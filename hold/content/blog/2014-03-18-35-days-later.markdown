@@ -1,0 +1,34 @@
+---
+author: 7sharp9
+layout: post
+title: "35 days later"
+date: 2014-03-18
+comments: true
+categories: [General]
+---
+After choosing to not surf the seas of Twitter, am I any less current in the world of F#, did I miss anything important that a real-time stream would of alerted me to?
+<!-- more -->  
+I know for certain that all the trivial micro updates can be interesting to read but ultimately they are quite a time suck, especially if you have alerts enabled on your mobile etc.  
+
+So after just over a month of non tweeting, apart from responding to directly to others, things have finally calmed down.  I'm not getting regular mentions anymore, my followers have topped out at just under 1000 although I still seem to be getting a follower every now and again.   
+
+Ive also cut back on hours.  I was regularly spending 13-15 hours in front of a computer each day including the day job, programming can be addictive to the detriment of other things.  So Ive cut back to 8-10 hours a day, no weekend programming.  
+
+So 35 days later I am no longer a programming zombie!  
+
+I have a lot of other things that I enjoy doing, like playing guitar, drawing and painting, woodwork, and recently astronomy.  There are just too many interesting things to do.  Heck, I'd even tempted to blog about some of this other stuff if I though anyone was even remotely interested!
+
+Until next time...  
+
+Keep on rocking!  
+{% img http://farm8.staticflickr.com/7217/7282084910_a4b33c6ef9_m.jpg %}
+
+* * *
+####Essential listening:
+*   Biohazzard - Urban Discipline  
+*   Xentrix - For whose advantage  
+
+    {% img http://upload.wikimedia.org/wikipedia/en/8/80/UrbanDiscipline.jpg 125 Biohazzard - Urban Discipline %}
+    {% img http://upload.wikimedia.org/wikipedia/en/4/46/For_Whose_Advantage.jpg 125 Xentrix - For whose advantage %}
+  
+
