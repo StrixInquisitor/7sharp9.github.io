@@ -1,0 +1,1576 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xamarin on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/xamarin/</link>
+    <description>Recent content in Xamarin on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Tue, 31 May 2016 13:24:29 +0100</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/xamarin/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>New Adventures</title>
+      <link>http://7sharpnine.com/2016/05/31/new-adventures/</link>
+      <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/05/31/new-adventures/</guid>
+      <description>
+
+&lt;p&gt;So today was my last day at Xamarin.&lt;/p&gt;
+
+&lt;p&gt;I have decided to move on and have some fabulous new adventures.  I don&amp;rsquo;t know quite where this will lead me yet but its going to be exciting finding out!&lt;/p&gt;
+
+&lt;h3 id=&#34;why-you-may-ask&#34;&gt;Why? you may ask.&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;ve been working for Xamarin since 22nd October 2013 on F# tooling and engineering.  Over a period of time it&amp;rsquo;s very easy to become comfortable and complacent and no longer be challenged.  I have a hacker mentality, I need to create new things, crack difficult problems, experiment.   There are various other reasons too, but with the Microsoft acquisition now seemed as good a time as any to say goodbye and move on.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-s-next&#34;&gt;What&amp;rsquo;s Next?&lt;/h3&gt;
+
+&lt;p&gt;So in a nutshell, I will also be writing, live-streaming and working on my own new and wonderful things to challenge myself and push my boundaries.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll once again available for some consulting work too, so feel free to ping me.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Anything you can do ...</title>
+      <link>http://7sharpnine.com/2014/06/01/2014-06-01-anything-you-can-do/</link>
+      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/06/01/2014-06-01-anything-you-can-do/</guid>
+      <description>&lt;p&gt;For any of you that are aware of the newly updated Xamarin Web site, you may have seen the &lt;a href=&#34;https://xamarin.com/platform&#34;&gt;following&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Objective-C was ahead of its time 30 years ago.
+C# is ahead of its time today.
+Anything you can do in Objective-C or Java, you can do in C# with Xamarin—usually more succinctly and with fewer bugs.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;What is also true is that F# is way ahead of its time, and you can produce even more succinct code with even fewer bugs than C#!&lt;br /&gt;
+&lt;!-- more --&gt;
+Take the code snippets from that page.&lt;/p&gt;
+
+&lt;p&gt;First up the Objective C version:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@interface Person : NSObject
+@property (strong, nonatomic) NSString *name;
+@end
+
+@implementation Person
+- (id)initWithName:(NSString *)name {
+    self = [super init];
+    if (self) {
+        self.name = name;
+    }
+    return self;
+}
+
++ (NSArray *)getNames
+{
+    NSArray *people = @[
+      [[Person alloc] initWithName:@&amp;quot;David&amp;quot;],
+      [[Person alloc] initWithName:@&amp;quot;Vinicius&amp;quot;],
+      [[Person alloc] initWithName:@&amp;quot;Serena&amp;quot;],
+    ];
+    NSMutableArray *names = [NSMutableArray array];
+    for (Person *person in people) {
+        [names addObject:person.name];
+    }
+    return names;
+}
+@end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Heres the C# version:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-csharp&#34;&gt;class Person : NSObject {
+  public string Name { get; set; }
+  
+  public static string[] GetNames() {
+    var people = new[] {
+        new Person { Name=&amp;quot;David&amp;quot; },
+        new Person { Name=&amp;quot;Vinicius&amp;quot; },
+        new Person { Name=&amp;quot;Serena&amp;quot; },
+    };
+    return people.Select(person =&amp;gt; person.Name).ToArray();
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And finally the F# version:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type Person() =
+   inherit NSObject()
+   member val Name = &amp;quot;&amp;quot; with get, set
+   static member GetNames() =
+      [| new Person(Name=&amp;quot;David&amp;quot;)
+         new Person(Name=&amp;quot;Vinicius&amp;quot;)
+         new Person(Name=&amp;quot;Serena&amp;quot;) |]
+      |&amp;gt; Array.map(fun person -&amp;gt; person.Name)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the F# version is doing exactly the same, although we are using the &lt;code&gt;map&lt;/code&gt; function from the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370273.aspx&#34;&gt;&lt;code&gt;Array&lt;/code&gt; module&lt;/a&gt; rather than the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/bb397926.aspx&#34;&gt;Linq&lt;/a&gt; &lt;code&gt;Select&lt;/code&gt; extension method.&lt;/p&gt;
+
+&lt;p&gt;Its not all about the lines of code though, using F# gives you all many advantages:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Using the type system to make sure the code is behaving how you expect before you even compile.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/dd547125.aspx&#34;&gt;Pattern matching&lt;/a&gt; in F# is amazing!  It can vastly simplify complex control logic, add Active patterns to that and you are ready to take on the world!&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Problems are approached from a functional perspective which often leads to succinct functions that are easy to reason about, test, and compose.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;F# emphasizes immutability and functional composition rather than inheritance, again this boils down to simplicity.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Features like &lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/hh156509.aspx&#34;&gt;Type providers&lt;/a&gt; can vastly simplify how you deal with data within your application, making access to data really easy and intuitive.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Theres are many areas that F# can really help productivity during development.  I hope to write a few more short posts to really bring attention to these.  I use F# all the time and often forget how awesome it is until I go back to another language thats missing those features.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/a/a6/Sr_independent.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Sacred Reich - Independent&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Sacred Reich - Independent&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/4/46/For_Whose_Advantage.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Xentrix - For Whose Advantage&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Xentrix - For Whose Advantage&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Xamarin 3 F# Awesomeness</title>
+      <link>http://7sharpnine.com/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
+      <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
+      <description>
+
+&lt;p&gt;With the release of Xamarin 3 there is a swathe of new features to the platform, but obviously the most important one is obviously F# support is now included by default in Xamarin Studio so there is no escape from the awesomeness of F#!&lt;/p&gt;
+
+&lt;p&gt;So what else have we got, well loads of other goodies too like Xamarin Designer for iOS, Xamarin.Forms, Major IDE enhancements, Improved code sharing with PCL and Shared projects, and BCL Documentation.  You can see the release blog post here: &lt;a href=&#34;http://blog.xamarin.com/announcing-xamarin-3/&#34;&gt;announcing Xamarin 3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;There are tons of things I could show you, but for this post lets have a quick look at Xamarin.Forms&lt;br /&gt;
+&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;xamarin-forms&#34;&gt;Xamarin.Forms&lt;/h2&gt;
+
+&lt;p&gt;So what is Xamarin.Forms?  Well to paraphrase the Xamarin blurb a little bit:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Build native UIs for iOS, Android and Windows Phone
+from a single, shared codebase.  Xamarin.Forms pages represent single screens within an app.&lt;/p&gt;
+
+&lt;p&gt;Pages contain layouts, buttons, labels, lists, and other common controls. Connect these controls to shared backend code and you get fully native iOS, Android, and Windows Phone apps built entirely with shared code.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So as this just a whistle-stop post I&amp;rsquo;ll quickly show you the code.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let profilePage = 
+   ContentPage(Title=&amp;quot;Profile&amp;quot;,
+               Icon=&amp;quot;Profile.png&amp;quot;,
+               Content=StackLayout.Create(
+                           [ Entry (Placeholder=&amp;quot;Username&amp;quot;) 
+                             Entry (Placeholder=&amp;quot;Password&amp;quot;, IsPassword=true)
+                             Button (Text=&amp;quot;Login&amp;quot;,
+                                     TextColor=Color.White, 
+                                     BackgroundColor=Color.FromHex &amp;quot;77D065&amp;quot;) ], 
+                             spacing=20.0,
+                             padding=thickness 50.0,
+                             verticalOptions=LayoutOptions.Center))
+                        
+let settingsPage = ContentPage(Title=&amp;quot;Settings&amp;quot;, Icon=&amp;quot;Settings.png&amp;quot;)
+
+let mainPage = TabbedPage.create [profilePage;settingsPage]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The result is a nice cross platform UI thats easy to build and maintain, sweet!&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://xamarin.com/content/images/pages/forms/example-app.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can see by the code thats there are several components at play but it&amp;rsquo;s very easy to see how the code relates to the UI layout.  A stack layout with two &lt;code&gt;Entry&lt;/code&gt; types followed by a &lt;code&gt;Button&lt;/code&gt;.  You can also see at the bottom that there is a &lt;code&gt;TabbedPage&lt;/code&gt; comprising of the &lt;code&gt;profilePage&lt;/code&gt; and the &lt;code&gt;settingPage&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Nice and easy!&lt;/p&gt;
+
+&lt;p&gt;OK, thats it for now, but next time I&amp;rsquo;ll be delving in a little deeper and showing you exactly how to build a PCL backed F# app over multiple platforms.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/1/1c/Iron_Maiden_-_Powerslave.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Iron Maiden - Powerslave&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Iron Maiden - Powerslave&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/6/6b/Electric_Sea.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Buckethead - Electric sea&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Buckethead - Electric sea&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Danger unstable structure - No more!</title>
+      <link>http://7sharpnine.com/2014/02/10/2014-02-10-danger-unstable-structure/</link>
+      <pubDate>Mon, 10 Feb 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/02/10/2014-02-10-danger-unstable-structure/</guid>
+      <description>
+
+
+&lt;figure class=&#34;img-left sixth&#34;&gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-dJcVwxtDxw8/Uvaxn7dezqI/AAAAAAAAByo/QffHElmM96I/s512-no/IMG_0379.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Over the last year a lot of work has been done on the &lt;a href=&#34;http://fsharp.github.io/fsharpbinding/&#34;&gt;F# addin&lt;/a&gt; for &lt;a href=&#34;https://xamarin.com/studio&#34;&gt;Xamarin Studio&lt;/a&gt;.  Lots of great new features have been added and a lot of bugs have been squashed.  I want to talk a bit about whats been happening and the evolution of the F# addin.&lt;/p&gt;
+
+&lt;!-- more --&gt;  
+
+&lt;p&gt;The F# addin for &lt;a href=&#34;http://monodevelop.com&#34;&gt;MonoDevelop&lt;/a&gt; / &lt;a href=&#34;https://xamarin.com/studio&#34;&gt;Xamarin Studio&lt;/a&gt; hasn&amp;rsquo;t always been as stable and pretty as it is now.  When I first started working on it I went through a rocky phase of just trying to get it to compile and install.  There were a whole host of changes going on in MonoDevelop which caused a lot of head scratching and late nights.  Of all the issues encountered tooltips were the absolute bane of my life, they were often horribly mangled like this:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-12p4uUpRK4g/Uvjtt2WAe7I/AAAAAAAABzs/QaQ-Tw8jIDw/w924-h416-no/77e93b30-7fa2-11e2-9490-303b1f7cb8b3.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Or completion lists were insanely long and downright pugly:&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-yZCVc4ymsGg/Uvsx_YwKbkI/AAAAAAAAB0w/NSvcqUyoC7w/w1400-h958-no/huge_overloads.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Modern IDE&amp;rsquo;s have features like tooltips and auto completions which are so intrinsic that without them you feel a little lost without them, instead you have to rely on having eidetic memory of the various APIs and functions.  Over the course of fixing bugs and adding new features inevitably you end up breaking lots of things which can make for a frustrating experience with half mangled IDE.  Thankfully all these issues have now been addressed and lots of new features have also been added.  Here are all the new features and improvements that have gone in over the last year or so.&lt;/p&gt;
+
+&lt;h3 id=&#34;ui-improvements&#34;&gt;UI Improvements&lt;/h3&gt;
+
+&lt;h4 id=&#34;rename-refactoring&#34;&gt;Rename refactoring&lt;/h4&gt;
+
+&lt;p&gt;One of the most recent and exciting new features is rename refactoring.  Renaming can be achieved by either using a shortcut key &lt;code&gt;Meta R&lt;/code&gt; or by right clicking and selecting rename from the context menu.  Here&amp;rsquo;s a screen cast of rename refactoring in action:&lt;br /&gt;
+&lt;object id=&#34;scPlayer&#34;  width=&#34;700&#34; height=&#34;530&#34; type=&#34;application/x-shockwave-flash&#34; data=&#34;http://content.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/scplayer.swf&#34; &gt;
+&lt;param name=&#34;movie&#34; value=&#34;http://content.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/scplayer.swf&#34; /&gt;
+&lt;param name=&#34;quality&#34; value=&#34;medium&#34; /&gt;
+&lt;param name=&#34;bgcolor&#34; value=&#34;#FFFFFF&#34; /&gt;
+&lt;param name=&#34;flashVars&#34; value=&#34;thumb=http://content.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/FirstFrame.jpg&amp;containerwidth=780&amp;containerheight=610&amp;xmp=sc.xmp&amp;content=http://content.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/ScreenFlow.mp4&amp;blurover=false&#34; /&gt;
+&lt;param name=&#34;allowFullScreen&#34; value=&#34;false&#34; /&gt;
+&lt;param name=&#34;scale&#34; value=&#34;showall&#34; /&gt;
+&lt;param name=&#34;allowScriptAccess&#34; value=&#34;always&#34; /&gt;
+&lt;param name=&#34;base&#34; value=&#34;http://content.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/&#34; /&gt;
+&lt;iframe type=&#34;text/html&#34; frameborder=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;overflow:hidden;&#34; src=&#34;http://www.screencast.com/users/DaveThomas2126/folders/Default/media/7d3ff591-57fe-4516-b888-5ee5c1487524/embed&#34; &gt;&lt;/iframe&gt;
+&lt;/object&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;highlight-usages&#34;&gt;Highlight usages&lt;/h4&gt;
+
+&lt;p&gt;The precursor to rename refactoring was highlight usages, by clicking in the code editor the current identifier is highlighted and all occurrences of of that identifier are also highlighted.  This makes it very easy to see where a specific identifier is used and is one of my favorite features:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-Adx7bMfd7O0/UvtEs9UQdcI/AAAAAAAAB1w/aMva_sHDX1U/w880-h498-no/Screen&amp;#43;Shot&amp;#43;2014-02-12&amp;#43;at&amp;#43;09.51.17.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h4 id=&#34;tooltip-overload-refinements&#34;&gt;Tooltip overload refinements&lt;/h4&gt;
+
+&lt;p&gt;Overload tooltips have now been refined so they look like the image below rather than the huge overload list shown at the top of this post.&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-hnmNtHIsrRU/UvtOB_yf0qI/AAAAAAAAB2U/FY3cMm-SY-0/w1400-h324-no/overload_enhancement.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&#34;tooltip-arrow-indicators&#34;&gt;Tooltip arrow indicators&lt;/h4&gt;
+
+&lt;p&gt;A little arrow indicators is now shown and positioned over the center of the tooltip.  Yeah is only cosmetic but it was annoying having it missing.&lt;/p&gt;
+
+&lt;h4 id=&#34;symbol-tooltips&#34;&gt;Symbol tooltips&lt;/h4&gt;
+
+&lt;p&gt;We now also have tooltips for symbols, which makes custom symbol use more palatable.  Now you can simply hover over the symbol see see its signature and xmldoc summary.&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-FFZtSnVdSkU/UvtVTNb5KlI/AAAAAAAAB2w/uPCpJhuOaoY/w642-h204-no/symbol&amp;#43;tooltips.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&#34;drag-and-drop-file-ordering&#34;&gt;Drag and drop file ordering&lt;/h4&gt;
+
+&lt;p&gt;F# source files can now be dragged in the Solution pad for correct ordering.  This is limited to ordering files within a single folder at the moment. Source files can still be moved from one folder to another but they must be ordered as a separate operation.&lt;/p&gt;
+
+&lt;h4 id=&#34;pathed-document-navigation&#34;&gt;Pathed document navigation&lt;/h4&gt;
+
+&lt;p&gt;Pathed document navigation is implemented in the source window to aid navigation between modules, types and functions within a source file:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-Evxt2R9Whr8/Uvt81UNJImI/AAAAAAAAB3M/_de-clz_b80/w1400-h878-no/pathed_doc.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;interactive-improvements&#34;&gt;Interactive Improvements&lt;/h3&gt;
+
+&lt;h4 id=&#34;send-all-project-references-to-fsi&#34;&gt;Send all project references to FSI&lt;/h4&gt;
+
+&lt;p&gt;From the context menu or keyboard shortcut &lt;code&gt;Ctrl Meta P&lt;/code&gt; you can choose to send all of the current projects reference to F# interactive, this saves having to enter a bunch of #r statements.&lt;/p&gt;
+
+&lt;h4 id=&#34;send-line-moves-down-automatically&#34;&gt;Send line moves down automatically&lt;/h4&gt;
+
+&lt;p&gt;For doing demos and testing scripts you can use a keyboard shortcut to sent the current line to F# interactive, the caret automatically drops down to the next line which makes stepping through the script a pinch.&lt;/p&gt;
+
+&lt;h4 id=&#34;clear-reset-fsi-keyboard-shortcuts&#34;&gt;Clear/Reset FSI keyboard shortcuts&lt;/h4&gt;
+
+&lt;p&gt;By pressing &lt;code&gt;Ctrl Meta R&lt;/code&gt; you can reset the current instance of F# interactive, similarly &lt;code&gt;Ctrl Meta C&lt;/code&gt; will clear the current F# interactive window.&lt;/p&gt;
+
+&lt;h4 id=&#34;fsi-theming&#34;&gt;FSI theming&lt;/h4&gt;
+
+&lt;p&gt;You can now also choose to have F# interactive match you current theme colours or pick your own:&lt;br /&gt;
+
+&lt;figure class=&#34;6u&#34;&gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-81Lw7ySfNRE/Uvs6_xH8pcI/AAAAAAAAB1Q/eO1Y2LmbT_E/w1400-h874-no/themed_fsi.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;engineering-improvements&#34;&gt;Engineering improvements&lt;/h3&gt;
+
+&lt;p&gt;Originally we had a reflective binding to the F# compiler services which meant it was version agnostic but quite difficult to debug and add new features to.&lt;/p&gt;
+
+&lt;p&gt;Actually just for posterity, and you might find this useful/interesting heres the code, it uses the &lt;a href=&#34;http://v2matveev.blogspot.co.uk/2010/07/tricky-late-binding-operators.html?utm_source=feedburner&amp;amp;utm_medium=feed&amp;amp;utm_campaign=Feed:+OccasionalNotes+(Occasional+notes)&#34;&gt;dynamic lookup operator&lt;/a&gt; &lt;code&gt;(?)&lt;/code&gt; :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let (?) (o:obj) name : &#39;R =
+  // The return type is a function, which means that we want to invoke a method
+  if FSharpType.IsFunction(typeof&amp;lt;&#39;R&amp;gt;) then
+    let argType, resType = FSharpType.GetFunctionElements(typeof&amp;lt;&#39;R&amp;gt;)
+    FSharpValue.MakeFunction(typeof&amp;lt;&#39;R&amp;gt;, fun args -&amp;gt;
+      // We treat elements of a tuple passed as argument as a list of arguments
+      // When the &#39;o&#39; object is &#39;System.Type&#39;, we call static methods
+      let methods, instance, args, owner = 
+        let args = 
+          if Object.Equals(argType, typeof&amp;lt;unit&amp;gt;) then [| |]
+          elif not(FSharpType.IsTuple(argType)) then [| args |]
+          else FSharpValue.GetTupleFields(args)
+        if (typeof&amp;lt;System.Type&amp;gt;).IsAssignableFrom(o.GetType()) then 
+          let methods = (unbox&amp;lt;Type&amp;gt; o).GetMethods(staticFlags) |&amp;gt; Array.map asMethodBase
+          let ctors = (unbox&amp;lt;Type&amp;gt; o).GetConstructors(ctorFlags) |&amp;gt; Array.map asMethodBase
+          let owner = (unbox&amp;lt;Type&amp;gt; o).Name + &amp;quot; (static)&amp;quot;
+          Array.concat [ methods; ctors ], null, args, owner
+        else 
+          let owner = o.GetType().Name + &amp;quot; (instance)&amp;quot;
+          o.GetType().GetMethods(instanceFlags) |&amp;gt; Array.map asMethodBase, o, args, owner
+      
+      // A simple overload resolution based on the name and number of parameters only
+      let methods = 
+        [ for m in methods do
+            if m.Name = name &amp;amp;&amp;amp; m.GetParameters().Length = args.Length then yield m 
+            if m.Name = name &amp;amp;&amp;amp; m.IsGenericMethod &amp;amp;&amp;amp;
+               m.GetGenericArguments().Length + m.GetParameters().Length = args.Length then yield m ]
+      match methods with 
+      | [] -&amp;gt; failwithf &amp;quot;No method &#39;%s&#39; with %d arguments found in %s&amp;quot; name args.Length owner
+      | _::_::_ -&amp;gt; failwithf &amp;quot;Multiple methods &#39;%s&#39; with %d arguments found %s&amp;quot; name args.Length owner
+      | [:? ConstructorInfo as c] -&amp;gt; c.Invoke(args)
+      | [ m ] when m.IsGenericMethod -&amp;gt;
+          let tyCount = m.GetGenericArguments().Length
+          let tyArgs = args |&amp;gt; Seq.take tyCount 
+          let actualArgs = args |&amp;gt; Seq.skip tyCount
+          let gm = (m :?&amp;gt; MethodInfo).MakeGenericMethod [| for a in tyArgs -&amp;gt; unbox a |]
+          gm.Invoke(instance, Array.ofSeq actualArgs)
+      | [ m ] -&amp;gt; m.Invoke(instance, args) ) |&amp;gt; unbox&amp;lt;&#39;R&amp;gt;
+  else
+    // When the &#39;o&#39; object is &#39;System.Type&#39;, we access static properties
+    let typ, flags, instance = 
+      if (typeof&amp;lt;System.Type&amp;gt;).IsAssignableFrom(o.GetType()) then unbox o, staticFlags, null
+      else o.GetType(), instanceFlags, o
+    
+    // Find a property that we can call and get the value
+    let prop = typ.GetProperty(name, flags)
+    if Object.Equals(prop, null) then 
+      // Find a field that we can read
+      let fld = typ.GetField(name, flags)
+      if Object.Equals(fld, null) then
+        // Try nested type...
+        let nested = typ.Assembly.GetType(typ.FullName + &amp;quot;+&amp;quot; + name)
+        if Object.Equals(nested, null) then 
+          failwithf &amp;quot;Property, field or nested type &#39;%s&#39; not found in &#39;%s&#39; using flags &#39;%A&#39;.&amp;quot; name typ.Name flags
+        elif not ((typeof&amp;lt;&#39;R&amp;gt;).IsAssignableFrom(typeof&amp;lt;System.Type&amp;gt;)) then
+          failwithf &amp;quot;Cannot return nested type &#39;%s&#39; as value of type &#39;%s&#39;.&amp;quot; nested.Name (typeof&amp;lt;&#39;R&amp;gt;.Name)
+        else nested |&amp;gt; box |&amp;gt; unbox&amp;lt;&#39;R&amp;gt;
+      else
+        // Get field value
+        fld.GetValue(instance) |&amp;gt; unbox&amp;lt;&#39;R&amp;gt;
+    else
+      // Call property
+      let meth = prop.GetGetMethod(true)
+      if prop = null then failwithf &amp;quot;Property &#39;%s&#39; found, but doesn&#39;t have &#39;get&#39; method.&amp;quot; name
+      try meth.Invoke(instance, [| |]) |&amp;gt; unbox&amp;lt;&#39;R&amp;gt;
+      with err -&amp;gt; failwithf &amp;quot;Failed to get value of &#39;%s&#39; property (of type &#39;%s&#39;), error: %s&amp;quot; name typ.Name (err.ToString())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To use it a type wrapper had to be constructed a bit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let interactiveCheckerType = asmCompiler.GetType(&amp;quot;Microsoft.FSharp.Compiler.SourceCodeServices.InteractiveChecker&amp;quot;)
+
+type InteractiveChecker(wrapped:obj) =
+member x.TryGetRecentTypeCheckResultsForFile(filename:string, options:CheckOptions) =
+   let res = wrapped?TryGetRecentTypeCheckResultsForFile(filename, options.Wrapped) : obj
+   if res = null then None else
+      let tuple = res?Value
+      Some(UntypedParseInfo(tuple?Item1), TypeCheckResults(tuple?Item2), int tuple?Item3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It was quite fiddly to get right as &lt;code&gt;FSharp.Core&lt;/code&gt; had to be used reflectively as you would potentially be using a different version of &lt;code&gt;FSharp.Core&lt;/code&gt; depending on what version of F# you were binding to.  I think this kind of reflective calling could be simplified by creating an F# type provider, I can think of a variety of uses for something like this.&lt;/p&gt;
+
+&lt;p&gt;Ultimately a branch called &lt;strong&gt;hardbinding&lt;/strong&gt; was created which led to the creation of the F# Compiler Editor branch of the F# compiler.  Slowly over the last few months that evolved into the &lt;a href=&#34;http://fsharp.github.io/FSharp.Compiler.Service/&#34;&gt;FSharp Compiler Service&lt;/a&gt; aka &lt;strong&gt;FCS&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;I also experimented quite a bit with a custom tokeniser that allowed the keywords and other syntax elements to be highlighted as tooltips:&lt;/p&gt;
+
+&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-_sHdxrBme-I/UvkMM1WVHHI/AAAAAAAAB0M/OtF0vnUdilI/w840-h344-no/keyword&amp;#43;tooltip.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;br /&gt;
+At the time the F# binding was going through quite a turbulent change to the source code, and the combination of trying to develop FSharp.Compiler.Services and also refactoring the existing code meant that I decided to put this on hold for the time being.  I hope to resurrected this work one day, I can see that keyword highlighting would be very useful to beginners, especially if a detailed description was available similar to what is available on MSDN.  It also addresses some bugs that are still outstanding so it would be nice to get finished.&lt;/p&gt;
+
+&lt;p&gt;Over the last couple of months a lot of the common code around parsing of long identifiers has been refactored so that is can be shared with other tools.  In the F# Binding we also have an emacs plugin which uses this shared code.  We have also created a shared language agent which makes using these language services even easier still!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&#34;swat-all-the-bugs&#34;&gt;Swat all the bugs!&lt;/h3&gt;
+
+&lt;p&gt;Anyone remember &lt;a href=&#34;http://www.videogamehouse.net/picnicparanoia.html&#34;&gt;Picnic paranoia&lt;/a&gt;?  
+&lt;figure class=&#34;img-left&#34;&gt;
+    
+        &lt;img src=&#34;http://i20.photobucket.com/albums/b223/NeoZeedeater/PicnicParanoiaTI.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Swat all the bugs&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;A shed load of bugs have also been swatted.  Using the F# addin is no longer like ignoring the &lt;strong&gt;Unstable Structure sign&lt;/strong&gt; and hoping things don&amp;rsquo;t crumble under your feet.  Admittedly there is still work to be done but some of the recent refactoring make it even easier to contribute to either new features or fixing bugs.  We&amp;rsquo;ve also added the F# binding to &lt;a href=&#34;http://up-for-grabs.net/#/tags/f#&#34;&gt;up-for-grabs.net&lt;/a&gt; and added the &lt;a href=&#34;https://github.com/fsharp/fsharpbinding/issues?direction=desc&amp;amp;labels=up-for-grabs&amp;amp;sort=created&amp;amp;state=open&#34;&gt;up-for-grabs&lt;/a&gt; issues as a starting point for anyone thinking about to helping out.  There&amp;rsquo;s been a lot of blood sweat and tears and its consumed quite a lot of my spare time but I hope you all enjoy using the new F# addin features.&lt;/p&gt;
+
+&lt;p&gt;Lastly a big thank you to everyone who has helped contribute over the last year, keep the contributions coming in!&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s all for now, see you next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/6/69/Silence_Followed_By_a_Deafening_Roar_album.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Paul Gilbert - Silence Followed By a Deafening Roar&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Paul Gilbert - Silence Followed By a Deafening Roar&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/1/1c/Get_Out_of_My_Yard_Artwork.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Paul Gilbert - Get out of my yard&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Paul Gilbert - Get out of my yard&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Adding Touch To SpriteKit</title>
+      <link>http://7sharpnine.com/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
+      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
+      <description>&lt;p&gt;Only a quick post this week.  Last time we looked at &lt;a href=&#34;https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html&#34;&gt;SpriteKit&lt;/a&gt; and how to add some particle emmiters to simulate a star-field and exhaust on a spaceship, this time lets look at adding some touch based input to move the spaceship around.  &lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;The first thing we need to do is add a type of gesture recogniser, there are various built in &lt;a href=&#34;https://developer.apple.com/library/ios/documentation/uikit/reference/UIGestureRecognizer_Class/Reference/Reference.html#//apple_ref/occ/cl/UIGestureRecognizer&#34;&gt;gestures&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;UITapGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UIPinchGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UIRotationGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UISwipeGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UIPanGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UIScreenEdgePanGestureRecognizer&lt;/li&gt;
+&lt;li&gt;UILongPressGestureRecognizer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;From the names above it&amp;rsquo;s pretty easy to get a feel for how they should be used, you can create your own subclass of &lt;code&gt;UIGestureRecognizer&lt;/code&gt; if you need a custom one.&lt;/p&gt;
+
+&lt;p&gt;Gesture recognizers come in two types continuous and discrete.  A discrete gesture is single action like tap or double tap and results in a single action been sent.  A continuous gesture is like pan, swipe, or rotate which is interpreted as a series of messages being sent.&lt;/p&gt;
+
+&lt;p&gt;For our purposes we are going to be using the &lt;code&gt;UIPanGestureRecognizer&lt;/code&gt; which is a continuous gesture.  What we need to do is create a function that sets up the &lt;code&gt;UIPanGestureRecognizer&lt;/code&gt; ready for us to use.  We do that by creating an instance of the &lt;code&gt;UIPanGestureRecognizer&lt;/code&gt; and add it to our view:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let setupGestures() =
+    use panRecogniser = new UIPanGestureRecognizer(x, MonoTouch.ObjCRuntime.Selector(&amp;quot;PanSelector&amp;quot;))
+    x.View.AddGestureRecognizer(panRecogniser)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we are also using a selector, which means we can use an attribute like &lt;code&gt;[&amp;lt;Export(&amp;quot;PanSelector&amp;quot;)&amp;gt;]&lt;/code&gt; to define the function that will be used as the callback.  Lets define that function now:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let OnLabelPan( sender: UIGestureRecognizer) =
+    match sender with
+    | :? UIPanGestureRecognizer as pan -&amp;gt;
+        match pan.State with
+        | UIGestureRecognizerState.Changed -&amp;gt;
+            let movement = pan.TranslationInView(x.View)
+            let move = SKAction.MoveBy(movement.X * 1.75f, -movement.Y * 1.75f, 0.05)
+            let ship = scene.GetChildNode(&amp;quot;Ship&amp;quot;)
+            ship.RunAction(move)
+            pan.SetTranslation(PointF.Empty, x.View)
+        | _ -&amp;gt; ()
+    | _ -&amp;gt; ()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First of all we use pattern matching to do a type match &lt;code&gt;| :? UIPanGestureRecognizer as pan -&amp;gt;&lt;/code&gt;.  This ensures we are dealing with the &lt;code&gt;UIPanGestureRecognizer&lt;/code&gt; type.  We might of applied multiple gesture recognisers to the view like swipe and rotate and had this function deal with all of them, we can handle this nicely with the type match.&lt;/p&gt;
+
+&lt;p&gt;We can now use a pattern match on the state of the gesture recogniser to react to just the changed event &lt;code&gt;UIGestureRecognizerState.Changed&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As mentioned previously the pan gesture is continuous and will send a changed action whenever the finger moves on the screen, this gives us a chance to retrieve the current translation of the pan in the current view.  We do this by calling &lt;code&gt;pan.TranslationInView(x.View)&lt;/code&gt;.  We can now apply a movement to our spaceship sprite by creating an action using &lt;code&gt;SKAction.MoveBy&lt;/code&gt;.   We multiply the translation retrieved by 1.75 to allow for the initial distance the the pan gesture moves before triggering.  We also invert the Y axis so that the spaceship sprite moves in the correct Y direction.  The final parameter is the time the action runs for, we use a really small time of 0.05 (50ms).  This stops the spaceship sprite from moving like an ordinary mouse pointer, just enough inertia to make it feel smooth.&lt;/p&gt;
+
+&lt;p&gt;To apply the action to the spaceship all we need to do is retrieve it from the scene using &lt;code&gt;scene.GetChildNode&lt;/code&gt; and call the &lt;code&gt;RunAction&lt;/code&gt; function passing in the action we just created.&lt;/p&gt;
+
+&lt;p&gt;Finally we set the pan translation back to zero using: &lt;code&gt;pan.SetTranslation(PointF.Empty, x.View)&lt;/code&gt;, this ensures that the spaceship only moves by last changed translation action.  Failure to reset the translation would result in the spaceship having too much inertia from the previous actions making it very difficult to control.&lt;/p&gt;
+
+&lt;p&gt;We could also use another overload of &lt;code&gt;UIPanGestureRecognizer&lt;/code&gt; which takes an &lt;code&gt;Action&amp;lt;UIPanGestureRecognizer&amp;gt;&lt;/code&gt;, we can pass this in as a lambda function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let setupGestures() =
+    use panRecogniser = 
+        new UIPanGestureRecognizer
+            (fun (pan:UIPanGestureRecognizer) -&amp;gt; 
+                match pan.State with
+                | UIGestureRecognizerState.Changed -&amp;gt;
+                    let movement = pan.TranslationInView(x.View)
+                    let move = SKAction.MoveBy(movement.X * 1.75f, -movement.Y * 1.75f, 0.05)
+                    let ship = scene.GetChildNode(&amp;quot;Ship&amp;quot;)
+                    ship.RunAction(move)
+                    pan.SetTranslation(PointF.Empty, x.View)
+                | _ -&amp;gt; ())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I think the attribute based version is a little cleaner as you can move the callback functionality away from the definition.  To be honest I don&amp;rsquo;t mind either way, although if the lambda definition gets too big you will definitely be better off with the former.&lt;/p&gt;
+
+&lt;p&gt;Finally we need to plug in the &lt;code&gt;setupGestures&lt;/code&gt; function, we do that by calling it at the end of &lt;code&gt;ViewDidLoad&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;override x.ViewDidLoad () =
+    base.ViewDidLoad()
+    setupScene()
+    setupGestures()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick YouTube video so you can see this in action:&lt;/p&gt;
+
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/j5JK5zWLdK0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+ &lt;/div&gt;
+
+
+&lt;p&gt;If you want to check out the project then you can find it in my &lt;a href=&#34;https://github.com/7sharp9/SpriteKit-Fsharp-Samples&#34;&gt;GitHub repo &lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s all for now, see you next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/e/e5/In_Utero_%28Nirvana%29_album_cover.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Nirvana - In Utero&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Nirvana - In Utero&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/8/85/Axiscover.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Jimi Hendrix Experience - Axis: Bold as Love&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Jimi Hendrix Experience - Axis: Bold as Love&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Spritekit particle fun</title>
+      <link>http://7sharpnine.com/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
+      <pubDate>Fri, 20 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
+      <description>
+
+&lt;p&gt;I have been meaning to write this post for quite a while now.  Since the first announcement of the iOS7 beta I immediately saw the list of new API&amp;rsquo;s and &lt;strong&gt;SpriteKit&lt;/strong&gt; caught my eye straight away.  I only managed to get time to briefly look over the API and saw that is wasn&amp;rsquo;t the usual trashy API with a million method overloads, internal mutation sucker punch type thing.  It seems to be very declarative and intuitive, which makes for a nice change.  &lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;First of all lots of kudos to &lt;a href=&#34;http://xamarin.com&#34;&gt;Xamarin&lt;/a&gt; for getting Xamarin iOS 7 out so swiftly, you can read about some of the new features &lt;a href=&#34;http://blog.xamarin.com/ios-7-and-xamarin-ready-when-you-are/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;spritekit&#34;&gt;SpriteKit&lt;/h2&gt;
+
+&lt;p&gt;So what is SpriteKit?&lt;/p&gt;
+
+&lt;p&gt;SpriteKit, as you might have guessed, is a games oriented API aimed at getting you quickly up and running with 2D sprites so that you can spend more time building your games rather than mucking about with the low level stuff.  Lets have a really quick tour of what&amp;rsquo;s in there, I don&amp;rsquo;t want to spend long on this as you can read the &lt;a href=&#34;https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html&#34;&gt;programming guide&lt;/a&gt; on the Apple site for further details.&lt;/p&gt;
+
+&lt;h3 id=&#34;scenes&#34;&gt;Scenes&lt;/h3&gt;
+
+&lt;p&gt;SpriteKit represents the different parts of your games with a scenes.  A scene could be the title screen or the levels in the game.  A scene is really just a just a collection of nodes which represents all of the objects currently visible.  There are several different types of node that can be used in the scene.&lt;/p&gt;
+
+&lt;h3 id=&#34;nodes&#34;&gt;Nodes&lt;/h3&gt;
+
+&lt;p&gt;Several different type of node are available to use, here they are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SKVideoNode - Allows videos to be embedded into the scene.&lt;/li&gt;
+&lt;li&gt;SKCropNode - A crop node allows you to mask of different areas of the viewing area.&lt;/li&gt;
+&lt;li&gt;SKEffectNode - The effects node allows its children to be rendered into a private frame buffer where &lt;a href=&#34;https://developer.apple.com/library/mac/documentation/graphicsimaging/Conceptual/CoreImaging/ci_intro/ci_intro.html&#34;&gt;Core Image&lt;/a&gt; effects can be applied before being blended back into the main scene.&lt;/li&gt;
+&lt;li&gt;SKEmitterNode - Allows particles to be placed into a scene.&lt;/li&gt;
+&lt;li&gt;SKLabelNode - Allows for arbitrary text to be places into the scene.&lt;/li&gt;
+&lt;li&gt;SKShapeNode - Allows path based shapes to be draw in the scene.&lt;/li&gt;
+&lt;li&gt;SKSpriteNode - This is your standard textured image which can be colour blended, scaled, rotated etc.&lt;/li&gt;
+&lt;li&gt;SKNode - This is the base node type from which all the others are derived.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;transitions&#34;&gt;Transitions&lt;/h3&gt;
+
+&lt;p&gt;Transitions allow you to move from one scene to another, allowing for a animated effect to be applied during the transition.&lt;/p&gt;
+
+&lt;h3 id=&#34;actions&#34;&gt;Actions&lt;/h3&gt;
+
+&lt;p&gt;Actions allow you to declarative apply an action to a node.  For example you could write something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SKAction *moveUp =     [SKAction moveByX:0 y:100.0 duration:1.0];
+SKAction *zoom =       [SKAction scaleTo:2.0 duration:0.25];
+SKAction *wait =       [SKAction waitForDuration: 0.5];
+SKAction *fadeAway =   [SKAction fadeOutWithDuration:0.25];
+SKAction *removeNode = [SKAction removeFromParent];
+ 
+SKAction *sequence = [SKAction sequence:@[moveUp, zoom, wait, fadeAway, removeNode]];
+[node runAction: sequence];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates a sequence of actions: moveUp, zoom, wait, fadeAway, removeNode.  The actions are reusable and stateless so they can be applied to any nodes in the scene.  If we didn&amp;rsquo;t want the actions to be applied in a sequence we could use a group, which applies the actions in parallel.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;rsquo;t worry if I&amp;rsquo;ve scared you with Objective-C there will be none of that when we get into writing a little demo in a moment.&lt;/p&gt;
+
+&lt;h3 id=&#34;physics&#34;&gt;Physics&lt;/h3&gt;
+
+&lt;p&gt;The physics part of SpriteKit can be really fun to play with, its fairly easy to fill a screen full of cubes and bash them about watching the gravity and collision effects.  The physics engine looks like its based on &lt;a href=&#34;http://box2d.org&#34;&gt;Box2D&lt;/a&gt; and involves adding approximate shapes for your game objects and then adding a bunch of physical properties like mass, friction, linear damping, restitution etc.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&#34;first-steps&#34;&gt;First Steps&lt;/h3&gt;
+
+&lt;p&gt;That was a really quick whistle stop tour just to give you a flavour of what&amp;rsquo;s in there.  For this post we are going to look at the &lt;code&gt;SKEmitterNode&lt;/code&gt; and see what we can do.&lt;/p&gt;
+
+&lt;p&gt;The first thing to do is set up the skeleton, not an actual skeleton mind, just the skeleton of the demo.&lt;/p&gt;
+
+&lt;p&gt;Create a new F# iOS Single View Application.  SpriteKit uses a subclass of &lt;code&gt;UIView&lt;/code&gt; for its rendering surface and is controlled as usual by the &lt;code&gt;UIViewController&lt;/code&gt; but we need to add a few things and make a few chnages to start using SpriteKit:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We need to open references for &lt;code&gt;MonoTouch.SpriteKit&lt;/code&gt; and &lt;code&gt;MonoTouch.CoreGraphics&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Add a couple of virtual overloads for &lt;code&gt;ViewDidAppear&lt;/code&gt; and &lt;code&gt;ViewDidDisappear&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Add an instance of &lt;code&gt;SKScene&lt;/code&gt; and &lt;code&gt;SKView&lt;/code&gt;.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;We will also add a function called &lt;code&gt;setupScene&lt;/code&gt; which will initialise the scene, this will be called from &lt;code&gt;DidViewLoad&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That means something like this will do the trick for an empty scene:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace SpriteKitSingleView
+
+open System
+open System.Drawing
+open MonoTouch.Foundation
+open MonoTouch.UIKit
+open MonoTouch.SpriteKit
+open MonoTouch.CoreGraphics
+
+[&amp;lt;Register (&amp;quot;SpriteKitViewController&amp;quot;)&amp;gt;]
+type SpriteKitViewController () as x=
+    inherit UIViewController ()
+    
+    let mutable scene = Unchecked.defaultof&amp;lt;SKScene&amp;gt;
+    let mutable spriteView = new SKView()
+    
+    let setupScene() =
+        spriteView.Bounds &amp;lt;- RectangleF(0.f, 0.f, x.View.Bounds.Width * UIScreen.MainScreen.Scale, 
+                                                  x.View.Bounds.Height * UIScreen.MainScreen.Scale)
+        spriteView.ShowsDrawCount &amp;lt;- true
+        spriteView.ShowsNodeCount &amp;lt;- true
+        spriteView.ShowsFPS &amp;lt;- true
+            
+        x.View &amp;lt;- spriteView
+        scene &amp;lt;- new SKScene (spriteView.Bounds.Size, 
+                              BackgroundColor = UIColor.Blue,
+                              ScaleMode = SKSceneScaleMode.AspectFit)
+
+    override x.DidReceiveMemoryWarning () =
+        base.DidReceiveMemoryWarning ()
+
+    override x.ShouldAutorotateToInterfaceOrientation (orientation) =
+        orientation &amp;lt;&amp;gt; UIInterfaceOrientation.PortraitUpsideDown
+        
+    override x.ViewDidLoad () =
+        base.ViewDidLoad()
+        setupScene()        
+
+    override x.ViewDidAppear(animated) =
+        base.ViewDidDisappear (animated)
+        spriteView.PresentScene(scene)
+        
+    override x.ViewDidDisappear(animated) =
+        base.ViewDidDisappear (animated)
+        scene.RemoveAllChildren()
+        scene.RemoveAllActions() 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The main interesting bit here is &lt;code&gt;setupScene&lt;/code&gt;.  The &lt;code&gt;spriteView&lt;/code&gt; instance is created at the beginning of the &lt;code&gt;SpriteKitViewController&#39;s&lt;/code&gt; &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233192.aspx&#34;&gt;implicit constructor&lt;/a&gt;.  We need to defer creating the &lt;code&gt;scene&lt;/code&gt; until later because in the constructor the &lt;code&gt;UIView&lt;/code&gt; has not yet been initialised by the the framework and we would get a null reference exception.&lt;/p&gt;
+
+&lt;p&gt;The first thing we do is get the dimensions of the current view, multiply it by the current scale, then apply it to the &lt;code&gt;spriteView&lt;/code&gt; &lt;code&gt;Bounds&lt;/code&gt; property.  The scale property is used for the various DPI modes in iOS devices.  Next we add a few debug outputs to the &lt;code&gt;spriteView&lt;/code&gt; to show the current draw and node counts as well at the current frame rate.  We assign the &lt;code&gt;spriteView&lt;/code&gt; to the &lt;code&gt;View&lt;/code&gt; property of the &lt;code&gt;ViewController&lt;/code&gt;.  And finally we create a new &lt;code&gt;SKScene&lt;/code&gt;, assigning the view boundary, background colour and the scaling mode.&lt;/p&gt;
+
+&lt;p&gt;As a side note we could create a storyboard and use an &lt;code&gt;SKView&lt;/code&gt; as the custom class instead of the default &lt;code&gt;UIView&lt;/code&gt;, doing this way means that when the &lt;code&gt;ViewDidLoad&lt;/code&gt; overload is called the &lt;code&gt;View&lt;/code&gt; property of the &lt;code&gt;SpriteKitViewControl&lt;/code&gt; would already be initialized with a &lt;code&gt;SKView&lt;/code&gt;.  This is a little more tricky in F# as we don&amp;rsquo;t currently have the fancy UI designer integration in Xamarin Studio.  You would have to do this in Xcode and copy it to your project manually.&lt;/p&gt;
+
+&lt;h3 id=&#34;adding-the-sprite&#34;&gt;Adding the Sprite&lt;/h3&gt;
+
+&lt;p&gt;Next we will add a spaceship sprite:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We need to add a &lt;code&gt;.png&lt;/code&gt; file to the project.&lt;/li&gt;
+&lt;li&gt;Create an instance of an &lt;code&gt;SKSprite&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;We also need to add the sprite to the scene.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Add a spaceship texture to the project and make sure that the build action is set to &lt;code&gt;BundleResource&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Next add the following to code to the &lt;code&gt;setupScene&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;use sprite = new SKSpriteNode (&amp;quot;Art/viper_mark_vii.png&amp;quot;)
+sprite.Position &amp;lt;- PointF (scene.Frame.GetMidX(), scene.Frame.GetMidY())
+sprite.Name &amp;lt;- &amp;quot;Ship&amp;quot;
+scene.AddChild(sprite)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I added my sprite to a sub folder in the project called Art, once you start adding lots of graphics assets you probably want to make sure they are properly organised.  Next I set the spaceship&amp;rsquo;s initial position to the center of the current scene using the &lt;code&gt;scene.Frame.GetMidX()&lt;/code&gt; and &lt;code&gt;scene.Frame.GetMidY()&lt;/code&gt; methods.  We give the sprite node a name using the &lt;code&gt;Name&lt;/code&gt; property.  This is useful if we want to refer to the spaceship via its name in the node graph rather than using its object reference  Finally we add the sprite to the scene using &lt;code&gt;scene.AddChild(sprite)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So this now gives us a single spaceship sitting in the middle of the screen:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-P_PyM1pMkNE/Uj22UP6XaOI/AAAAAAAABs4/QhrH1JVRbSA/w592-h1236-no/scene&amp;#43;with&amp;#43;spaceship.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;creating-particles-with-xcode-s-particle-designer&#34;&gt;Creating Particles with xCode&amp;rsquo;s Particle Designer&lt;/h3&gt;
+
+&lt;p&gt;The great thing about SpriteKit is it also comes with a nice particle designer.  To use the particle designer you have to fire up Xcode and add a new file of type &lt;code&gt;SpriteKit Particle Designer&lt;/code&gt;.  You get a choice of a eight different preset&amp;rsquo;s particle types:  Bokeh, Fire, Fireflies, Magic, Rain, Smoke, Snow, and Spark.&lt;/p&gt;
+
+&lt;p&gt;It certainly saves a lot of time developing the particle effects with the particle designer, there are loads of parameters to play around with.  If I quickly choose the rain preset and fiddle with the parameters a bit you get a star-field type effect like this:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-8vyHp_i429s/Uj3B9SeUU9I/AAAAAAAABtk/GVOuegVGVlw/w1370-h1114-no/starfield.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;While we&amp;rsquo;re here lets also create an exhaust plume for our spaceship, create another particle, this time using the spark preset and tweak it so it look a bit like this:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-3F9wo4u_uUI/Uj3B9XopZeI/AAAAAAAABtg/eIDF-kRuynQ/w1370-h1114-no/exhaust.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;adding-the-particles&#34;&gt;Adding The Particles&lt;/h3&gt;
+
+&lt;p&gt;We now have all we need to plug the particles into our demo.  Find the particles you created in Xcode and copy or move them into your project, don&amp;rsquo;t forget to make sure that the build action to &lt;code&gt;BundleResource&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;While I remember lets change the background colour to black, the blue looks a bit lurid and the exhaust trail wont look its best against a blue background.  Find where &lt;code&gt;scene&lt;/code&gt; is initialised in &lt;code&gt;setupScene&lt;/code&gt; and change it so it looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;scene &amp;lt;- new SKScene (spriteView.Bounds.Size, 
+                      BackgroundColor = UIColor.Black,
+                      ScaleMode = SKSceneScaleMode.AspectFit)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you look at the &lt;code&gt;SKEmitterNode&lt;/code&gt; constructor you might be slightly befuddled by the fact that it only takes either an &lt;code&gt;NSCoder&lt;/code&gt;, &lt;code&gt;NSObjectFlag&lt;/code&gt; or a &lt;code&gt;nativeint&lt;/code&gt;.   To help us out we create a nice little function to do the dirty work for us:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module spritekit =
+    type SKEmitterNode with
+        static member fromResource res =
+            let emitterpath = NSBundle.MainBundle.PathForResource (res, &amp;quot;sks&amp;quot;)
+            NSKeyedUnarchiver.UnarchiveFile(emitterpath) :?&amp;gt; SKEmitterNode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;.sks&lt;/code&gt; files produced by Xcode are archive files so we need to get them into a format that works in our project.  First we find the full path for the resource as its embedded in our app bundle - &lt;code&gt;NSBundle.MainBundle.PathForResource (res, &amp;quot;sks&amp;quot;)&lt;/code&gt;, next we use the  &lt;code&gt;UnarchiveFile&lt;/code&gt; method from the &lt;code&gt;NSKeyedUnarchiver&lt;/code&gt; type to get an &lt;code&gt;NSObject&lt;/code&gt;.  We finally cast the &lt;code&gt;NSObject&lt;/code&gt; as an &lt;code&gt;SKEmitterNode&lt;/code&gt; before it is returned.&lt;/p&gt;
+
+&lt;p&gt;The function shown above is added as a static extension method to the &lt;code&gt;SKEmitterNode&lt;/code&gt;.  We could of also added this using a module or even just a simple function but at the moment we don&amp;rsquo;t have a clear view of any other extensions that we might need so we&amp;rsquo;ll just keep it tucked up in the &lt;code&gt;SKEmitterNode&lt;/code&gt; type for now.&lt;/p&gt;
+
+&lt;p&gt;We can now use this function to load and add our star-field to our scene.  Add this piece of code before the spaceship code we added previously:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;use stars = SKEmitterNode.fromResource &amp;quot;Stars&amp;quot;
+stars.Position &amp;lt;- PointF(scene.Frame.GetMidX(), scene.Frame.GetMaxY())
+scene.AddChild(stars)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Its pretty simple now we have the helper function to load the star-field as a resource.  Notice we add the star-field as a child of the scene and position it at the middle X coordinate of the screen (&lt;code&gt;scene.Frame.GetMidX()&lt;/code&gt;) and the maximum Y coordinate (&lt;code&gt;scene.Frame.GetMaxY()&lt;/code&gt;).  This places the star-field centrally at the top of the screen.&lt;/p&gt;
+
+&lt;p&gt;We can now go ahead and add our exhaust plume in the same way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;use flame = SKEmitterNode.fromResource &amp;quot;Fire&amp;quot;
+flame.Position &amp;lt;- PointF(0.f, -60.f)
+sprite.AddChild(flame)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The only difference here is we position the exhaust at location X = 0.0, Y = -60.0 and add the exhaust as a child of the spaceship.  This means that the exhaust is offset -60.0 in the Y axis from the spaceships location, this is because child nodes inherit their parents coordinate system.  This makes groups of sprites easy to animate and manipulate as you don&amp;rsquo;t have to work out all the offsets.&lt;/p&gt;
+
+&lt;p&gt;If we run our demo now it starts to look more interesting:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-cyiCu4dZOW4/Uj3QKqZINOI/AAAAAAAABuE/FAoU_bizdUk/w698-h1238-no/exhaust&amp;#43;and&amp;#43;starfield.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;That&amp;rsquo;s all for now, I hope you have enjoyed this little look at particles in SpriteKit.  If you want to download the demo project you can find it in my &lt;a href=&#34;https://github.com/7sharp9/SpriteKit-Fsharp-Samples&#34;&gt;GitHub repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/0/05/Foo_Fighters_Wasting_Light_Album_Cover.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Foo Fighters - Wasting Light&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Foo Fighters - Wasting Light&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/4/43/AIC_Unplugged.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Alice In Chains - Unplugged&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Alice In Chains - Unplugged&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/2/2d/PearlJam-Ten2.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Pearl Jam - Ten&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Pearl Jam - Ten&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>MonoTouch and F# part II</title>
+      <link>http://7sharpnine.com/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
+      <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
+      <description>
+
+&lt;p&gt;In the last post we left at the point where everything was running fine and dandy on the Simulator.  So what happens if we compile for the real hardware?&lt;/p&gt;
+
+&lt;p&gt;Lets change the active configuration to &lt;code&gt;Debug|iPhone&lt;/code&gt; and hit build, what do we get?&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;boom&#34;&gt;Boom!&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Error MT2002: Could not resolve: FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (MT2002) (singleview)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference to it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/Libraries/FrameWorks/Mono.FrameWork/Libraries/mono/Microsoft F#/v4.0/Fsharp.Core.dll
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now try and build &amp;hellip; another weird error:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;unknown-file(1,1): Error FS2020: The assembly &amp;lsquo;F#/v4.0/FSharp.Core.dll&amp;rsquo; is listed on the command line. Assemblies should be referenced using a command line flag such as &amp;lsquo;-r&amp;rsquo;. (FS2020) (singleview)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Hmmm, lets look in the F# compiler source, were going to have to break out the big guns for this one.&lt;/p&gt;
+
+&lt;p&gt;What we need to do is look at the different targets that are available.  I remember seeing different targets when I was nosing through the source files a while ago.  Also if you look at the &lt;code&gt;readme.md&lt;/code&gt; file that comes with the open source compiler:&lt;/p&gt;
+
+&lt;p&gt;You can also build FSharp.Core for: .NET 2.0, Mono 2.1, Silverlight 5.0, Portable Profile47 (net4+sl4+wp71+win8) and XNA 4.0 for Xbox 360 profiles:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;msbuild fsharp-library-build.proj /p:TargetFramework=net20 
+msbuild fsharp-library-build.proj /p:TargetFramework=mono21
+msbuild fsharp-library-build.proj /p:TargetFramework=portable-net4+sl4+wp71+win8
+msbuild fsharp-library-build.proj /p:TargetFramework=sl5
+msbuild fsharp-library-build.proj /p:TargetFramework=net40-xna40-xbox360
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So lets build the &lt;code&gt;mono21&lt;/code&gt; target with &lt;code&gt;xbuild&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xbuild fsharp-library-build.proj /p:TargetFramework=mono21
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that&amp;rsquo;s build lets reference the output and see what happens:&lt;/p&gt;
+
+&lt;p&gt;Arrgh another error this time relating the the version of the framework that we have compiled against.&lt;/p&gt;
+
+&lt;p&gt;If you read the documentation for &lt;a href=&#34;http://xamarin.com/monotouch&#34;&gt;MonoTouch&lt;/a&gt; in a little more detail you will discover that a different mscorlib is required.  We need to modify this in the build script:&lt;/p&gt;
+
+&lt;p&gt;Open up &lt;code&gt;FSharp.Source.Targets&lt;/code&gt; and find the &lt;code&gt;&amp;lt;PropertyGroup Condition=&amp;quot;&#39;$(TargetFramework)&#39;==&#39;mono21&#39;&amp;quot;&amp;gt;&lt;/code&gt; section, add the following after the &lt;code&gt;&amp;lt;DefineConstants&amp;gt;&lt;/code&gt; elements.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;OtherFlags&amp;gt;$(OtherFlags) --simpleresolution -r:&amp;quot;/Developer/MonoTouch/usr/lib/mono/2.1/mscorlib-runtime.dll&amp;quot;  &amp;lt;/OtherFlags&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Right, fingers crossed&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Sigh, another error:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Error MT2002: Can not resolve reference: System.Reflection.Emit.AssemblyBuilder (MT2002) (singleview)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Were getting closer though.&lt;/p&gt;
+
+&lt;p&gt;Lets look at the &lt;code&gt;&amp;lt;DefineConstants/&amp;gt;&lt;/code&gt; that are declared in the build file, if you have a quick look you will notice that there is one called &lt;code&gt;FX_NO_REFLECTION_EMIT&lt;/code&gt; that&amp;rsquo;s what we need so that &lt;code&gt;Reflection.Emit&lt;/code&gt; is not included.  MonoTouch does not support &lt;code&gt;Reflection.Emit&lt;/code&gt; due to the meta data not being available once the code have been compiled with the &lt;a href=&#34;http://www.mono-project.com/AOT&#34;&gt;AOT compiler&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lets add that constant to the end of the rest:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;DefineConstants&amp;gt;$(DefineConstants);FX_NO_REFLECTION_EMIT&amp;lt;/DefineConstants&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we rebuild &lt;code&gt;Fsharp.Core&lt;/code&gt; again with &lt;code&gt;xbuild&lt;/code&gt; and rebind the reference in our test project&amp;hellip;&lt;/p&gt;
+
+&lt;h3 id=&#34;wow-it-works&#34;&gt;Wow it works!&lt;/h3&gt;
+
+&lt;p&gt;You should now have a working hello world application that can be deployed and run on real hardware.&lt;/p&gt;
+
+&lt;h2 id=&#34;final-words&#34;&gt;Final Words&lt;/h2&gt;
+
+&lt;p&gt;As this is just a documented hackathon I have mainly brain dumped what I remembered doing after the fact, so some steps may be slightly different.  As soon as time permits Ill be adding a couple of project templates to the &lt;a href=&#34;https://github.com/fsharp/fsharpbinding&#34;&gt;FSharpBinding&lt;/a&gt; to allow building F# MonoTouch libraries and applications.&lt;/p&gt;
+
+&lt;p&gt;I also have some ideas for dealing with the UI and tooling with &lt;a href=&#34;https://developer.apple.com/technologies/tools/&#34;&gt;Xcode&lt;/a&gt; but Ill need a little time to investigate to see if it&amp;rsquo;s a viable option&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/4/44/Soilscars.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Soil - Scars&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Soil - Scars&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/e/e9/AlbinoSlug.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Buckethead - Albino Slug&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Buckethead - Albino Slug&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+&lt;br /&gt;
+Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MonoTouch and F# part I</title>
+      <link>http://7sharpnine.com/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
+      <pubDate>Sun, 03 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;http://xamarin.com/monotouch&#34;&gt;MonoTouch&lt;/a&gt; and F# that would be a cool duo right?&lt;/p&gt;
+
+&lt;p&gt;Well let me explain what needs to be done and why to get this pair working together.&lt;/p&gt;
+
+&lt;p&gt;I heard rumours a while ago that F# and &lt;a href=&#34;http://xamarin.com/monotouch&#34;&gt;MonoTouch&lt;/a&gt; would not play together nicely because of &lt;a href=&#34;http://docs.xamarin.com/ios/about/limitations&#34;&gt;limitations&lt;/a&gt; in the ahead of time compilation &lt;a href=&#34;http://www.mono-project.com/AOT&#34;&gt;(AOT)&lt;/a&gt;.  So I thought I would either prove or disprove this with some concentrated hacking.  How hard can it be?&lt;/p&gt;
+
+&lt;p&gt;As my good friend and colleague Dr. Kewin would quote:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;“No problem can withstand the assault of sustained thinking.”—Voltaire&lt;!-- more --&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;These are the same as MonoTouch, I&amp;rsquo;m using a Mac and MonoDevelop at the moment.  You would need a Mac anyway to be able to do the compile and deploy to an iOS device.  &lt;a href=&#34;https://developer.apple.com/technologies/tools/&#34;&gt;Xcode&lt;/a&gt; with an Apple profile and certificates are required for code signing etc.&lt;/p&gt;
+
+&lt;h2 id=&#34;first-steps&#34;&gt;First steps&lt;/h2&gt;
+
+&lt;p&gt;So how do we tackle this?&lt;/p&gt;
+
+&lt;p&gt;First lets look at the &lt;strong&gt;C# Single View&lt;/strong&gt; MonoTouch project file (&lt;code&gt;.csproj&lt;/code&gt;) up to the end of the first PropertyGroup:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+&amp;lt;Project DefaultTargets=&amp;quot;Build&amp;quot; ToolsVersion=&amp;quot;4.0&amp;quot; xmlns=&amp;quot;http://schemas.microsoft.com/developer/msbuild/2003&amp;quot;&amp;gt;
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;Configuration Condition=&amp;quot; &#39;$(Configuration)&#39; == &#39;&#39; &amp;quot;&amp;gt;Debug&amp;lt;/Configuration&amp;gt;
+    &amp;lt;Platform Condition=&amp;quot; &#39;$(Platform)&#39; == &#39;&#39; &amp;quot;&amp;gt;iPhoneSimulator&amp;lt;/Platform&amp;gt;
+    &amp;lt;ProductVersion&amp;gt;10.0.0&amp;lt;/ProductVersion&amp;gt;
+    &amp;lt;SchemaVersion&amp;gt;2.0&amp;lt;/SchemaVersion&amp;gt;
+    &amp;lt;ProjectGuid&amp;gt;{822346B5-6805-42FD-9B6A-65446A688E63}&amp;lt;/ProjectGuid&amp;gt;
+    &amp;lt;ProjectTypeGuids&amp;gt;{6BC8ED88-2882-458C-8E55-DFD12B67127B};
+                      {FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}&amp;lt;/ProjectTypeGuids&amp;gt;
+    &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt;
+    &amp;lt;RootNamespace&amp;gt;HelloWorld&amp;lt;/RootNamespace&amp;gt;
+    &amp;lt;AssemblyName&amp;gt;HelloWorld&amp;lt;/AssemblyName&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The bits we are interested in are the &lt;strong&gt;ProjectTypeGuids&lt;/strong&gt;.  Visual Studio/MonoDevelop projects use these guid&amp;rsquo;s to identify the type of the project.  If you do a bit of Googling &lt;em&gt;(or Binging&amp;hellip;)&lt;/em&gt; you would find that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;6BC8ED88-2882-458C-8E55-DFD12B67127B&lt;/strong&gt;  is a MonoTouch project type guid&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FAE04EC0-301F-11D3-BF4B-00C04F79EFBC&lt;/strong&gt;  is a C# project type guid&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The F# project type guid is &lt;strong&gt;F2A71F9B-5D33-465A-A702-920D77279786&lt;/strong&gt;.  We can now replace &lt;strong&gt;FAE04EC0-301F-11D3-BF4B-00C04F79EFBC&lt;/strong&gt; with the F# one.  For a comprehensive list of project type guid&amp;rsquo;s have a look at &lt;a href=&#34;http://workblog.pilin.name/2012/11/visual-studio-project-type-guids.html&#34;&gt;Mikhail Pilin&amp;rsquo;s blog&lt;/a&gt;.  Next scroll down to the bottom of the project file and update the  &lt;Import Project=&#34;$(MSBuildBinPath)\Microsoft.CSharp.targets&#34; /&gt; to &lt;Import Project=&#34;$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets&#34; /&gt;.  the final step on the project file is to change the project file extension from &lt;code&gt;.csproj&lt;/code&gt; to &lt;code&gt;.fsproj&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The last of the tweaking is to open up the &lt;code&gt;.sln&lt;/code&gt; file and make a slight change to that too:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project(&amp;quot;{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}&amp;quot;) = &amp;quot;singleview&amp;quot;, &amp;quot;singleview\singleview.fsproj&amp;quot;, &amp;quot;{4465399C-4EE8-4F60-AD9A-EB9AEDD1C5BF}&amp;quot;
+EndProject
+Global
+...snip...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Modify the  Project sections Guid &lt;strong&gt;FAE04EC0-301F-11D3-BF4B-00C04F79EFBC&lt;/strong&gt; to the F# project type Guid &lt;strong&gt;4925A630-B079-445d-BCD4-3A9C94FE9307&lt;/strong&gt;.  If you forget this step then MonoDevelop will get really confused and try to compile the F# project with the C# compiler.&lt;/p&gt;
+
+&lt;h2 id=&#34;code-changes&#34;&gt;Code Changes&lt;/h2&gt;
+
+&lt;p&gt;For the sake of simplicity I&amp;rsquo;m going to port the C# code verbatim showing the C# code first then the F# code.  The easiest way would probably be to change all the  C# files to have the &lt;code&gt;.fs&lt;/code&gt; extension and edit them in place, remembering to also update the entries in the &lt;code&gt;.fsproj&lt;/code&gt; file too this only takes a second to do.&lt;/p&gt;
+
+&lt;p&gt;I know what you are going to say: &amp;ldquo;Why didn&amp;rsquo;t you just create a nice project template for us all to use?&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;I am, I am, patience!&lt;/p&gt;
+
+&lt;p&gt;A number of people wanted to know what I did to get things going so this is my documented &amp;lsquo;hack-a-thon&amp;rsquo; if you like.  The project template will be along shortly.  Lets move along to the code changes.&lt;/p&gt;
+
+&lt;h2 id=&#34;viewcontroller&#34;&gt;ViewController&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;using System;
+using System.Drawing;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+
+namespace singleview
+{
+	public partial class singleviewViewController : UIViewController
+	{
+		public singleviewViewController () : base (&amp;quot;singleviewViewController&amp;quot;, null)
+		{
+		}
+		
+		public override void DidReceiveMemoryWarning ()
+		{
+			// Releases the view if it doesn&#39;t have a superview.
+			base.DidReceiveMemoryWarning ();
+			// Release any cached data, images, etc that aren&#39;t in use.
+		}
+		
+		public override void ViewDidLoad ()
+		{
+			base.ViewDidLoad ();
+			// Perform any additional setup after loading the view, typically from a nib.
+		}
+		
+		public override void ViewDidUnload ()
+		{
+			base.ViewDidUnload ();
+			// Clear any references to subviews of the main view in order to
+			// allow the Garbage Collector to collect them sooner.
+			// e.g. myOutlet.Dispose (); myOutlet = null;
+			ReleaseDesignerOutlets ();
+		}
+		
+		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
+		{
+			// Return true for supported orientations
+			return (toInterfaceOrientation != UIInterfaceOrientation.PortraitUpsideDown);
+		}
+	}
+}
+
+// This file has been generated automatically by MonoDevelop to store outlets and
+// actions made in the Xcode designer. If it is removed, they will be lost.
+// Manual changes to this file may not be handled correctly.
+using MonoTouch.Foundation;
+
+namespace singleview
+{
+	[Register (&amp;quot;singleviewViewController&amp;quot;)]
+	partial class singleviewViewController
+	{
+		void ReleaseDesignerOutlets ()
+		{
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Singleview
+
+open System
+open System.Drawing
+open MonoTouch.Foundation
+open MonoTouch.UIKit
+
+[&amp;lt;Register (&amp;quot;singleviewViewController&amp;quot;)&amp;gt;]
+type singleviewViewController() =
+    inherit UIViewController(&amp;quot;singleviewViewController&amp;quot;, null)
+        
+    let ReleaseDesignerOutlets() = ( (* No outlets to release  *))
+
+    override x.DidReceiveMemoryWarning() =
+    // Releases the view if it doesn&#39;t have a superview.
+        base.DidReceiveMemoryWarning();
+        // Release any cached data, images, etc that aren&#39;t in use.
+
+    override x.ViewDidLoad() =
+        base.ViewDidLoad()
+        // Perform any additional setup after loading the view, typically from a nib.
+
+    override x.ViewDidUnload() =
+        base.ViewDidUnload()
+        // Clear any references to subviews of the main view in order to
+        // allow the Garbage Collector to collect them sooner.
+        // e.g. myOutlet.Dispose (); myOutlet = null;
+        ReleaseDesignerOutlets()
+
+    override x.ShouldAutorotateToInterfaceOrientation(toInterfaceOrientation) =
+        // Return true for supported orientations
+        toInterfaceOrientation &amp;lt;&amp;gt; UIInterfaceOrientation.PortraitUpsideDown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On looking at this section you will notice that there is no partial class in the F# version, that&amp;rsquo;s because F# doesn&amp;rsquo;t have any notion of partial classes.  In this simple project we don&amp;rsquo;t actually have any interaction with the UI so designer interaction is a moot point at the moment.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;.fsproj&lt;/code&gt; file still needs to be edited to remove the nested partial class that is present in the C# version:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;   &amp;lt;Compile Include=&amp;quot;singleviewViewController.designer.cs&amp;quot;&amp;gt;
+      &amp;lt;DependentUpon&amp;gt;singleviewViewController.cs&amp;lt;/DependentUpon&amp;gt;
+    &amp;lt;/Compile&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Simply remove the &lt;code&gt;DependUpon&lt;/code&gt; element and just use the name &lt;code&gt;singleviewViewController.fs&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;Compile&amp;gt;singleviewViewController.fs/&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The lack of partial classes in F# makes the tooling available for UI designer a pain to integrate tightly into F# without a bit of work work &lt;em&gt;(I have some ideas on that that I&amp;rsquo;m currently experimenting with that Ill return to after finishing this article)&lt;/em&gt;.  Currently MonoTouch uses the Xcodes interface designer to build the UI which is stored in a xib file.  This is simply a file describing the user interface and its interaction points.  The Properties of the UI are called &lt;code&gt;Outlets&lt;/code&gt; and events spawned from the UI are called &lt;code&gt;Actions&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;appdelegate&#34;&gt;AppDelegate&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+
+namespace singleview
+{
+	// The UIApplicationDelegate for the application. This class is responsible for launching the 
+	// User Interface of the application, as well as listening (and optionally responding) to 
+	// application events from iOS.
+	[Register (&amp;quot;AppDelegate&amp;quot;)]
+	public partial class AppDelegate : UIApplicationDelegate
+	{
+		// class-level declarations
+		UIWindow window;
+		singleviewViewController viewController;
+
+		// This method is invoked when the application has loaded and is ready to run. In this 
+		// method you should instantiate the window, load the UI into it and then make the window visible.
+		// You have 17 seconds to return from this method, or iOS will terminate your application.
+		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+		{
+			window = new UIWindow (UIScreen.MainScreen.Bounds);
+			
+			viewController = new singleviewViewController ();
+			window.RootViewController = viewController;
+			window.MakeKeyAndVisible ();
+			
+			return true;
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Singleview
+open System
+open System.Collections.Generic
+open MonoTouch.Foundation
+open MonoTouch.UIKit
+
+// The UIApplicationDelegate for the application. This class is responsible for launching the 
+// User Interface of the application, as well as listening (and optionally responding) to application events from iOS.
+[&amp;lt;Register (&amp;quot;AppDelegate&amp;quot;)&amp;gt;]
+type AppDelegate() =
+    inherit UIApplicationDelegate()
+    
+    let mutable window = Unchecked.defaultof&amp;lt;_&amp;gt;
+    let mutable viewController = Unchecked.defaultof&amp;lt;_&amp;gt;
+
+    // This method is invoked when the application has loaded and is ready to run. In this 
+    // method you should instantiate the window, load the UI into it and then make the window visible.
+    // You have 17 seconds to return from this method, or iOS will terminate your application.
+    override x.FinishedLaunching ( app: UIApplication,  options: NSDictionary) =
+        window &amp;lt;- new UIWindow(UIScreen.MainScreen.Bounds)
+        viewController &amp;lt;- new singleviewViewController()
+        window.RootViewController &amp;lt;- viewController
+        window.MakeKeyAndVisible()
+        true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code is pretty similar between the two implementations, with the F# version omitting the type annotations, semicolons and curly braces.  The other area to notice is that the &lt;code&gt;mutable&lt;/code&gt; variable declarations for the &lt;code&gt;window&lt;/code&gt; and &lt;code&gt;viewController&lt;/code&gt; bindings.  The C# implementation defaults to mutable variables whereas F# defaults to the safer immutable ones.&lt;/p&gt;
+
+&lt;h2 id=&#34;program-main&#34;&gt;Program/main&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+
+namespace singleview
+{
+	public class Application
+	{
+		// This is the main entry point of the application.
+		static void Main (string[] args)
+		{
+			// if you want to use a different Application Delegate class from &amp;quot;AppDelegate&amp;quot;
+			// you can specify it here.
+			UIApplication.Main (args, null, &amp;quot;AppDelegate&amp;quot;);
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module main
+open System
+open System.Collections.Generic
+open MonoTouch.Foundation
+open MonoTouch.UIKit
+
+    [&amp;lt;EntryPoint&amp;gt;]
+    let main( args) = 
+        UIApplication.Main (args, null, &amp;quot;AppDelegate&amp;quot;)
+        0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The main thing you will notice is that the F# code is terser, again dropping the type annotations, semicolons and curly braces.  Oh, I also called the entry point main.  To be precise it&amp;rsquo;s a function called main in a module named main, there&amp;rsquo;s no need to create a class or type for this.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-xib-file&#34;&gt;The Xib file&lt;/h2&gt;
+
+&lt;p&gt;In C# MonoToch projects the &lt;code&gt;xib&lt;/code&gt; file is compiled and embedded for you as part of the build process, unfortunately this is not currently possible in F# so we have to do it manually.  In an ideal world this would all be done by the F# project at build time and this is something that I&amp;rsquo;m working on too.  In the mean time we have to do it manually so open up your trusty friend the &lt;code&gt;Terminal&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m going to split the command line into separate parts due to its size:&lt;/p&gt;
+
+&lt;p&gt;First of all we invoke the &lt;code&gt;ibtool&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/Applications/Xcode.app/Contents/Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Followed by name of the &lt;code&gt;.nib&lt;/code&gt; file you want to compile to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;/yourPath/singleviewViewController.nib&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The path of the &lt;code&gt;.xib&lt;/code&gt; you want to compile from:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;/yourPath/singleviewViewController.xib&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally the sdk that you want to use for compilation, in this instance it is The iPhoneSimulator6.0.sdk as we are targetting the simulator:
+    &amp;ndash;sdk &amp;ldquo;/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Once you have compiled to a &lt;code&gt;.nib&lt;/code&gt; file include it in the project, set the build action to &lt;code&gt;Content&lt;/code&gt;.  You can still include the &lt;code&gt;.xib&lt;/code&gt; version within the project if you want but you would have to set the build action to &lt;code&gt;None&lt;/code&gt;.  Currently the F# binding does not support the build action of &lt;code&gt;Interface Definition&lt;/code&gt; if it did then we probably wouldn&amp;rsquo;t have to go through the manual compilation process either.&lt;/p&gt;
+
+&lt;p&gt;That ought to do it, everything should now work on the simulator.  If you try to compile to a real phone then everything will quickly come grinding to a halt but Ill explain all of that next time and how to resolve it too.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/5/5f/MegadethThirteen.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Megadeth - TH1RT3EN&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Megadeth - TH1RT3EN&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/7/7a/Worship_Music.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Anthrax - Worship Music&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Anthrax - Worship Music&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+  </channel>
+</rss>

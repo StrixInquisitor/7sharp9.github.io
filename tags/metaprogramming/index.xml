@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Metaprogramming on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/metaprogramming/</link>
+    <description>Recent content in Metaprogramming on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Sun, 12 Jul 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/metaprogramming/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Meta-Matic</title>
+      <link>http://7sharpnine.com/2015/07/12/2015-07-08-meta-matic/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/07/12/2015-07-08-meta-matic/</guid>
+      <description>
+
+&lt;p&gt;Sit down, strap in, and prepare for take off, we&amp;rsquo;re going Meta-Matic!&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re going to be exploring some &lt;a href=&#34;https://en.wikipedia.org/wiki/Metaprogramming&#34;&gt;metaprogramming&lt;/a&gt; magic in F#.  Transforming
+its abstract syntax tree (&lt;a href=&#34;https://en.wikipedia.org/wiki/Abstract_syntax_tree&#34;&gt;AST&lt;/a&gt;) into another languages AST before executing
+it in another &lt;a href=&#34;https://en.wikipedia.org/wiki/Virtual_machine&#34;&gt;virtual machine&lt;/a&gt;, Exciting!!&lt;/p&gt;
+
+&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
+
+&lt;p&gt;&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;Nothing really known can continue to be acutely fascinating&lt;/p&gt;
+
+  &lt;cite&gt;H.P Lovecraft&lt;/cite&gt;
+&lt;/blockquote&gt;
+First a little bit of background.  There are three main forms of metaprogramming
+in F#, although you could call &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/hh156509.aspx&#34;&gt;Type Providers&lt;/a&gt; a form of metaprogramming albeit
+limited in scope.  I shall now briefly describe each below.&lt;/p&gt;
+
+&lt;h2 id=&#34;quotations&#34;&gt;Quotations&lt;/h2&gt;
+
+&lt;p&gt;According to MSDN:&lt;/p&gt;
+
+&lt;blockquote cite=&#34;https://msdn.microsoft.com/en-us/library/dd233212.aspx?f=255&amp;amp;MSPPError=-2147217396&#34;&gt;
+  &lt;p&gt;Code quotations, a language feature that enables you to generate and work with
+F# code expressions programmatically. This feature lets you generate an abstract
+syntax tree that represent&amp;rsquo;s F# code. The abstract syntax tree can then be traversed
+and processed according to the needs of your application&lt;/p&gt;
+
+  &lt;cite&gt;&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Quotations are fairly useful for translating some parts of the F# language to another
+language.  They can depend on &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/f7ykdhsy(v=vs.110).aspx&#34;&gt;Reflection&lt;/a&gt; and having compiled DLLs for any types
+referenced in the quoted expression.  They also have limitations like types are
+not supported, neither are variables that escape their quoted scope, and also
+generic definitions are not supported.  They cant really be used for staged
+metaprogramming where you may need to refer to the full language and its constructs.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;&amp;lt;@ [for i in 1 .. 10 do yield i * i] @&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Quotations.Expr&amp;lt;int list&amp;gt; =
+  Call (None, ToList,
+    [Call (None, CreateSequence,
+      [Call (None, Delay,
+        [Lambda (unitVar,
+          Call (None, Map,
+            [Lambda (i, Call (None, op_Multiply, [i, i])),
+              Call (None, op_Range,
+                [Value (1), Value (10)])]))])])])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;untyped-ast&#34;&gt;Untyped AST&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the untyped &lt;a href=&#34;https://en.wikipedia.org/wiki/Abstract_syntax_tree&#34;&gt;AST&lt;/a&gt; that can be manipulated in some ways although
+it&amp;rsquo;s not exactly pleasant to do.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example-1&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[for i in 1 .. 10 do yield i * i]  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[SynModuleOrNamespace
+   ([Test
+       {idRange = Test.fs (1,0--1,0);
+        idText = &amp;quot;Test&amp;quot;;}],true,
+    [DoExpr
+       (SequencePointAtBinding
+          Test.fs (1,0--1,33)
+            {...},
+        ArrayOrListOfSeqExpr
+          (false,
+           CompExpr
+             (true,{contents = true;},
+              ForEach
+                (SequencePointAtForLoop
+                   Test.fs (1,1--1,20)
+                     {...},
+                 SeqExprOnly false,true,
+                 Named
+                   (Wild
+                      Test.fs (1,5--1,6)
+                        {...},
+                    i {idRange = Test.fs (1,5--1,6);
+                       idText = &amp;quot;i&amp;quot;;},false,null,
+                    Test.fs (1,5--1,6)
+                      {...}),
+                 App
+                   (NonAtomic,false,
+                    App
+                      (NonAtomic,true,
+                       Ident
+                         op_Range
+                           {idRange = Test.fs (1,12--1,14);
+                            idText = &amp;quot;op_Range&amp;quot;;},
+                       Const
+                         (Int32 1,
+                          Test.fs (1,10--1,11)
+                            {...}),
+                       Test.fs (1,10--1,14)
+                         {...}),
+                    Const
+                      (Int32 10,
+                       Test.fs (1,15--1,17)
+                         {...}),
+                    Test.fs (1,10--1,17)
+                      {...}),
+                 YieldOrReturn
+                   ((true, false),
+                    App
+                      (NonAtomic,false,
+                       App
+                         (NonAtomic,true,
+                          Ident
+                            op_Multiply
+                              {idRange = Test.fs (1,29--1,30);
+                               idText = &amp;quot;op_Multiply&amp;quot;;},
+                          Ident
+                            i {idRange = Test.fs (1,27--1,28);
+                               idText = &amp;quot;i&amp;quot;;},
+                          Test.fs (1,27--1,30)
+                            {...}),
+                       Ident
+                         i {idRange = Test.fs (1,31--1,32);
+                            idText = &amp;quot;i&amp;quot;;},
+  &amp;lt;snip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see it&amp;rsquo;s a bit of a handful, I even omitted some of the range statements
+too.  It&amp;rsquo;s possible to manipulate this but it&amp;rsquo;s not exactly easy without a lot of
+helper functions and patience.  Maybe I can cover this in a future post as it has
+its own use case in terms of F# manipulation and recompilation, but that&amp;rsquo;s a whole
+other story.  Outside of the compiler it&amp;rsquo;s mainly used for code analysis type operations.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;typed-ast-typed-expressions&#34;&gt;Typed AST / Typed Expressions&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the Typed AST (TAST) or Typed Expressions that fully represent&amp;rsquo;s the
+F# language.  Like quotations, they give you a detailed view of checked/resolved/typed
+F# expressions.  They have no dependency on reflection and do not require any on
+disk assemblies.  They can be generated for solutions that that contain errors,
+and include all F# language constructs including those used in FSharp.Core.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example-2&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[for i in 1 .. 10 do yield i * i]  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[Entity
+  (Test,
+    [InitAction
+      Call (null,val toList,[],[int],
+        [Call (null,val seq,[],[type int],
+          [Call (null,val delay,[],[int],
+            [Lambda (val unitVar,
+              Call (null,val map,[],
+                [type int; type int],
+                  [Lambda (val i,
+                    Call (null,val op_Multiply,[],
+                      [type int; type int;
+                        type int],[Value val i; Value val i]));
+                          Call (null,val op_Range,[],[type int],
+                            [Const (1,type int);
+                              Const (10,type int)])]))])])])])] 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this example and the preceding one you will notice that they both begin with
+either an &lt;code&gt;Entity&lt;/code&gt; in this example, and &lt;code&gt;SynModuleOrNamespace&lt;/code&gt; in the
+previous.  This is because dealing with the full F# metadata means we have access
+to the full range of F# syntactic constructs.  Entities also sit within another
+file based construct that I have omitted from these examples for the benefit of clarity.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;let-s-get-to-work&#34;&gt;Let&amp;rsquo;s get to work&lt;/h1&gt;
+
+&lt;p&gt;For the purpose of this blog post we are going to use a basic F# module with a
+single function.  We will be performing all sorts of black magic so it&amp;rsquo;s best to constrain
+this from the outset.  &lt;em&gt;(Note:  Im joking here)&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;There is nothing more beautiful than an elegant mathematical proof.&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, letter to Frank Belknap Long&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The module and function we will be using is very simple and looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module Test
+   let square x = x * x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;retrieving-the-tast&#34;&gt;Retrieving the TAST&lt;/h2&gt;
+
+&lt;p&gt;First things first how do we get hold of the TAST?&lt;/p&gt;
+
+&lt;p&gt;We will need the &lt;code&gt;FSharp.Compiler.Service&lt;/code&gt; package that can be installed from your
+IDE or favorite command line tool such as nuget:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nuget install FSharp.Compiler.Service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that it&amp;rsquo;s installed we can start using it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;#r &amp;quot;../packages/FSharp.Compiler.Service.0.0.89/lib/net45/FSharp.Compiler.Service.dll&amp;quot;
+open System
+open System.IO
+open Microsoft.FSharp.Compiler.SourceCodeServices
+
+let testModule = &amp;quot;&amp;quot;&amp;quot;module Test
+   let square x = x * x
+&amp;quot;&amp;quot;&amp;quot;
+
+let file = __SOURCE_DIRECTORY__ +  &amp;quot;/Test.fs&amp;quot;
+File.WriteAllText(file, testModule)
+let checker = FSharpChecker.Create(keepAssemblyContents=true)
+let options =
+  checker.GetProjectOptionsFromCommandLineArgs(&amp;quot;Test&amp;quot;, [|&amp;quot;-o:Test.dll&amp;quot;;&amp;quot;-a&amp;quot;;file|])
+let checkProjectResults =
+  checker.ParseAndCheckProject(options) |&amp;gt; Async.RunSynchronously
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to examine the TAST we have to make sure that when creating the &lt;code&gt;FSharpChecker&lt;/code&gt;
+we set the optional parameter &lt;code&gt;keepAssemblyContents&lt;/code&gt; to true, this lets you examine
+the typed AST in full.&lt;/p&gt;
+
+&lt;h2 id=&#34;examining-the-tast&#34;&gt;Examining the TAST&lt;/h2&gt;
+
+&lt;p&gt;Examining &lt;code&gt;checkProjectResults&lt;/code&gt; will yield several properties: &lt;code&gt;AssemblyContents&lt;/code&gt;,
+&lt;code&gt;AssemblySignature&lt;/code&gt;, &lt;code&gt;Errors&lt;/code&gt;, &lt;code&gt;HasCriticalErrors&lt;/code&gt;, and &lt;code&gt;ProjectContext&lt;/code&gt;.  Most of
+those are pretty obvious, if we examine &lt;code&gt;Errors&lt;/code&gt; and &lt;code&gt;HasCriticalErrors&lt;/code&gt; we could
+decide to abandon further processing but for the purposes of this example we are
+going to assume that there are no errors.&lt;/p&gt;
+
+&lt;p&gt;The property that we are interested in is &lt;code&gt;AssemblyContents&lt;/code&gt; this essentially
+contains a list of &lt;code&gt;ImplementationFiles&lt;/code&gt;, and an &lt;code&gt;ImplementationFile&lt;/code&gt; has a list of
+&lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go ahead and examine what we currently have:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;checkProjectResults.AssemblyContents.ImplementationFiles.Head.Declarations
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will yield a similar structure to what you saw above in the list comprehension.&lt;br /&gt;
+I have shortened the the &lt;code&gt;Microsoft.FSharp.Core.*&lt;/code&gt; prefixes to save space.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[Entity
+ (Test,
+  [MemberOrFunctionOrValue
+     (val square,[[val x]],
+      Call
+        (null,val op_Multiply,[],
+         [type int; type int;
+          type int],[Value val x; Value val x]))])]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt; is a &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/dd233226.aspx&#34;&gt;discriminated union&lt;/a&gt; type that is defined as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type FSharpImplementationFileDeclaration = 
+  | Entity of FSharpEntity * FSharpImplementationFileDeclaration list
+  | MemberOrFunctionOrValue of FSharpMemberOrFunctionOrValue * FSharpMemberOrFunctionOrValue list list * FSharpExpr
+  | InitAction of FSharpExpr
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With this in mind we could now traverse the tree with something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec processDecl decl =
+  match decl with
+  | Entity(ent, declList) -&amp;gt;
+      printfn &amp;quot;Entity&amp;quot;
+      declList |&amp;gt; List.iter processDecl
+  | InitAction(expr) -&amp;gt; printfn &amp;quot;Init Action&amp;quot;
+  | MemberOrFunctionOrValue(memb, curriedParameterGroups, expr)-&amp;gt;
+      printfn &amp;quot;Member&amp;quot;
+      printfn &amp;quot;Expressions: %A&amp;quot; expr
+
+for implFile in checkProjectResults.AssemblyContents.ImplementationFiles do
+  for decl in implFile.Declarations do
+    processDecl decl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This would yield similar output to what we saw before although we are now getting a
+feel for the structure of the tree.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Entity:Test
+Member:square
+Expressions: Call
+  (null,val op_Multiply,[],
+   [type int; type int;
+    type int],[Value val x; Value val x])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;preparing-to-transform&#34;&gt;Preparing To transform&lt;/h1&gt;
+
+&lt;p&gt;Ok, so we know a little about the TAST structure and how to navigate it, now we
+can look to transform it.  So what can we transform the F# TAST to?&lt;/p&gt;
+
+&lt;p&gt;Absolutely anything we want, but for the purposes of this article let&amp;rsquo;s choose
+something interesting &amp;hellip; like Elixir.&lt;/p&gt;
+
+&lt;h2 id=&#34;elixir-language&#34;&gt;Elixir language&lt;/h2&gt;
+
+&lt;p&gt;So what is Elixir?  I&amp;rsquo;ll quote the description from the &lt;a href=&#34;http://elixir-lang.org&#34;&gt;Elixir website&lt;/a&gt; as this
+post is not about describing the Elixir language.&lt;br /&gt;
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;Elixir is a dynamic, functional language designed for building scalable and
+maintainable applications.&lt;/p&gt;
+
+  &lt;cite&gt;&lt;/cite&gt;
+&lt;/blockquote&gt;&lt;/p&gt;
+
+&lt;p&gt;Elixir leverages the Erlang VM, known for running low-latency, distributed and
+fault-tolerant systems, while also being successfully used in web development and
+the embedded software domain.
+{% endblockquote %}&lt;/p&gt;
+
+&lt;h2 id=&#34;elixir-ast-structure&#34;&gt;Elixir AST structure&lt;/h2&gt;
+
+&lt;p&gt;The Elixir AST structure is described like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{atom | tuple, list, list | atom}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The first element is an atom or another tuple in the same representation;&lt;/li&gt;
+&lt;li&gt;The second element is a keyword list containing metadata, like numbers and contexts&lt;/li&gt;
+&lt;li&gt;The third element is either a list of arguments for the function call or an
+atom. When this element is an atom, it means the tuple represent&amp;rsquo;s a variable.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Elixir is a quite capable language and I will be exploring it further in future
+posts.  For now we&amp;rsquo;ll simply transform the equivalent function in Elixir to
+its native AST to see what it looks like.  This is really quite easy in Elixir
+as it has a far more natural metaprogramming experience than F#.  We just use
+&lt;code&gt;quote(opts, block)&lt;/code&gt;, where &lt;code&gt;block&lt;/code&gt; is the expression we want to get the AST
+representation for.  As an example let&amp;rsquo;s &lt;code&gt;quote&lt;/code&gt; the Elixir equivalent of the F#
+&lt;code&gt;Test&lt;/code&gt; module with the &lt;code&gt;square&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;quote do
+  defmodule Test do
+    def square(x) do
+      x * x
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in an Elixir AST:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{:defmodule, [context: Elixir, import: Kernel],
+ [{:__aliases__, [alias: false], [:Test]},
+  [do: {:def, [context: Elixir, import: Kernel],
+    [{:square, [context: Elixir], [{:x, [], Elixir}]},
+     [do: {:*, [context: Elixir, import: Kernel],
+       [{:x, [], Elixir}, {:x, [], Elixir}]}]]}]]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;a-tale-of-two-trees&#34;&gt;A Tale Of Two Trees&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start defining a tree structure for our transformation, we are going to be
+transforming from an F# TAST straight to an Elixir AST as Elixir has capabilities
+to use the AST fairly easily, we don&amp;rsquo;t have to specifically work with the AST
+to get it back to code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type ElixirAst =
+  | Fragment of atom : string * metadata : (string * string ) list * args : Arguments
+  | Nested of (string * Arguments) list
+  
+and Arguments =
+  | Binding of string 
+  | Bindings of list&amp;lt;string&amp;gt;
+  | Arguments of list&amp;lt;ElixirAst&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We use a recursive &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/dd233226.aspx&#34;&gt;Discriminated Union&lt;/a&gt; that describes the
+Elixir AST.  You should be able to see it&amp;rsquo;s made up of either a &lt;code&gt;Fragment&lt;/code&gt; or a
+&lt;code&gt;Nested&lt;/code&gt; both of those can contain &lt;code&gt;Arguments&lt;/code&gt; that can in turn contain &lt;code&gt;Binding&lt;/code&gt;,
+&lt;code&gt;Bindings&lt;/code&gt;, or a list of &lt;code&gt;Arguments&lt;/code&gt; that can also be &lt;code&gt;Fragment&lt;/code&gt; or &lt;code&gt;Nested&lt;/code&gt; &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s quite a brain twister at first glance but it should hopefully make sense.&lt;/p&gt;
+
+&lt;h2 id=&#34;transforming-the-trees&#34;&gt;Transforming The Trees&lt;/h2&gt;
+
+&lt;p&gt;We are now going to write a pair of functions that will iterate over the F# TAST
+and produce an Elixir AST, its more or less a case of transforming the F# constructs to the Elixir equivalents.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec traverseExpr expr =
+  match expr with
+  | BasicPatterns.Call(_expr,functionMemberOrVal,_,_typeSig, expressions) -&amp;gt;
+      let argumentFragments = expressions |&amp;gt; List.map traverseExpr
+      let functionName = functionMap functionMemberOrVal.LogicalName
+      Fragment(functionName, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;;&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments argumentFragments)
+  | BasicPatterns.Value(v) -&amp;gt; Fragment(&amp;quot;:&amp;quot; + v.DisplayName, [], Binding &amp;quot;Elixir&amp;quot;)
+  | other -&amp;gt; failwithf &amp;quot;Not implmented: %A&amp;quot; other
+
+let rec traverse decl = 
+  match decl with
+  | FSharpImplementationFileDeclaration.Entity(ent, declList) -&amp;gt;
+      let arguments =
+        [yield Fragment(&amp;quot;:__aliases__&amp;quot;, [&amp;quot;alias:&amp;quot;, &amp;quot;false&amp;quot;], Bindings[&amp;quot;:&amp;quot; + ent.DisplayName])
+         let declList = declList |&amp;gt; List.map traverse
+         yield Nested[(&amp;quot;do:&amp;quot;, Arguments declList)] ]
+      let moduledef =
+        Fragment(&amp;quot;:defmodule&amp;quot;, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;; &amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments arguments )
+      moduledef
+      
+  | FSharpImplementationFileDeclaration -&amp;gt; failwith &amp;quot;Not implemented&amp;quot;
+  
+  | FSharpImplementationFileDeclaration.MemberOrFunctionOrValue(memb, curriedParameterGroups, expr)-&amp;gt;
+      let args = 
+        [ let parameters =
+            [for group in curriedParameterGroups do
+               for param in group do
+                 yield &amp;quot;:&amp;quot; + param.DisplayName] |&amp;gt; List.map (fun name -&amp;gt; Fragment(name, [], Binding &amp;quot;Elixir&amp;quot;))
+        
+          yield Fragment(&amp;quot;:&amp;quot; + memb.DisplayName, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;], Arguments parameters)
+          yield Nested[(&amp;quot;do:&amp;quot;, Arguments [traverseExpr expr] ) ] ]
+      Fragment(&amp;quot;:def&amp;quot;, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;; &amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the &lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt; fails with not implemented as
+it&amp;rsquo;s not needed in this example so we will omit it here.&lt;/p&gt;
+
+&lt;p&gt;One thing I haven&amp;rsquo;t shown in detail in the F# TAST section was the expressions,
+that&amp;rsquo;s because there are 43 different elements that make up F#&amp;rsquo;s&amp;rsquo; full typed
+expressions.  In our example we only need to use &lt;code&gt;Call&lt;/code&gt; and &lt;code&gt;Value&lt;/code&gt; so the
+other expression types fail with not implemented too.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try this out by pumping the F# TAST through our new function and see what we get:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let astElements =
+  [for implFile in checkProjectResults.AssemblyContents.ImplementationFiles do
+    for decl in implFile.Declarations do
+      yield traverse decl]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[Fragment
+ (&amp;quot;:defmodule&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+  Arguments
+    [Fragment (&amp;quot;:__aliases__&amp;quot;,[(&amp;quot;alias:&amp;quot;, &amp;quot;false&amp;quot;)],Bindings [&amp;quot;:Test&amp;quot;]);
+     Nested
+       [(&amp;quot;do:&amp;quot;,
+         Arguments
+           [Fragment
+              (&amp;quot;:def&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+               Arguments
+                 [Fragment
+                    (&amp;quot;:square&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;)],
+                     Arguments [Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;)]);
+                      Nested
+                        [(&amp;quot;do:&amp;quot;,
+                          Arguments
+                            [Fragment
+                               (&amp;quot;:*&amp;quot;,
+                                [(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+                                Arguments
+                                  [Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;);
+                                   Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;)])])]])])]])]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;&amp;ldquo;I have harnessed the shadows that stride from world to world to sow death and madness.&amp;rdquo;&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, From Beyond&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;stringify-the-ast&#34;&gt;Stringify the AST&lt;/h2&gt;
+
+&lt;p&gt;Ok, so now that we have an F# based tree structure that describes the Elixir AST we
+now need it back in stringly form to do anything with it.  We could of just traversed
+the tree writing the AST elements but that wouldn&amp;rsquo;t of given us the flexibility to
+traverse the tree in the future.&lt;/p&gt;
+
+&lt;p&gt;As we will be working with string&amp;rsquo;s and &lt;code&gt;StringBuilder&lt;/code&gt;s let&amp;rsquo;s define a few helper functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let (++) (ctx:StringBuilder) (str:String) = ctx.Append(str)
+let (+&amp;gt;) (ctx:StringBuilder) (f:StringBuilder -&amp;gt; StringBuilder) = f ctx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These will let us pipe two &lt;code&gt;StringBuilder&lt;/code&gt; append operations together and also allow
+us to pipe into other functions that take a &lt;code&gt;StringBuilder&lt;/code&gt; as an argument.&lt;/p&gt;
+
+&lt;p&gt;First we&amp;rsquo;ll define something simple that will just render the metadata:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let printMeta (meta: (string * string) list) (sb:StringBuilder) =
+  meta
+  |&amp;gt; Seq.map (fun (key,value) -&amp;gt; sprintf &amp;quot;%s %s&amp;quot; key value)
+  |&amp;gt; String.concat &amp;quot;, &amp;quot;
+  |&amp;gt; Printf.bprintf sb &amp;quot;[%s]&amp;quot;
+  sb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now a duo of functions that will traverse the &lt;code&gt;ElixirAst&lt;/code&gt;, processing the
+&lt;code&gt;Arguments&lt;/code&gt;, &lt;code&gt;Fragment&lt;/code&gt;, and &lt;code&gt;Nested&lt;/code&gt; elements:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec printArgs args (sb:StringBuilder) =
+  match args with
+  | Binding s -&amp;gt; sb ++ s
+  | Bindings xs -&amp;gt; sb ++ sprintf &amp;quot;[%s]&amp;quot; (String.concat &amp;quot;, &amp;quot; xs)
+  | Arguments args -&amp;gt;
+    sb ++ &amp;quot;[&amp;quot; |&amp;gt; ignore
+    args |&amp;gt; List.iteri (fun i item -&amp;gt; printAst item sb |&amp;gt; ignore
+                                      if i &amp;lt; args.Length-1 then sb ++ &amp;quot;, &amp;quot; |&amp;gt; ignore)
+    sb ++ &amp;quot;]&amp;quot;
+
+and printAst ast (sb:StringBuilder) =
+  match ast with
+  | Fragment(atom, metadata, args) -&amp;gt;
+    sb ++ sprintf &amp;quot;{%s, &amp;quot; atom +&amp;gt; printMeta metadata ++ &amp;quot;, &amp;quot; +&amp;gt; printArgs args ++ &amp;quot;}&amp;quot;
+  | Nested(items) -&amp;gt;
+    sb ++ &amp;quot;[&amp;quot; |&amp;gt; ignore
+
+    items
+    |&amp;gt; List.iteri (fun i (name, args) -&amp;gt;
+                     sb ++ sprintf &amp;quot;%s &amp;quot; name +&amp;gt; printArgs args |&amp;gt; ignore
+                     if i &amp;lt; items.Length-1 then sb ++ &amp;quot;, &amp;quot; |&amp;gt; ignore)
+
+    sb ++ &amp;quot;]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally capture the results by iterating over the AST and collecting the
+stringified results:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let elixirAstItems = 
+  let sb = StringBuilder()
+  [for element in astElements do
+     printAst element sb |&amp;gt; ignore
+     yield sb.ToString()]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;vm-execution&#34;&gt;VM execution&lt;/h1&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;&amp;ldquo;I have brought to light a monstrous abnormality, but I did it for the sake of
+knowledge. Now for the sake of all life and Nature you must help me thrust it
+back into the dark again.&amp;rdquo;&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, The Case of Charles Dexter Ward&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;helper-process&#34;&gt;Helper Process&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;ll go for the simplest option here: we will create a new process, start up an
+interactive Elixir session, and send across a few commands including the AST that
+we just created.&lt;/p&gt;
+
+&lt;p&gt;Now we&amp;rsquo;ll define a type to help us with this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type public ProcessWrapper(file: string, env:Collections.Generic.IDictionary&amp;lt;_,_&amp;gt;) =
+  let info = ProcessStartInfo(RedirectStandardInput = true,
+                              RedirectStandardOutput = true,
+                              UseShellExecute = false,
+                              CreateNoWindow = true,
+                              FileName = file)
+
+  do 
+    for item in env do
+      info.EnvironmentVariables.[item.Key] &amp;lt;- item.Value
+  let proc = new Process(StartInfo = info)
+  let outputBuffer = StringBuilder()
+  let dataReceived = proc.OutputDataReceived.Subscribe(fun data -&amp;gt; outputBuffer.AppendLine(data.Data) |&amp;gt; ignore)
+
+  [&amp;lt;CLIEvent&amp;gt;]
+  member this.OutputReceived = proc.OutputDataReceived
+
+  [&amp;lt;CLIEvent&amp;gt;]
+  member this.ErrorReceived = proc.ErrorDataReceived
+
+  member this.Start() =
+    proc.Start() |&amp;gt; ignore
+    proc.BeginOutputReadLine()
+
+  member this.Send(line: string) =
+    proc.StandardInput.WriteLine(line)
+
+  member this.Flush() =
+    proc.StandardInput.Flush()
+
+  member x.GetOutputBuffer(?clear) =
+    let data = outputBuffer.ToString()
+    if clear.IsSome then outputBuffer.Clear() |&amp;gt; ignore
+    data
+
+  interface IDisposable with
+    member x.Dispose() =
+      dataReceived.Dispose()
+      proc.Dispose()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;code-execution&#34;&gt;Code Execution&lt;/h2&gt;
+
+&lt;p&gt;Now that we have all of the pieces in place let&amp;rsquo;s start the process and add some
+path variables so that iex can find the things that are normally in your path.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let iex =
+  new ProcessWrapper(&amp;quot;/usr/local/Cellar/elixir/1.0.4/bin/iex&amp;quot;,
+                     dict[&amp;quot;PATH&amp;quot;, &amp;quot;/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin&amp;quot;])
+iex.Start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can send across out AST definition and assign it to &lt;code&gt;mycode&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;mycode =&amp;quot; + List.head elixirAstItems)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we examined the output of iex now we can see that this has been assigned:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.GetOutputBuffer()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{:defmodule, [context: Elixir, import: Kernel],
+ [{:__aliases__, [alias: false], [:Test]},
+  [do: [{:def, [context: Elixir, import: Kernel],
+     [{:square, [context: Elixir], [{:x, [], Elixir}]},
+      [do: [{:*, [context: Elixir, import: Kernel],
+         [{:x, [], Elixir}, {:x, [], Elixir}]}]]]}]]]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can use Elixir&amp;rsquo;s metaprogramming capabilities to compile this AST so we can use it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;mycode |&amp;gt; Code.compile_quoted()&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;[{Test, &amp;lt;&amp;lt;70, 79, 82, 49, 0, 0, 4, 104, 66, 69, 65, 77, 69, 120, 68, 99, 0 ...&amp;gt;&amp;gt;}]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes!!  It looks like our AST has now been compiled, we have a module named &lt;code&gt;Test&lt;/code&gt;
+with binary data assigned.  Now let&amp;rsquo;s see if we can execute our &lt;code&gt;square&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;Test.square(16)&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;[256]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Woo-hoo job done!  I hope you enjoyed this whistle stop tour through the
+&lt;a href=&#34;https://en.wikipedia.org/wiki/At_the_Mountains_of_Madness&#34;&gt;Mountains Of Madness&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know about you, but I need a cup of tea!&lt;/p&gt;
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

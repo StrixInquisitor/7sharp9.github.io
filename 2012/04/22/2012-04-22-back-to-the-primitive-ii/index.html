@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Back to the Primitive II &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Back to the Primitive II</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>In the last post I discussed an asynchronous version of the <code>ManualResetEvent</code> and as promised this time we will be looking at an
+ asynchronous version of the <code>AutoResetEvent</code>.  I&rsquo;m using <a href="http://blogs.msdn.com/b/pfxteam/archive/2012/02/11/10266923.aspx">Stephen Toubs post</a>
+as reference and we will be building a version that is functional in style that maps straight into asynchronous work flows without and conversion
+or adaptors.</p>
+
+<h3 id="what-is-an-autoresetevent">What is an AutoResetEvent?</h3>
+
+<p>An <code>AutoResetEvent</code> can be described as a turnstile mechanism, it lets a single waiting person through before re-latching
+waiting for the next signal.  This is opposed to a <code>ManualResetEvent</code> which functions like an ordinary gate. Calling Set opens
+the gate, allowing any number of threads that are waiting to be let through. Calling Reset closes the gate.</p>
+
+<h3 id="asyncautoresetevent">AsyncAutoResetEvent</h3>
+
+<p>First of all here is the shape of the type that we will be building:</p>
+
+<pre><code>type AsyncAutoResetEvent =
+    new : ?reusethread:bool -&gt; AsyncAutoResetEvent
+    member Set : unit -&gt; unit
+    member WaitAsync : unit -&gt; Async&lt;bool&gt;
+</code></pre>
+
+<p>Fairly simple: implied constructor, <code>Set</code> and <code>WaitAsync</code> members.</p>
+
+<h3 id="implied-constructor">Implied Constructor</h3>
+
+<p>Thinking about this logically we may need the following items:</p>
+
+<ul>
+<li>A queue mechanism to store asynchronous waiters - <code>let mutable awaits = Queue&lt;_&gt;()</code>.</li>
+<li>A way of knowing if a signal has been made in the absence of any waiters - <code>let mutable signalled = false</code>.</li>
+<li>We can also declare a short-circuit asynchronous workflow for the situation that <code>Set()</code> is called before <code>WaitAsync()</code></li>
+<li><code>let completed = async.Return true</code>.  This will save us constructing an <code>AsyncResultCell&lt;_&gt;</code> and going though the
+rest of the asynchronous mechanism.<br /></li>
+</ul>
+
+<p>Also notice that an optional parameter called <code>reusethread</code> is defined, we use the <code>?</code> prefix when defining it to make it
+optional.  We then make use of the <code>defaultArg</code> function to give it a default value of false if a one is not passed in.  This
+will be used in the <code>Set</code> operation to determine if the code will run on the same thread or a thread in the ThreadPool.</p>
+
+<pre><code>open System
+open System.Threading
+open System.Collections.Generic
+ 
+    type AsyncAutoResetEvent(?reusethread) =
+		let mutable awaits = Queue&lt;_&gt;()
+		let mutable signalled = false
+        let completed = async.Return true
+        let reuseThread = defaultArg reusethread false
+</code></pre>
+
+<h3 id="waitasync">WaitAsync()</h3>
+
+<p>The first step is to use  a locking construct to control access to the mutable queue <code>awaits</code>.  Inside this lock we
+check to see if <code>signalled</code> is true and if so we reset it to false and return our pre-built <code>completed</code> asynchronous workflow.  If
+signalled is false then we create a new <code>AsyncResultCell&lt;_&gt;</code> and add it to the queue then return the <code>AsyncResult</code> to the caller.</p>
+
+<pre><code>        member x.WaitAsync() =
+            lock awaits (fun () -&gt;
+                if signalled then
+                    signalled &lt;- false
+                    completed
+                else
+                    let are = AsyncResultCell&lt;_&gt;()
+                    awaits.Enqueue are
+                    are.AsyncResult)
+</code></pre>
+
+<h3 id="set">Set()</h3>
+
+<p>We first declare a function called <code>getWaiter()</code>, we use this function to return an <a href="http://msdn.microsoft.com/en-us/library/dd233245.aspx">option type</a>
+ that is either <code>Some AsyncResultCell&lt;bool&gt;</code> or <code>None</code>.  We use the lock function to control access to the mutable queue <code>lock awaits</code>.  Once
+inside the lock we use pattern matching to capture <code>awaits.Count</code> and <code>signalled</code>:</p>
+
+<ul>
+<li>The first pattern match <code>(x,_)</code> checks if there are any waiters (<code>awaits.Count &gt; 0</code>) and then dequeues an <code>AsyncResultCell&lt;bool&gt;</code> from the
+queue and returns it within an option type: <code>Some &lt;| awaits.Dequeue()</code>.<br /></li>
+<li>The second pattern match <code>(_,y)</code> checks whether <code>signalled</code> is set to false before setting its value to true.  This causes next <code>WaitAsync()</code>
+caller to get the short-circuited value <code>completed</code>.  This means that an <code>AsyncResultCell&lt;bool&gt;</code> does not need to be created and go though the
+whole async mechanism.  We then return <code>None</code> as there is no waiter to be notified.<br /></li>
+<li>The final pattern match <code>(_,_)</code> is used when there are no waiting callers and <code>signalled</code> has already being set, there is simply nothing to do in
+this situation so we return <code>None</code>.<br /></li>
+</ul>
+
+<p>We use the <code>getWaiter()</code> function via pattern match.  If we have a result i.e. Some AsyncResultCell<bool> then we call <code>RegisterResult</code>
+passing in <code>AsyncOK(true)</code> to indicate a completion.  Notice that we also pass in the <code>reuseThread</code> boolean that was declared as part of the
+constructor.  If <code>reuseThread</code> is true then the notification to the waiter happens <strong>synchronously</strong> use this with care!  Personally I would stick
+with the default of false to ensure that the operation is completed via the thread pool, unless you have a performance critical reason and the
+waiting code that executes is <strong>very fast</strong>.</p>
+
+<pre><code>		member x.Set() =
+		    let getWaiter()=
+		        lock awaits (fun () -&gt;
+		            match (awaits.Count, signalled) with
+		            | (x,_) when x &gt; 0 -&gt; Some &lt;| awaits.Dequeue()
+		            | (_,y) when not y -&gt; signalled &lt;- true;None
+		            | (_,_) -&gt; None)
+		    match getWaiter() with
+		    | Some a -&gt; a.RegisterResult(AsyncOk(true), reuseThread)
+		    | None _ -&gt; ()
+</code></pre>
+
+<p>The reason for using the <code>getWaiter()</code> function is to separate the locking function away from the notification, if <code>RegisterResult</code>
+was called within the lock and <code>reuseThread</code> was true then the awaiting function would be called synchronously within the lock which
+would not be a very good situation to be in.</p>
+
+<p>So there we have it, I could take this series further and convert the other primitives that Stephen Toub describes but there should be
+enough information in these two posts to set you on your way.  If anyone would like me to complete the series then let me know.  I
+may well finish them off and post them on GitHub in the future, time permitting.</p>
+
+<p>Thanks for tuning in, until next time&hellip;</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/a/a8/CowboysFromHell.jpg" style="margin: 0"
+                 alt="Pantera - Cowboys From Hell" />
+            <figcaption>
+                <h6>Pantera - Cowboys From Hell</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/0/09/Cacophony_-_1988_-_Go_Off%21.jpg" style="margin: 0"
+                 alt="Cacophony - Go Off" />
+            <figcaption>
+                <h6>Cacophony - Go Off</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/csharp/">CSharp</a>
+            
+                 <a href="/tags/tpl/">TPL</a>
+            
+                 <a href="/tags/async/">Async</a>
+            
+                 <a href="/tags/threading/">Threading</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Back%20to%20the%20Primitive%20II&url=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f22%2f2012-04-22-back-to-the-primitive-ii%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f22%2f2012-04-22-back-to-the-primitive-ii%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f22%2f2012-04-22-back-to-the-primitive-ii%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

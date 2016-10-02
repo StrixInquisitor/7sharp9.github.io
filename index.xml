@@ -1,0 +1,2819 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>7sharp9</title>
+    <link>http://7sharpnine.com/</link>
+    <description>Recent content on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Thu, 30 Jun 2016 13:53:45 +0100</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Elmtastic Updates</title>
+      <link>http://7sharpnine.com/2016/06/30/elmtastic-updates/</link>
+      <pubDate>Thu, 30 Jun 2016 13:53:45 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/06/30/elmtastic-updates/</guid>
+      <description>
+
+&lt;p&gt;With the release of Elm 0.17 there were some fundamental changes to the Elm language.  This post
+is my attempt to help those that may be struggling with these changes&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve played with lots of new languages over the last year or so namely Elixir, Rust, and Elm.  Elm
+and Elixir have been my favorites and I hope to cover those much more in this and future blog posts.&lt;/p&gt;
+
+&lt;h1 id=&#34;so-whats-new-in-elm-0-17-why-do-i-need-to-upgrade-anything&#34;&gt;So whats new in Elm 0.17 why do I need to upgrade anything?&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;ll summarise here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Signals have been removed (Hence some upgrade is required if you had any code using signals.)&lt;/li&gt;
+&lt;li&gt;Faster HTML renderer&lt;/li&gt;
+&lt;li&gt;Libraries for geolocation, page visibility, and web sockets&lt;/li&gt;
+&lt;li&gt;Generated JS is smaller and works with Google&amp;rsquo;s Closure Compiler&lt;/li&gt;
+&lt;li&gt;Generated JS works with RequireJS and CommonJS&lt;/li&gt;
+&lt;li&gt;Features in place for services like GraphQL and Elixir Phoenix&lt;/li&gt;
+&lt;li&gt;Improved documentation at guide.elm-lang.org&lt;/li&gt;
+&lt;li&gt;Helpful messages when decoding JSON fails&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The big things are that are going to throw a spanner in the works are Signals have been removed
+and the following packages have moved around:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;evancz/elm-html    -&amp;gt; elm-lang/html
+evancz/elm-svg     -&amp;gt; elm-lang/svg
+evancz/virtual-dom -&amp;gt; elm-lang/virtual-dom
+evancz/start-app   -&amp;gt; elm-lang/html
+evancz/elm-effects -&amp;gt; elm-lang/core
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Be sure to read the &lt;a href=&#34;http://elm-lang.org/blog/farewell-to-frp&#34;&gt;official post&lt;/a&gt; on the subject for the full information.&lt;/p&gt;
+
+&lt;h2 id=&#34;how-do-i-upgrade-are-there-any-resources-to-help&#34;&gt;How Do I upgrade?  Are there any resources to help?&lt;/h2&gt;
+
+&lt;p&gt;There are a few guides already that do help, the &lt;a href=&#34;https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md&#34;&gt;official upgrade plan&lt;/a&gt; is
+really useful as is &lt;a href=&#34;http://www.lambdacat.com/migrating-from-elm-0-16-to-0-17-from-startapp/&#34;&gt;migrating from elm 0.16 to 0.17&lt;/a&gt; and I would advise that
+you read the official plan before this or any other guides.  Hopefully my whistle stop
+tour of upgrading an existing package may be of help.&lt;/p&gt;
+
+&lt;h2 id=&#34;example-upgrade&#34;&gt;Example Upgrade&lt;/h2&gt;
+
+&lt;p&gt;Lets take the &lt;a href=&#34;https://github.com/Fresheyeball/elm-sprite&#34;&gt;elm-sprite&lt;/a&gt; package as an example, its fairly simple with only a few
+dependencies.&lt;/p&gt;
+
+&lt;h3 id=&#34;elm-package-json&#34;&gt;elm.package.json&lt;/h3&gt;
+
+&lt;p&gt;Lets look at the elm.package.json file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;quot;,
+    &amp;quot;summary&amp;quot;: &amp;quot;Simple sprite rendering for elm-html&amp;quot;,
+    &amp;quot;repository&amp;quot;: &amp;quot;https://github.com/Fresheyeball/elm-sprite.git&amp;quot;,
+    &amp;quot;license&amp;quot;: &amp;quot;MIT&amp;quot;,
+    &amp;quot;source-directories&amp;quot;: [
+        &amp;quot;src&amp;quot;
+    ],
+    &amp;quot;exposed-modules&amp;quot;: [
+        &amp;quot;Sprite&amp;quot;
+    ],
+    &amp;quot;dependencies&amp;quot;: {
+        &amp;quot;elm-lang/core&amp;quot;: &amp;quot;3.0.0 &amp;lt;= v &amp;lt; 4.0.0&amp;quot;
+    },
+    &amp;quot;elm-version&amp;quot;: &amp;quot;0.16.0 &amp;lt;= v &amp;lt; 0.17.0&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to update the dependencies for &lt;code&gt;elm-lang/core&lt;/code&gt; to &lt;code&gt;4.0.1 &amp;lt;= v &amp;lt; 5.0.0&lt;/code&gt;
+and &lt;code&gt;elm-version&lt;/code&gt; to &lt;code&gt;0.17.0 &amp;lt;= v &amp;lt; 0.18.0&lt;/code&gt;.  Pretty easy in terms of dependencies.&lt;/p&gt;
+
+&lt;h3 id=&#34;sprite-elm&#34;&gt;Sprite.elm&lt;/h3&gt;
+
+&lt;p&gt;This ones pretty easy, the only thing to change is the module definition which is
+using an obsolete syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module Sprite (..) where
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now becomes&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module Sprite exposing (..)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Actually the Elm compiler does a fantastic job here by actually telling us what the problem is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;-- SYNTAX PROBLEM --------------------------------------------------- Sprite.elm
+
+I ran into something unexpected when parsing your code!
+
+1| module Sprite (..) where
+                 ^
+I am looking for one of the following things:
+
+    something like `exposing (..)` which replaced `where` in 0.17
+    whitespace
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So that was pretty painless, lets have a look at the example file: &lt;code&gt;One.elm&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;one-elm&#34;&gt;One.elm&lt;/h3&gt;
+
+&lt;p&gt;This ones a bit more tricky as there are signals involved and packages that have moved about.&lt;br /&gt;
+Lets have a look at the changes needed.&lt;/p&gt;
+
+&lt;p&gt;First of all lets address the obsolete &lt;code&gt;where&lt;/code&gt; syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module One exposing (..)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to remove the &lt;code&gt;Signal&lt;/code&gt;, &lt;code&gt;Html.Events&lt;/code&gt; and &lt;code&gt;Effects&lt;/code&gt; imports packages, let&amp;rsquo;s remove these:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Signal exposing (message, Address)
+import Html.Events exposing (on, targetValue)
+import Effects exposing (Effects, none)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to address the changes in the Time package as &lt;code&gt;fps&lt;/code&gt; is no longer available, we can use milliseconds instead.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Time exposing (Time, millisecond)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to adjust the &lt;code&gt;StartpApp&lt;/code&gt; import and use &lt;code&gt;Html.App&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Html.App as Html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So all in all the imports section will look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module One exposing (..)
+
+import Html exposing (..)
+import Html.App as Html
+import Time exposing (Time, millisecond)
+import Html.Attributes as A
+import Sprite exposing (..)
+import Array
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;action&#34;&gt;Action&lt;/h3&gt;
+
+&lt;p&gt;The first thing we will tackle is the Action which flows though this application.  It now looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Action
+    = Tick Time
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As &lt;code&gt;Action&lt;/code&gt; has now been replaced with &lt;code&gt;Msg&lt;/code&gt; so we need to change this to the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Msg
+  = Tick Time
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;init&#34;&gt;init&lt;/h3&gt;
+
+&lt;p&gt;Next lets look at the init function its signature is slightly different now.  &lt;code&gt;Html.Program&lt;/code&gt; now &lt;a href=&#34;http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-App#program&#34;&gt;starts the application&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : (model, Cmd msg)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So rather than:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : Sprite {}
+init =
+   { sheet = &amp;quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&amp;quot;
+     , rows = 16
+     , columns = 16
+     , size = ( 2048, 2048 )
+     , frame = 0
+     , dope = idle
+     }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It will now become:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : (Sprite {}, Cmd Msg)
+init = (
+  { sheet = &amp;quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&amp;quot;
+    , rows = 16
+    , columns = 16
+    , size = ( 2048, 2048 )
+    , frame = 0
+    , dope = idle
+    } , Cmd.none)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;view&#34;&gt;view&lt;/h3&gt;
+
+&lt;p&gt;This is what view looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;view : Address Action -&amp;gt; Sprite {} -&amp;gt; Html
+view address s =
+    let
+        onInput address contentToValue =
+            on
+                &amp;quot;input&amp;quot;
+                targetValue
+                (message address &amp;lt;&amp;lt; contentToValue)
+    in
+        div
+            []
+            [ node
+                &amp;quot;sprite&amp;quot;
+                [ A.style (sprite s) ]
+                []
+            ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At first glance this looks a bit more complex but when you look at the code a little
+more you come to realise that the &lt;code&gt;onInput&lt;/code&gt; function is not even used anymore this is
+just dead code.  So no all that remains is to change &lt;code&gt;view&lt;/code&gt; to match the new Elm 0.17
+architecture, so instead of &lt;code&gt;Address Action -&amp;gt; Sprite {} -&amp;gt; Html&lt;/code&gt; it will now be
+&lt;code&gt;Sprite {} -&amp;gt; Html Msg&lt;/code&gt; as &lt;code&gt;Address&lt;/code&gt; and &lt;code&gt;Action&lt;/code&gt; are now no longer needed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;view : Sprite {} -&amp;gt; Html Msg
+view s =
+  div
+      []
+      [
+        node
+          &amp;quot;sprite&amp;quot;
+          [ A.style (sprite s)]
+          []
+      ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update&#34;&gt;update&lt;/h3&gt;
+
+&lt;p&gt;Ok, now for &lt;code&gt;update&lt;/code&gt; lets have a look at that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;update : Action -&amp;gt; Sprite {} -&amp;gt; ( Sprite {}, Effects Action )
+update action s =
+    let
+        s&#39; =
+            case action of
+                Tick _ -&amp;gt;
+                    advance s
+    in
+        ( s&#39;, none )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;update&lt;/code&gt; now has a signature of &lt;code&gt;msg -&amp;gt; model -&amp;gt; (model, Cmd msg)&lt;/code&gt; so all we really have
+to do is replace &lt;code&gt;Action&lt;/code&gt; with &lt;code&gt;Msg&lt;/code&gt;, and &lt;code&gt;Effects Action&lt;/code&gt; with &lt;code&gt;Cmd Msg&lt;/code&gt;.  Finally I
+change the return to: &lt;code&gt;Cmd.none&lt;/code&gt; which was previously &lt;code&gt;Effects.none&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;update : Msg -&amp;gt; Sprite {} -&amp;gt; (Sprite {}, Cmd Msg)
+update action s =
+    let
+        s&#39; =
+            case action of
+                Tick _ -&amp;gt;
+                    advance s
+    in
+        ( s&#39;, Cmd.none )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;subs&#34;&gt;subs&lt;/h3&gt;
+
+&lt;p&gt;This part is new, with the old 0.16 based version there was a signal which was mapping
+time to a sprite update:&lt;code&gt;[ Signal.map Tick (fps 30) ]&lt;/code&gt;.  Now that we will be using
+subscriptions this is a simple function like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;subs : Sprite {} -&amp;gt; Sub Msg
+subs model =
+  Time.every (millisecond * 33) Tick
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So every 33 milliseconds (30 frames per second) we are sending a Tick command to the update function.&lt;/p&gt;
+
+&lt;h3 id=&#34;application-start&#34;&gt;application start&lt;/h3&gt;
+
+&lt;p&gt;The last part is the application start, heres what it looks like in 0.16:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;app : StartApp.App (Sprite {})
+app =
+    StartApp.start
+        { view = view
+        , update = update
+        , init = ( init, none )
+        , inputs = [ Signal.map Tick (fps 30) ]
+        }
+
+
+main : Signal Html
+main =
+    app.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the &lt;code&gt;signal&lt;/code&gt; I talked about above.  This whole section has now become a lot simpler in Elm 0.17.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;main : Program Never
+main =
+  Html.program
+    { view = view
+    , update = update
+    , init = init
+    , subscriptions = subs
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;StartApp&lt;/code&gt; has now become &lt;code&gt;Html.App&lt;/code&gt; which we aliased to &lt;code&gt;Html&lt;/code&gt; at the beginning &lt;code&gt;import Html.App as Html&lt;/code&gt;
+and we use the &lt;code&gt;program&lt;/code&gt; function to feed in all the functions we just declared.&lt;/p&gt;
+
+&lt;p&gt;Ok, we&amp;rsquo;re all done, hopefully someone found this useful!&lt;/p&gt;
+
+&lt;p&gt;One tip I can give is to update the function signatures for each function first and it should make
+things a little clearer on what you need to do.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr /&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Creating fuse applications with fable</title>
+      <link>http://7sharpnine.com/2016/06/07/fable-fuse-template/</link>
+      <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/06/07/fable-fuse-template/</guid>
+      <description>
+
+&lt;p&gt;So as promised here&amp;rsquo;s a guide to creating your first &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve made a template available so this can be tried out quickly and easily, I&amp;rsquo;ll run through the
+requirements and describe whats in the template.&lt;/p&gt;
+
+&lt;h1 id=&#34;requirements&#34;&gt;Requirements&lt;/h1&gt;
+
+&lt;p&gt;First of all here are the requirements.&lt;/p&gt;
+
+&lt;h2 id=&#34;yeoman&#34;&gt;Yeoman&lt;/h2&gt;
+
+&lt;p&gt;As &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;fable&lt;/a&gt; uses &lt;a href=&#34;https://docs.npmjs.com/getting-started/what-is-npm&#34;&gt;npm modules&lt;/a&gt; for dependencies &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; template will also be based
+on them.  I have used &lt;a href=&#34;http://fsprojects.github.io/Fable/docs.html&#34;&gt;Yeoman&lt;/a&gt; as it&amp;rsquo;s very flexible and works nicely.&lt;/p&gt;
+
+&lt;p&gt;So what you need to get Yeoman is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;npm install -g yo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then to install the &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; template for Yeoman:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;npm install -g generator-fable-fuse
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nice and easy.&lt;/p&gt;
+
+&lt;h2 id=&#34;fable&#34;&gt;Fable&lt;/h2&gt;
+
+&lt;p&gt;Installing Fable is covered in the &lt;a href=&#34;http://fsprojects.github.io/Fable/docs.html&#34;&gt;Fable documentation&lt;/a&gt;, but it&amp;rsquo;s essentially just another npm install:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g fable-compiler
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;fuse&#34;&gt;Fuse&lt;/h2&gt;
+
+&lt;p&gt;Fuse can be downloaded at their site &lt;a href=&#34;https://www.fusetools.com/downloads&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty much all the requirements, let&amp;rsquo;s try this out!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;creating-a-fable-fuse-application&#34;&gt;Creating a &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application?&lt;/h1&gt;
+
+&lt;p&gt;OK, so with everything installed how do you get going?&lt;/p&gt;
+
+&lt;p&gt;This is really easy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir fable-fuse-test
+cd fable-fuse-test
+yo fable-fuse
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then follow the prompts, here&amp;rsquo;s a &lt;a href=&#34;https://asciinema.org&#34;&gt;asciinema&lt;/a&gt; session showing the process:&lt;/p&gt;
+
+
+&lt;figure class=&#34;8u&#34;&gt;
+    &lt;a href=&#34;https://asciinema.org/a/9eqmwurfreaspzsmrm0f5ezc9?size=medium&amp;amp;speed=1.75&#34;&gt;
+        &lt;img src=&#34;https://asciinema.org/a/9eqmwurfreaspzsmrm0f5ezc9.png&#34; /&gt;
+    &lt;/a&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Now that the template has been created let&amp;rsquo;s have a look at whats inside.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;project-structure&#34;&gt;Project Structure&lt;/h1&gt;
+
+&lt;p&gt;The structure of a &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application is as follows &lt;em&gt;(Using a project name of test)&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;├── App
+│   ├── MainView.ux
+│   └── test.unoproj
+├── build.bat
+├── build.sh
+├── node_modules
+│   ├── fable-core
+│   ├── fable-fuse
+│   └── fable-import-fetch
+├── package.json
+└── src
+    ├── fableconfig.json
+    ├── test.fs
+    └── test.fsproj
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lets go through the root files first&lt;/p&gt;
+
+&lt;h2 id=&#34;package-json&#34;&gt;package.json&lt;/h2&gt;
+
+&lt;p&gt;This file has the dependencies for &lt;code&gt;fable |&amp;gt; fuse&lt;/code&gt;.  Currently these are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;fable-core&lt;/strong&gt; : This has the main definitions for Fable.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;fable-fuse&lt;/strong&gt; : This has the bindings for the Fuse JavaScript API&amp;rsquo;s.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;fable-import-fetch&lt;/strong&gt; : This has the F# bindings for JavaScript Fetch API.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;build-sh-build-bat&#34;&gt;build.sh / build.bat&lt;/h2&gt;
+
+&lt;p&gt;These two files contain the script to transpile the F# source into JavaScript.  So upon typing &lt;code&gt;./build.sh&lt;/code&gt; the F# files
+will be transpiled into JavaScript and placed into the &lt;code&gt;App/js&lt;/code&gt; folder.  In addition &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;Fable&lt;/a&gt; will continue to watch the
+F# files and transpile the files if they change so you get realtime updating of the &lt;a href=&#34;https://www.fusetools.com/&#34;&gt;fuse&lt;/a&gt; application.&lt;/p&gt;
+
+&lt;p&gt;Now the directories:&lt;/p&gt;
+
+&lt;h2 id=&#34;app&#34;&gt;App&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;App&lt;/code&gt; directory has all the necessary files that &lt;a href=&#34;https://www.fusetools.com/&#34;&gt;Fuse&lt;/a&gt; requires to build&lt;/p&gt;
+
+&lt;h3 id=&#34;test-unoproj&#34;&gt;test.unoproj&lt;/h3&gt;
+
+&lt;p&gt;This is the project file for Fuse, it has settings for the different platforms and controls which gets embedded in the application.&lt;/p&gt;
+
+&lt;h3 id=&#34;mainview-ux&#34;&gt;MainView.ux&lt;/h3&gt;
+
+&lt;p&gt;This is the main view markup file for the user interface.&lt;/p&gt;
+
+&lt;h2 id=&#34;src&#34;&gt;src&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;src&lt;/code&gt; folder has all the F# source files that &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;Fable&lt;/a&gt; transpiles into JavaScript.&lt;/p&gt;
+
+&lt;h3 id=&#34;fableconfig-json&#34;&gt;fableconfig.json&lt;/h3&gt;
+
+&lt;p&gt;This is the configuration file for Fable which allows you to run scrip before or after compilation and set various defaults.&lt;/p&gt;
+
+&lt;h3 id=&#34;test-fs&#34;&gt;test.fs&lt;/h3&gt;
+
+&lt;p&gt;This is the main source file for F# and is the same as the one you saw in the previous post:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace App
+open Fable.Core
+open Fuse
+open Fable.Import
+open Fable.Import.Fetch
+
+module test =
+    let data = Observable.create()
+
+    promise {
+        let! req = GlobalFetch.fetch (Url &amp;quot;http://az664292.vo.msecnd.net/files/ZjPdBhWNdPRMI4qK-colors.json&amp;quot;)
+        let! json = req.json ()
+        do (data.value &amp;lt;- json) } |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is fairly easy to follow, the &lt;code&gt;promise&lt;/code&gt; block is a custom &lt;a href=&#34;https://msdn.microsoft.com/visualfsharpdocs/conceptual/computation-expressions-%5Bfsharp%5D&#34;&gt;computation expression&lt;/a&gt; that allows each successful JavaScript
+promise to execute before the next promise is ran.  In this example &lt;code&gt;GlobalFetch.fetch&lt;/code&gt; and &lt;code&gt;req.json()&lt;/code&gt; both return JavaScript
+promises. The promise block runs the &lt;code&gt;GlobalFetch.fetch&lt;/code&gt; function and if it &lt;em&gt;succeeds&lt;/em&gt; it runs the &lt;code&gt;req.json()&lt;/code&gt;
+function.  If that too is successful then the observable value &lt;code&gt;data&lt;/code&gt; is updated to the resulting json data.&lt;/p&gt;
+
+&lt;h2 id=&#34;node-modules&#34;&gt;node-modules&lt;/h2&gt;
+
+&lt;p&gt;These are our dependencies, there&amp;rsquo;s fable-core which is required by &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;Fable&lt;/a&gt;, also included are &lt;a href=&#34;https://www.npmjs.com/package/fable-fuse&#34;&gt;fable-fuse&lt;/a&gt; which
+are the F# bindings to the Fuse JavaScript libraries, and &lt;a href=&#34;https://www.npmjs.com/package/fable-import-fetch&#34;&gt;fable-import-fetch&lt;/a&gt; which is the F# bindings for the
+&lt;a href=&#34;https://developer.mozilla.org/en/docs/Web/API/Fetch_API&#34;&gt;Fetch JavaScript API&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;running&#34;&gt;Running&lt;/h1&gt;
+
+&lt;p&gt;To get a &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application running all you have to do is run the build script &lt;code&gt;./build&lt;/code&gt; which transpiles the
+F# files into JavaScript and then watches for any updates to the F# files.  Running a Fuse application is also really easy,
+you can do this from within Atom via the &lt;a href=&#34;https://atom.io/packages/fuse&#34;&gt;plugin&lt;/a&gt;, or sublime via that &lt;a href=&#34;https://github.com/fusetools/Fuse.SublimePlugin&#34;&gt;plugin&lt;/a&gt;, or simply just run
+&lt;code&gt;fuse preview ./App/&lt;/code&gt; from the project root.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;any-problems&#34;&gt;Any Problems?&lt;/h1&gt;
+
+&lt;p&gt;If you have any problems with the Yeoman generator for &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; then please log an issue on its
+GitHub repo: &lt;a href=&#34;https://github.com/7sharp9/generator-fable-fuse&#34;&gt;generator-fable-fuse&lt;/a&gt;.  If you have any issues with the fable-fuse module itself then please got an issue
+on its GitHub repo: &lt;a href=&#34;https://github.com/7sharp9/fable-fuse&#34;&gt;fable-fuse&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you have an improvements or suggestions then a PR is very welcome too!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;whats-next&#34;&gt;Whats next?&lt;/h1&gt;
+
+&lt;p&gt;If there is enough interest around using &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; I&amp;rsquo;ll port some of the more intricate samples from the
+&lt;a href=&#34;https://www.fusetools.com/examples&#34;&gt;Fuse examples&lt;/a&gt; over to &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; and also create a GitHub site with all the content relating to it.&lt;/p&gt;
+
+&lt;p&gt;Let me know what you think!!&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr /&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Light The Fuse</title>
+      <link>http://7sharpnine.com/2016/06/03/light-the-fuse/</link>
+      <pubDate>Fri, 03 Jun 2016 11:21:57 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/06/03/light-the-fuse/</guid>
+      <description>
+
+&lt;p&gt;In this post Im going to be introducing something new and exciting the combination of F#, Fable and Fuse.  If I was American I might say this was the holy trinity of awesomeness!&lt;/p&gt;
+
+&lt;p&gt;This is the start of an exciting new series on using F# as a transpiling language to &amp;ldquo;light the Fuse&amp;rdquo; (pun intended) on new platform and opportunities for F#.&lt;/p&gt;
+
+&lt;p&gt;OK, so now for the introductions&amp;hellip;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;what-is-fable&#34;&gt;What is Fable&lt;/h1&gt;
+
+&lt;p&gt;Put simply Fable is a transpiler for F# that turn F# into JavaScript.  Lets face it JavaScript is really pervasive but not everyone wants to write it.  You can read about how Fable works &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;what-is-fuse&#34;&gt;What is fuse?&lt;/h1&gt;
+
+&lt;p&gt;Taken from their site this is what fuse is in a nutshell:&lt;/p&gt;
+
+&lt;h2 id=&#34;fuse-is-for-mobile-app-designers-and-developers&#34;&gt;FUSE IS FOR MOBILE APP DESIGNERS AND DEVELOPERS&lt;/h2&gt;
+
+&lt;p&gt;Create and update the look and feel for native apps in real time
+on multiple devices simultaneously.&lt;/p&gt;
+
+&lt;p&gt;Fuse is a set of tools (currently in beta) that makes design and developing native mobile apps for iOS and Android fast, easy and fun. Fuse is free, and we’re actively working towards making it Open Source as well.&lt;/p&gt;
+
+&lt;p&gt;Fuse introduces UX Markup - a XML-based language for creating truly native, data-driven, responsive, smoothly animated and highly interactive experiences, while sharing most of the code between iOS and Android. UX is easy to learn and incredibly powerful.&lt;/p&gt;
+
+&lt;p&gt;Fuse is fast. Based on Uno, a language which compiles down to pure C++ code, and seamlessly interops with Objective-C (iOS) and Java (Android) where needed. The UI is rendered using native platform controls, OpenGL or a combination (best of both worlds).&lt;/p&gt;
+
+&lt;p&gt;For business logic, Fuse runs JavaScript on a separate thread on both iOS and Android, so your UI is fast and responsive no matter what it is doing. Fuse lets you call seamlessly into C++, Java and Objective-C libraries through Uno when you need it.&lt;/p&gt;
+
+&lt;p&gt;You can read about Fuse in more depth on their site &lt;a href=&#34;https://www.fusetools.com/&#34;&gt;here&lt;/a&gt;, you really should take a look.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;introducing-fable-fuse&#34;&gt;Introducing &lt;strong&gt;Fable |&amp;gt; Fuse&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;p&gt;Fable-Fuse is a set of packages that allows you use power of F# with &lt;a href=&#34;https://www.fusetools.com/&#34;&gt;Fuse&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;First of all lets have a little look at some declarative UI with Fuse.&lt;/p&gt;
+
+&lt;p&gt;This is taken from the original Fuse Sample titled &lt;strong&gt;&lt;em&gt;Parsing JSON fetched over HTTP&lt;/em&gt;&lt;/strong&gt;   which is located &lt;a href=&#34;https://www.fusetools.com/examples/http-json&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://res.cloudinary.com/fusetools/image/upload/w_450%2Ch_450%2Cdpr_1.0%2Cc_limit/examples/media/4343ca40291fab07d70ef87254204bed_http-json-example.webp&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;App Theme=&amp;quot;Basic&amp;quot; Background=&amp;quot;#eee&amp;quot;&amp;gt;
+    &amp;lt;DockPanel&amp;gt;
+        &amp;lt;StatusBarBackground Dock=&amp;quot;Top&amp;quot; /&amp;gt;
+        &amp;lt;BottomBarBackground Dock=&amp;quot;Bottom&amp;quot; /&amp;gt;
+        &amp;lt;ScrollView&amp;gt;
+            &amp;lt;Grid ColumnCount=&amp;quot;2&amp;quot;&amp;gt;
+                &amp;lt;JavaScript&amp;gt;
+                    var Observable = require(&amp;quot;FuseJS/Observable&amp;quot;);
+
+                    var data = Observable();
+
+                    fetch(&#39;http://az664292.vo.msecnd.net/files/ZjPdBhWNdPRMI4qK-colors.json&#39;)
+                        .then(function(response) { return response.json(); })
+                        .then(function(responseObject) { data.value = responseObject; });
+
+                    module.exports = {
+                        data: data
+                    };
+                &amp;lt;/JavaScript&amp;gt;
+                &amp;lt;Each Items=&amp;quot;{data.colorsArray}&amp;quot;&amp;gt;
+                    &amp;lt;DockPanel Height=&amp;quot;120&amp;quot; Margin=&amp;quot;10,0&amp;quot;&amp;gt;
+                        &amp;lt;Panel DockPanel.Dock=&amp;quot;Top&amp;quot; Margin=&amp;quot;10&amp;quot; Height=&amp;quot;30&amp;quot;&amp;gt;
+                            &amp;lt;Rectangle Layer=&amp;quot;Background&amp;quot; CornerRadius=&amp;quot;10&amp;quot; Fill=&amp;quot;#fff&amp;quot;/&amp;gt;
+                            &amp;lt;Text Value=&amp;quot;{colorName}&amp;quot; TextAlignment=&amp;quot;Center&amp;quot; Alignment=&amp;quot;Center&amp;quot; /&amp;gt;
+                        &amp;lt;/Panel&amp;gt;
+
+                        &amp;lt;Rectangle Layer=&amp;quot;Background&amp;quot; CornerRadius=&amp;quot;10&amp;quot; Fill=&amp;quot;{hexValue}&amp;quot;/&amp;gt;
+                    &amp;lt;/DockPanel&amp;gt;
+                &amp;lt;/Each&amp;gt;
+            &amp;lt;/Grid&amp;gt;
+        &amp;lt;/ScrollView&amp;gt;
+    &amp;lt;/DockPanel&amp;gt;
+&amp;lt;/App&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the UI mark-up is concise and easy to follow, also notice the JavaScript element which can be in-line, as shown here, or placed in a separate file.  We will place this in a separate file so that we can transpile from F# using &lt;a href=&#34;http://fsprojects.github.io/Fable/&#34;&gt;Fable&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Program
+open Fable.Core
+open Fuse
+open Fable.Import
+open Fable.Import.Fetch
+
+module HttpJson =
+    let data = Observable.create()
+    promise {
+        let! req = GlobalFetch.fetch (Url &amp;quot;http://az664292.vo.msecnd.net/files/ZjPdBhWNdPRMI4qK-colors.json&amp;quot;)
+        let! json = req.json ()
+        do (data.value &amp;lt;- json) } |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see here there is a custom computation expression that allows you to use JavaScrip promises, you could also use a pipeline oriented definition too, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;GlobalFetch.fetch (Url &amp;quot;http://az664292.vo.msecnd.net/files/ZjPdBhWNdPRMI4qK-colors.json&amp;quot;)
+|&amp;gt; Promise.success (fun resp -&amp;gt; resp.json())                                                                          
+|&amp;gt; Promise.success (fun json -&amp;gt; data.value &amp;lt;- json) 
+|&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or if you really really wanted to you could integrate this into an F# async with a little helper type extension:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module AsyncExtensions =    
+    type Microsoft.FSharp.Control.AsyncBuilder with
+        member x.Bind(p, f) = 
+            async.Bind (Async.AwaitPromise(p), f)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This would allow you to use a promise with an ordinary &lt;code&gt;let!&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;async {
+    let! req = GlobalFetch.fetch &amp;quot;http://az664292.vo.msecnd.net/files/ZjPdBhWNdPRMI4qK-colors.json&amp;quot;
+    let! json = req.json ()
+    do (data.value &amp;lt;- json) } |&amp;gt; Async.Start 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Anyway I digress, needless to say there are various options with promises and how to handle them with &lt;strong&gt;Fable |&amp;gt; Fuse&lt;/strong&gt;.&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://i.imgur.com/P4YcEi7.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;What&amp;rsquo;s more because Fuse and Fable are real-time you can edit the UX definitions and it the application in real-time across multiple devices!&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/fable-fuse/realtime.gif&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;so-how-do-i-get-started-with-fable-fuse&#34;&gt;So how do I get started with &lt;strong&gt;Fable |&amp;gt; Fuse&lt;/strong&gt; ?&lt;/h2&gt;
+
+&lt;p&gt;Well you&amp;rsquo;ll have to hold your horses, I was so excited to share this introductory post I haven&amp;rsquo;t wrote that part yet.  The package I&amp;rsquo;m working on is still private while I finalise things and make it really easy and friendly to create applications with &lt;strong&gt;Fable |&amp;gt; Fuse&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned as there will be more in this series next week as I discuss the more technical aspects and how to create your first &lt;strong&gt;Fable |&amp;gt; Fuse&lt;/strong&gt; application.&lt;/p&gt;
+
+&lt;p&gt;If there is enough interest I will also live stream this on my &lt;a href=&#34;https://www.livecoding.tv/7sharp9/&#34;&gt;livecoding.tv channel&lt;/a&gt;, please subscribe.&lt;/p&gt;
+
+&lt;p&gt;A really big thanks to Alfonso Garcia-Caro (&lt;a href=&#34;https://twitter.com/alfonsogcnunez&#34;&gt;@alfonsogcnunez&lt;/a&gt;) creator of Fable for answering all my annoying questions.  And Lars Thomas Denstad (&lt;a href=&#34;https://twitter.com/COCPORN&#34;&gt;@cocporn&lt;/a&gt;) for help creating the Fuse API bindings for Fable.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>New Adventures</title>
+      <link>http://7sharpnine.com/2016/05/31/new-adventures/</link>
+      <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/05/31/new-adventures/</guid>
+      <description>
+
+&lt;p&gt;So today was my last day at Xamarin.&lt;/p&gt;
+
+&lt;p&gt;I have decided to move on and have some fabulous new adventures.  I don&amp;rsquo;t know quite where this will lead me yet but its going to be exciting finding out!&lt;/p&gt;
+
+&lt;h3 id=&#34;why-you-may-ask&#34;&gt;Why? you may ask.&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;ve been working for Xamarin since 22nd October 2013 on F# tooling and engineering.  Over a period of time it&amp;rsquo;s very easy to become comfortable and complacent and no longer be challenged.  I have a hacker mentality, I need to create new things, crack difficult problems, experiment.   There are various other reasons too, but with the Microsoft acquisition now seemed as good a time as any to say goodbye and move on.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-s-next&#34;&gt;What&amp;rsquo;s Next?&lt;/h3&gt;
+
+&lt;p&gt;So in a nutshell, I will also be writing, live-streaming and working on my own new and wonderful things to challenge myself and push my boundaries.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll once again available for some consulting work too, so feel free to ping me.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>flame on</title>
+      <link>http://7sharpnine.com/2016/05/29/flame-on/</link>
+      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/05/29/flame-on/</guid>
+      <description>
+
+&lt;p&gt;A few weeks back I posted on Twitter that I was experimenting with flame graphs, In this post I will share how this was accomplished.&lt;/p&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Lately I have been flame graphing &lt;a href=&#34;https://twitter.com/hashtag/fsharp?src=hash&#34;&gt;#fsharp&lt;/a&gt; performance just for fun.  You cant have too many pretty graphs! :-) &lt;a href=&#34;https://t.co/3gu9pOJp28&#34;&gt;pic.twitter.com/3gu9pOJp28&lt;/a&gt;&lt;/p&gt;&amp;mdash; Dave Thomas (@7sharp9_exhumed) &lt;a href=&#34;https://twitter.com/7sharp9_exhumed/status/721829320646389762&#34;&gt;April 17, 2016&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
+
+&lt;p&gt;First of all the requirements, I&amp;rsquo;m assuming your using a Mac just as I am.  If you are not then you might be able to use x-perf for windows check out &lt;a href=&#34;https://randomascii.wordpress.com/2013/03/26/summarizing-xperf-cpu-usage-with-flame-graphs/&#34;&gt;summarizing-xperf-cpu-usage-with-flame-graphs&lt;/a&gt; for information in that area.  I don&amp;rsquo;t really use Windows that often but if I do happen to try this out on Windows then I&amp;rsquo;ll pop back here and update this post.&lt;/p&gt;
+
+&lt;p&gt;OK, so back to requirements, a Mac, Mono Installation, &lt;a href=&#34;https://developer.apple.com/xcode/&#34;&gt;Xcode&lt;/a&gt; installed so that you can use &lt;a href=&#34;https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/#//apple_ref/doc/uid/TP40004652-CH3-SW1&#34;&gt;Instruments&lt;/a&gt; to collect trace information, clone the FlameGraph repo itself:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/brendangregg/FlameGraph
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The FlameGraph repo is a bunch of scripts to help process the trace data and produce an svg.  You can read more about FlameGraphs here: &lt;a href=&#34;http://www.brendangregg.com/flamegraphs.html&#34;&gt;http://www.brendangregg.com/flamegraphs.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;aot-the-framework&#34;&gt;AOT the framework&lt;/h3&gt;
+
+&lt;p&gt;Next step is to AOT compile all the mono runtime assemblies, you can do this by running the following commands from your mono installation.  For me this would be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /Library/Frameworks/Mono.framework/Versions/4.4.0/lib/mono/
+for i in `find gac -name &#39;*dll&#39;` */mscorlib.dll; do
+   mono --aot $i
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;aot-your-app&#34;&gt;AOT Your app&lt;/h3&gt;
+
+&lt;p&gt;Now you need to AOT you applications files with the same command&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mono --aot myApp.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;attaching-instruments&#34;&gt;Attaching Instruments&lt;/h3&gt;
+
+&lt;p&gt;Now you are ready to run your app and attach Instruments or have Instruments launch your app.&lt;/p&gt;
+
+&lt;p&gt;For simplicity I opted to add this to the beginning of my app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;printfn &amp;quot;Press any key to start&amp;quot;
+Console.ReadKey() |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way I could just launch my app (noting the process id) and use the process browser within Instruments to attach.&lt;br /&gt;
+Now launch Instruments and select the Time Profiler template:&lt;/p&gt;
+
+
+&lt;figure class=&#34;6u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/timeprofiler-template.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can tweak the sampling interval with the settings on the right, in my example below I was using 40us because it was a really fast executing demo.&lt;/p&gt;
+
+&lt;p&gt;Use the process browser in Instruments to choose the mono process running my app e.g. mono (16314).&lt;/p&gt;
+
+&lt;p&gt;Now that instruments is attached hit the big red record button and hit any key on you app to start collecting data.  When you are finished just hit the top button in Instruments.&lt;/p&gt;
+
+&lt;p&gt;You should end up with something similar to this, I used a few cycles of my 68000 emulator to get this data:&lt;/p&gt;
+
+
+&lt;figure class=&#34;8u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/trace.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;exporting-the-data&#34;&gt;Exporting The Data&lt;/h3&gt;
+
+&lt;p&gt;Exporting the data is pretty easy, use expand all on a node in the collected data using &lt;code&gt;Cmd cLick&lt;/code&gt;, you can also add filters to the data, I used &lt;code&gt;Atari&lt;/code&gt; in the screen-shot above to constrain the output to nodes that contained &lt;code&gt;Atari&lt;/code&gt;.  Now select export from the instrument menu:
+
+&lt;figure class=&#34;6u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/export.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;producing-the-flamegraph&#34;&gt;Producing the FlameGraph&lt;/h3&gt;
+
+&lt;p&gt;Now you can open a move to the flamegraph repo that you cloned earlier and execute the following command replacing myoutput.csv|svg with your input/outputs.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./stackcollapse-instruments.pl myoutput.csv | ./flamegraph.pl &amp;gt;myoutput.svg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should now have a funky FlameGraph!&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/68kcpusteps.svg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You could quite easily post process the csv output to clean up the mangled names that are a result of the AOT process.&lt;/p&gt;
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>http://7sharpnine.com/page/about/</link>
+      <pubDate>Fri, 29 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/page/about/</guid>
+      <description>&lt;p&gt;
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/working.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+Hi, my name is Dave Thomas and Im a software engineer from the Uk.  I work primarily in F# but also like to tinker with pretty much any interesting language.  Im drawn to more functional languages like F#, Elixir, Elm, but also like to use Go, Rust, and recently Pony.&lt;/p&gt;
+
+&lt;p&gt;When Im not working I like: playing guitar, woodworking, watercolour sketching, and practicing yoga.&lt;/p&gt;
+
+&lt;p&gt;Have questions or suggestions? Feel free to &lt;a href=&#34;https://twitter.com/7sharp9_exhumed&#34;&gt;ask me on Twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Building Emulators in FSharp</title>
+      <link>http://7sharpnine.com/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/03/06/2016-03-06-building-emulators-in-fsharp/</guid>
+      <description>&lt;p&gt;So I wanted to briefly talk about what I&amp;rsquo;ve been up to lately.   I&amp;rsquo;ve been doing a spot of compiler hacking, working on improving type Providers and generally tinkering with concepts relating to macros etc.  I&amp;rsquo;ve also been tinkering with the Elixir and Rust programming languages which I like a lot.  I might write about those things at a later time depending on my train of thought which can be quite disjoint.  What was I talking about again?  :-)&lt;/p&gt;
+
+&lt;p&gt;So, emulators, that&amp;rsquo;s what I was going to talk about.  Lately I&amp;rsquo;ve been thinking about emulators, reading about them, and also watching streams about writing them.  I&amp;rsquo;ve always been interested in emulators but never sat down and looked at the theory or written one.  So I&amp;rsquo;ve started live streaming creating one on &lt;a href=&#34;https://www.livecoding.tv/livestreams/&#34;&gt;LiveCoding.tv&lt;/a&gt; which is apparently where you go to:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Watch coders code products live and hang out with them&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So I&amp;rsquo;ve started live coding an &lt;a href=&#34;https://en.wikipedia.org/wiki/Atari_ST&#34;&gt;Atari ST&lt;/a&gt; emulator with its &lt;a href=&#34;https://en.wikipedia.org/wiki/Motorola_68000&#34;&gt;68000 CPU&lt;/a&gt; using LiveCoding.tv.  I&amp;rsquo;ve chosen an Atari St because it was one of the computers that I grew up with and the computer I first started to program on.  I have many many fond memories of it.  I may also stream about building other types of emulators not just the 68000.  There are plenty of interesting hardware systems and processor types that I grew up with.  I was thinking of building an arcade emulator such as &lt;a href=&#34;https://en.wikipedia.org/wiki/CP_System&#34;&gt;Capcom Play System&lt;/a&gt; but the technical data is a bit more difficult to get hold of.&lt;/p&gt;
+
+&lt;p&gt;In some respects emulator coding is quite tricky, a lot of research and digging is required to get the relevant information you need, and a lot of grunt work inputting data can also be involved too.  In short its not a trivial task, at least it isn&amp;rsquo;t if you want to do one properly.  I cant promise it will be super interesting, or even done properly, but it will be raw coding warts and all :-)&lt;/p&gt;
+
+&lt;p&gt;You can find my channel here &lt;a href=&#34;https://www.livecoding.tv/7sharp9/&#34;&gt;Building Emulators with F#&lt;/a&gt; I normally stream a couple of days a week, currently Wednesday and Friday 17:00 GMT but I also may also stream at other times too.&lt;/p&gt;
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;https://upload.wikimedia.org/wikipedia/en/9/93/MegadethDystopia.png&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Megadeth - Dystopia&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Megadeth - Dystopia&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;https://upload.wikimedia.org/wikipedia/en/0/06/Xentrix-Kin.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Xentrix - Kin&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Xentrix - Kin&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>F# Community Hero</title>
+      <link>http://7sharpnine.com/2015/10/25/2015-10-25-f-community-hero/</link>
+      <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/10/25/2015-10-25-f-community-hero/</guid>
+      <description>&lt;p&gt;Ive been meaning to write this post for ages but Ive only just found the time.&lt;/p&gt;
+
+&lt;p&gt;On the 3rd of September my good friend Ryan Riley (aka &lt;a href=&#34;https://twitter.com/panesofglass&#34;&gt;@panesofglass&lt;/a&gt;) emailed me letting me know I had won a Community for F# hero award for 2015!&lt;/p&gt;
+
+&lt;p&gt;I want to say a big thank you to everyone who voted for me.  Its really nice to be recognized for the things that you do.&lt;/p&gt;
+
+&lt;p&gt;Anyway, this is just a quick post to say thanks, and share a cup of coffee :-)&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm6.staticflickr.com/5787/22472995755_40e96870b2.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reckoning day</title>
+      <link>http://7sharpnine.com/2015/07/16/2015-07-16-reckoning-day/</link>
+      <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/07/16/2015-07-16-reckoning-day/</guid>
+      <description>
+
+&lt;p&gt;
+&lt;figure class=&#34;img-left&#34;&gt;
+    
+        &lt;img src=&#34;https://farm1.staticflickr.com/256/18984716933_b7f2cbe6fb_t.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+I&amp;rsquo;ve finally been awarded a &lt;a href=&#34;https://mvp.microsoft.com/en-us/default.aspx&#34;&gt;Microsoft MVP&lt;/a&gt; its been quite a long time coming.  Ive been nominated for MVP every year since July 2011 but until now I have been unsuccessful.  On the 1st of July I received an email congratulating me that I had been successful on my MVP nomination.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;I am now officially a Microsoft Most Valued Professional!&lt;/strong&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm1.staticflickr.com/271/18984720063_55b4c8d2cf_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;I was first nominated in July 2011 which seems like an age ago.  I have been
+nominated various times each year since then.  There are various activities that
+I have been involved in over the that last four or so years in F#.  Here are the
+ones that I feel particularly proud of:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;blogging&#34;&gt;Blogging&lt;/h1&gt;
+
+&lt;p&gt;I write about various F# topics that I find interesting.  They are usually technical
+in nature or just what I find interesting or challenging at the time.  If I can
+help someone else figure something out from one of my posts, or bootstrap an
+interesting new project, then all the better!&lt;/p&gt;
+
+&lt;h1 id=&#34;renovating-f-addin-for-monodevelop&#34;&gt;Renovating F# addin for MonoDevelop&lt;/h1&gt;
+
+&lt;p&gt;When I first started using F# on OSX the MonoDevelop F# addin was pretty derelict,
+it hadn&amp;rsquo;t been updated for sometime and didn&amp;rsquo;t even compile.  It took quite a
+learning curve but I soon got up to speed and managed to improve things bit by bit.&lt;/p&gt;
+
+&lt;p&gt;Editor support and general tooling can take a lot of time and effort, you can often
+get stuck on things with no clue on how to resolve something without digging deep
+within the F# compiler.  Im sure Don Syme has a spam filter on my emails by now :-)&lt;/p&gt;
+
+&lt;h1 id=&#34;f-on-ios&#34;&gt;F# on IOS&lt;/h1&gt;
+
+&lt;p&gt;Around January 2013 I managed to get F# working on iOS devices, you can read some
+of the details in &lt;a href=&#34;http://7sharpnine.com/posts/monotouch-and-fsharp-part-i/&#34;&gt;part one&lt;/a&gt; and &lt;a href=&#34;http://7sharpnine.com/posts/monotouch-and-fsharp-part-ii/&#34;&gt;part two&lt;/a&gt;.  It was really exciting to get
+a shinny new platform availably for F#!&lt;/p&gt;
+
+&lt;h1 id=&#34;edge-fs&#34;&gt;Edge.fs&lt;/h1&gt;
+
+&lt;p&gt;Before the FSharp.Compiler.Service even came to light I heard about &lt;a href=&#34;http://tjanczuk.github.io/edge/#/&#34;&gt;Edge.js&lt;/a&gt; and
+wanted to have F# support, so in May 2013 I set about implementing it.  I
+ended up playing around in the compiler trying to figure how things worked.  You
+can read all about that &lt;a href=&#34;http://7sharpnine.com/posts/i-node-something/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;f-for-scriptcs&#34;&gt;F# for ScriptCS&lt;/h1&gt;
+
+&lt;p&gt;Around June 2013 &lt;a href=&#34;http://scriptcs.net&#34;&gt;ScriptCS&lt;/a&gt; was getting a great deal of publicity on Twitter so I
+decided it was about time F# should be &lt;a href=&#34;http://7sharpnine.com/posts/can-i-have-some-fsharp-with-that/&#34;&gt;part of it&lt;/a&gt;.  This was also another
+opportunity to start hacking in the compiler again, ultimately this ended up with
+better programmatic REPL support added to the F# compiler.&lt;/p&gt;
+
+&lt;h1 id=&#34;creation-of-f-compiler-service&#34;&gt;Creation of F# Compiler Service&lt;/h1&gt;
+
+&lt;p&gt;As part of working on the &lt;a href=&#34;https://github.com/fsharp/xamarin-monodevelop-fsharp-addin&#34;&gt;F# plugin&lt;/a&gt; for MonoDevelop it came to light that better
+support was needed for the F# compiler so that better tool integration could be
+built.  I worked to try and consolidate different areas of the the compiler that
+were being used by disparate tooling at the time.  This eventually lead to working
+with Don Syme to create &lt;a href=&#34;http://fsharp.github.io/FSharp.Compiler.Service/&#34;&gt;FSharp.Compiler.Service&lt;/a&gt;.  Over time this repository has
+been improved and lead to even better tooling for all editors and IDE&amp;rsquo;s that use it.&lt;/p&gt;
+
+&lt;h1 id=&#34;fsharp-core-nuget-package&#34;&gt;FSharp.Core nuget package&lt;/h1&gt;
+
+&lt;p&gt;I petitioned for some time to get better PCL support for F#, namely the quite
+common profiles 78 &lt;em&gt;(.NET Framework 4.5, Windows 8, Windows Phone Silverlight 8)&lt;/em&gt;
+and 259 &lt;em&gt;(.NET Framework 4.5, Windows 8, Windows Phone 8.1, Windows Phone Silverlight 8)&lt;/em&gt;.   Once
+the extra profiles were brought to fruition I created a nuget package to deploy
+them for easy consumption.&lt;/p&gt;
+
+&lt;h1 id=&#34;f-community-bad-ass&#34;&gt;F# Community Bad Ass&lt;/h1&gt;
+
+&lt;p&gt;This is one of my favorites:  In May 2014 I was awarded the F# community Badass
+award at &lt;a href=&#34;http://www.meetup.com/FSharpLondon/&#34;&gt;Functional Londoners&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/7sharp9&#34;&gt;@7sharp9&lt;/a&gt; &lt;a href=&#34;https://twitter.com/fsharporg&#34;&gt;@fsharporg&lt;/a&gt; &amp;quot;For services to the F# community in open source, cross-platform IDE, mobile and runtime tools&amp;quot;. Badass #1&lt;/p&gt;&amp;mdash; Don Syme (@dsyme) &lt;a href=&#34;https://twitter.com/dsyme/status/464669331889340416&#34;&gt;May 9, 2014&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;I wish I had got an official trophy for that, it would have looked really good on
+the mantlepiece!  :-)&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm1.staticflickr.com/256/18984716933_b7f2cbe6fb_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Meta-Matic</title>
+      <link>http://7sharpnine.com/2015/07/12/2015-07-08-meta-matic/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/07/12/2015-07-08-meta-matic/</guid>
+      <description>
+
+&lt;p&gt;Sit down, strap in, and prepare for take off, we&amp;rsquo;re going Meta-Matic!&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re going to be exploring some &lt;a href=&#34;https://en.wikipedia.org/wiki/Metaprogramming&#34;&gt;metaprogramming&lt;/a&gt; magic in F#.  Transforming
+its abstract syntax tree (&lt;a href=&#34;https://en.wikipedia.org/wiki/Abstract_syntax_tree&#34;&gt;AST&lt;/a&gt;) into another languages AST before executing
+it in another &lt;a href=&#34;https://en.wikipedia.org/wiki/Virtual_machine&#34;&gt;virtual machine&lt;/a&gt;, Exciting!!&lt;/p&gt;
+
+&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
+
+&lt;p&gt;&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;Nothing really known can continue to be acutely fascinating&lt;/p&gt;
+
+  &lt;cite&gt;H.P Lovecraft&lt;/cite&gt;
+&lt;/blockquote&gt;
+First a little bit of background.  There are three main forms of metaprogramming
+in F#, although you could call &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/hh156509.aspx&#34;&gt;Type Providers&lt;/a&gt; a form of metaprogramming albeit
+limited in scope.  I shall now briefly describe each below.&lt;/p&gt;
+
+&lt;h2 id=&#34;quotations&#34;&gt;Quotations&lt;/h2&gt;
+
+&lt;p&gt;According to MSDN:&lt;/p&gt;
+
+&lt;blockquote cite=&#34;https://msdn.microsoft.com/en-us/library/dd233212.aspx?f=255&amp;amp;MSPPError=-2147217396&#34;&gt;
+  &lt;p&gt;Code quotations, a language feature that enables you to generate and work with
+F# code expressions programmatically. This feature lets you generate an abstract
+syntax tree that represent&amp;rsquo;s F# code. The abstract syntax tree can then be traversed
+and processed according to the needs of your application&lt;/p&gt;
+
+  &lt;cite&gt;&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Quotations are fairly useful for translating some parts of the F# language to another
+language.  They can depend on &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/f7ykdhsy(v=vs.110).aspx&#34;&gt;Reflection&lt;/a&gt; and having compiled DLLs for any types
+referenced in the quoted expression.  They also have limitations like types are
+not supported, neither are variables that escape their quoted scope, and also
+generic definitions are not supported.  They cant really be used for staged
+metaprogramming where you may need to refer to the full language and its constructs.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;&amp;lt;@ [for i in 1 .. 10 do yield i * i] @&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Quotations.Expr&amp;lt;int list&amp;gt; =
+  Call (None, ToList,
+    [Call (None, CreateSequence,
+      [Call (None, Delay,
+        [Lambda (unitVar,
+          Call (None, Map,
+            [Lambda (i, Call (None, op_Multiply, [i, i])),
+              Call (None, op_Range,
+                [Value (1), Value (10)])]))])])])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;untyped-ast&#34;&gt;Untyped AST&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the untyped &lt;a href=&#34;https://en.wikipedia.org/wiki/Abstract_syntax_tree&#34;&gt;AST&lt;/a&gt; that can be manipulated in some ways although
+it&amp;rsquo;s not exactly pleasant to do.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example-1&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[for i in 1 .. 10 do yield i * i]  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[SynModuleOrNamespace
+   ([Test
+       {idRange = Test.fs (1,0--1,0);
+        idText = &amp;quot;Test&amp;quot;;}],true,
+    [DoExpr
+       (SequencePointAtBinding
+          Test.fs (1,0--1,33)
+            {...},
+        ArrayOrListOfSeqExpr
+          (false,
+           CompExpr
+             (true,{contents = true;},
+              ForEach
+                (SequencePointAtForLoop
+                   Test.fs (1,1--1,20)
+                     {...},
+                 SeqExprOnly false,true,
+                 Named
+                   (Wild
+                      Test.fs (1,5--1,6)
+                        {...},
+                    i {idRange = Test.fs (1,5--1,6);
+                       idText = &amp;quot;i&amp;quot;;},false,null,
+                    Test.fs (1,5--1,6)
+                      {...}),
+                 App
+                   (NonAtomic,false,
+                    App
+                      (NonAtomic,true,
+                       Ident
+                         op_Range
+                           {idRange = Test.fs (1,12--1,14);
+                            idText = &amp;quot;op_Range&amp;quot;;},
+                       Const
+                         (Int32 1,
+                          Test.fs (1,10--1,11)
+                            {...}),
+                       Test.fs (1,10--1,14)
+                         {...}),
+                    Const
+                      (Int32 10,
+                       Test.fs (1,15--1,17)
+                         {...}),
+                    Test.fs (1,10--1,17)
+                      {...}),
+                 YieldOrReturn
+                   ((true, false),
+                    App
+                      (NonAtomic,false,
+                       App
+                         (NonAtomic,true,
+                          Ident
+                            op_Multiply
+                              {idRange = Test.fs (1,29--1,30);
+                               idText = &amp;quot;op_Multiply&amp;quot;;},
+                          Ident
+                            i {idRange = Test.fs (1,27--1,28);
+                               idText = &amp;quot;i&amp;quot;;},
+                          Test.fs (1,27--1,30)
+                            {...}),
+                       Ident
+                         i {idRange = Test.fs (1,31--1,32);
+                            idText = &amp;quot;i&amp;quot;;},
+  &amp;lt;snip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see it&amp;rsquo;s a bit of a handful, I even omitted some of the range statements
+too.  It&amp;rsquo;s possible to manipulate this but it&amp;rsquo;s not exactly easy without a lot of
+helper functions and patience.  Maybe I can cover this in a future post as it has
+its own use case in terms of F# manipulation and recompilation, but that&amp;rsquo;s a whole
+other story.  Outside of the compiler it&amp;rsquo;s mainly used for code analysis type operations.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;typed-ast-typed-expressions&#34;&gt;Typed AST / Typed Expressions&lt;/h2&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the Typed AST (TAST) or Typed Expressions that fully represent&amp;rsquo;s the
+F# language.  Like quotations, they give you a detailed view of checked/resolved/typed
+F# expressions.  They have no dependency on reflection and do not require any on
+disk assemblies.  They can be generated for solutions that that contain errors,
+and include all F# language constructs including those used in FSharp.Core.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-example-2&#34;&gt;Code Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[for i in 1 .. 10 do yield i * i]  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A textual representation of what this looks like is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[Entity
+  (Test,
+    [InitAction
+      Call (null,val toList,[],[int],
+        [Call (null,val seq,[],[type int],
+          [Call (null,val delay,[],[int],
+            [Lambda (val unitVar,
+              Call (null,val map,[],
+                [type int; type int],
+                  [Lambda (val i,
+                    Call (null,val op_Multiply,[],
+                      [type int; type int;
+                        type int],[Value val i; Value val i]));
+                          Call (null,val op_Range,[],[type int],
+                            [Const (1,type int);
+                              Const (10,type int)])]))])])])])] 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this example and the preceding one you will notice that they both begin with
+either an &lt;code&gt;Entity&lt;/code&gt; in this example, and &lt;code&gt;SynModuleOrNamespace&lt;/code&gt; in the
+previous.  This is because dealing with the full F# metadata means we have access
+to the full range of F# syntactic constructs.  Entities also sit within another
+file based construct that I have omitted from these examples for the benefit of clarity.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;let-s-get-to-work&#34;&gt;Let&amp;rsquo;s get to work&lt;/h1&gt;
+
+&lt;p&gt;For the purpose of this blog post we are going to use a basic F# module with a
+single function.  We will be performing all sorts of black magic so it&amp;rsquo;s best to constrain
+this from the outset.  &lt;em&gt;(Note:  Im joking here)&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;There is nothing more beautiful than an elegant mathematical proof.&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, letter to Frank Belknap Long&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The module and function we will be using is very simple and looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module Test
+   let square x = x * x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;retrieving-the-tast&#34;&gt;Retrieving the TAST&lt;/h2&gt;
+
+&lt;p&gt;First things first how do we get hold of the TAST?&lt;/p&gt;
+
+&lt;p&gt;We will need the &lt;code&gt;FSharp.Compiler.Service&lt;/code&gt; package that can be installed from your
+IDE or favorite command line tool such as nuget:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nuget install FSharp.Compiler.Service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that it&amp;rsquo;s installed we can start using it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;#r &amp;quot;../packages/FSharp.Compiler.Service.0.0.89/lib/net45/FSharp.Compiler.Service.dll&amp;quot;
+open System
+open System.IO
+open Microsoft.FSharp.Compiler.SourceCodeServices
+
+let testModule = &amp;quot;&amp;quot;&amp;quot;module Test
+   let square x = x * x
+&amp;quot;&amp;quot;&amp;quot;
+
+let file = __SOURCE_DIRECTORY__ +  &amp;quot;/Test.fs&amp;quot;
+File.WriteAllText(file, testModule)
+let checker = FSharpChecker.Create(keepAssemblyContents=true)
+let options =
+  checker.GetProjectOptionsFromCommandLineArgs(&amp;quot;Test&amp;quot;, [|&amp;quot;-o:Test.dll&amp;quot;;&amp;quot;-a&amp;quot;;file|])
+let checkProjectResults =
+  checker.ParseAndCheckProject(options) |&amp;gt; Async.RunSynchronously
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to examine the TAST we have to make sure that when creating the &lt;code&gt;FSharpChecker&lt;/code&gt;
+we set the optional parameter &lt;code&gt;keepAssemblyContents&lt;/code&gt; to true, this lets you examine
+the typed AST in full.&lt;/p&gt;
+
+&lt;h2 id=&#34;examining-the-tast&#34;&gt;Examining the TAST&lt;/h2&gt;
+
+&lt;p&gt;Examining &lt;code&gt;checkProjectResults&lt;/code&gt; will yield several properties: &lt;code&gt;AssemblyContents&lt;/code&gt;,
+&lt;code&gt;AssemblySignature&lt;/code&gt;, &lt;code&gt;Errors&lt;/code&gt;, &lt;code&gt;HasCriticalErrors&lt;/code&gt;, and &lt;code&gt;ProjectContext&lt;/code&gt;.  Most of
+those are pretty obvious, if we examine &lt;code&gt;Errors&lt;/code&gt; and &lt;code&gt;HasCriticalErrors&lt;/code&gt; we could
+decide to abandon further processing but for the purposes of this example we are
+going to assume that there are no errors.&lt;/p&gt;
+
+&lt;p&gt;The property that we are interested in is &lt;code&gt;AssemblyContents&lt;/code&gt; this essentially
+contains a list of &lt;code&gt;ImplementationFiles&lt;/code&gt;, and an &lt;code&gt;ImplementationFile&lt;/code&gt; has a list of
+&lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go ahead and examine what we currently have:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;checkProjectResults.AssemblyContents.ImplementationFiles.Head.Declarations
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will yield a similar structure to what you saw above in the list comprehension.&lt;br /&gt;
+I have shortened the the &lt;code&gt;Microsoft.FSharp.Core.*&lt;/code&gt; prefixes to save space.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[Entity
+ (Test,
+  [MemberOrFunctionOrValue
+     (val square,[[val x]],
+      Call
+        (null,val op_Multiply,[],
+         [type int; type int;
+          type int],[Value val x; Value val x]))])]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt; is a &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/dd233226.aspx&#34;&gt;discriminated union&lt;/a&gt; type that is defined as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type FSharpImplementationFileDeclaration = 
+  | Entity of FSharpEntity * FSharpImplementationFileDeclaration list
+  | MemberOrFunctionOrValue of FSharpMemberOrFunctionOrValue * FSharpMemberOrFunctionOrValue list list * FSharpExpr
+  | InitAction of FSharpExpr
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With this in mind we could now traverse the tree with something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec processDecl decl =
+  match decl with
+  | Entity(ent, declList) -&amp;gt;
+      printfn &amp;quot;Entity&amp;quot;
+      declList |&amp;gt; List.iter processDecl
+  | InitAction(expr) -&amp;gt; printfn &amp;quot;Init Action&amp;quot;
+  | MemberOrFunctionOrValue(memb, curriedParameterGroups, expr)-&amp;gt;
+      printfn &amp;quot;Member&amp;quot;
+      printfn &amp;quot;Expressions: %A&amp;quot; expr
+
+for implFile in checkProjectResults.AssemblyContents.ImplementationFiles do
+  for decl in implFile.Declarations do
+    processDecl decl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This would yield similar output to what we saw before although we are now getting a
+feel for the structure of the tree.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Entity:Test
+Member:square
+Expressions: Call
+  (null,val op_Multiply,[],
+   [type int; type int;
+    type int],[Value val x; Value val x])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;preparing-to-transform&#34;&gt;Preparing To transform&lt;/h1&gt;
+
+&lt;p&gt;Ok, so we know a little about the TAST structure and how to navigate it, now we
+can look to transform it.  So what can we transform the F# TAST to?&lt;/p&gt;
+
+&lt;p&gt;Absolutely anything we want, but for the purposes of this article let&amp;rsquo;s choose
+something interesting &amp;hellip; like Elixir.&lt;/p&gt;
+
+&lt;h2 id=&#34;elixir-language&#34;&gt;Elixir language&lt;/h2&gt;
+
+&lt;p&gt;So what is Elixir?  I&amp;rsquo;ll quote the description from the &lt;a href=&#34;http://elixir-lang.org&#34;&gt;Elixir website&lt;/a&gt; as this
+post is not about describing the Elixir language.&lt;br /&gt;
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;Elixir is a dynamic, functional language designed for building scalable and
+maintainable applications.&lt;/p&gt;
+
+  &lt;cite&gt;&lt;/cite&gt;
+&lt;/blockquote&gt;&lt;/p&gt;
+
+&lt;p&gt;Elixir leverages the Erlang VM, known for running low-latency, distributed and
+fault-tolerant systems, while also being successfully used in web development and
+the embedded software domain.
+{% endblockquote %}&lt;/p&gt;
+
+&lt;h2 id=&#34;elixir-ast-structure&#34;&gt;Elixir AST structure&lt;/h2&gt;
+
+&lt;p&gt;The Elixir AST structure is described like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{atom | tuple, list, list | atom}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The first element is an atom or another tuple in the same representation;&lt;/li&gt;
+&lt;li&gt;The second element is a keyword list containing metadata, like numbers and contexts&lt;/li&gt;
+&lt;li&gt;The third element is either a list of arguments for the function call or an
+atom. When this element is an atom, it means the tuple represent&amp;rsquo;s a variable.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Elixir is a quite capable language and I will be exploring it further in future
+posts.  For now we&amp;rsquo;ll simply transform the equivalent function in Elixir to
+its native AST to see what it looks like.  This is really quite easy in Elixir
+as it has a far more natural metaprogramming experience than F#.  We just use
+&lt;code&gt;quote(opts, block)&lt;/code&gt;, where &lt;code&gt;block&lt;/code&gt; is the expression we want to get the AST
+representation for.  As an example let&amp;rsquo;s &lt;code&gt;quote&lt;/code&gt; the Elixir equivalent of the F#
+&lt;code&gt;Test&lt;/code&gt; module with the &lt;code&gt;square&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;quote do
+  defmodule Test do
+    def square(x) do
+      x * x
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in an Elixir AST:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{:defmodule, [context: Elixir, import: Kernel],
+ [{:__aliases__, [alias: false], [:Test]},
+  [do: {:def, [context: Elixir, import: Kernel],
+    [{:square, [context: Elixir], [{:x, [], Elixir}]},
+     [do: {:*, [context: Elixir, import: Kernel],
+       [{:x, [], Elixir}, {:x, [], Elixir}]}]]}]]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;a-tale-of-two-trees&#34;&gt;A Tale Of Two Trees&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start defining a tree structure for our transformation, we are going to be
+transforming from an F# TAST straight to an Elixir AST as Elixir has capabilities
+to use the AST fairly easily, we don&amp;rsquo;t have to specifically work with the AST
+to get it back to code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type ElixirAst =
+  | Fragment of atom : string * metadata : (string * string ) list * args : Arguments
+  | Nested of (string * Arguments) list
+  
+and Arguments =
+  | Binding of string 
+  | Bindings of list&amp;lt;string&amp;gt;
+  | Arguments of list&amp;lt;ElixirAst&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We use a recursive &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/dd233226.aspx&#34;&gt;Discriminated Union&lt;/a&gt; that describes the
+Elixir AST.  You should be able to see it&amp;rsquo;s made up of either a &lt;code&gt;Fragment&lt;/code&gt; or a
+&lt;code&gt;Nested&lt;/code&gt; both of those can contain &lt;code&gt;Arguments&lt;/code&gt; that can in turn contain &lt;code&gt;Binding&lt;/code&gt;,
+&lt;code&gt;Bindings&lt;/code&gt;, or a list of &lt;code&gt;Arguments&lt;/code&gt; that can also be &lt;code&gt;Fragment&lt;/code&gt; or &lt;code&gt;Nested&lt;/code&gt; &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s quite a brain twister at first glance but it should hopefully make sense.&lt;/p&gt;
+
+&lt;h2 id=&#34;transforming-the-trees&#34;&gt;Transforming The Trees&lt;/h2&gt;
+
+&lt;p&gt;We are now going to write a pair of functions that will iterate over the F# TAST
+and produce an Elixir AST, its more or less a case of transforming the F# constructs to the Elixir equivalents.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec traverseExpr expr =
+  match expr with
+  | BasicPatterns.Call(_expr,functionMemberOrVal,_,_typeSig, expressions) -&amp;gt;
+      let argumentFragments = expressions |&amp;gt; List.map traverseExpr
+      let functionName = functionMap functionMemberOrVal.LogicalName
+      Fragment(functionName, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;;&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments argumentFragments)
+  | BasicPatterns.Value(v) -&amp;gt; Fragment(&amp;quot;:&amp;quot; + v.DisplayName, [], Binding &amp;quot;Elixir&amp;quot;)
+  | other -&amp;gt; failwithf &amp;quot;Not implmented: %A&amp;quot; other
+
+let rec traverse decl = 
+  match decl with
+  | FSharpImplementationFileDeclaration.Entity(ent, declList) -&amp;gt;
+      let arguments =
+        [yield Fragment(&amp;quot;:__aliases__&amp;quot;, [&amp;quot;alias:&amp;quot;, &amp;quot;false&amp;quot;], Bindings[&amp;quot;:&amp;quot; + ent.DisplayName])
+         let declList = declList |&amp;gt; List.map traverse
+         yield Nested[(&amp;quot;do:&amp;quot;, Arguments declList)] ]
+      let moduledef =
+        Fragment(&amp;quot;:defmodule&amp;quot;, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;; &amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments arguments )
+      moduledef
+      
+  | FSharpImplementationFileDeclaration -&amp;gt; failwith &amp;quot;Not implemented&amp;quot;
+  
+  | FSharpImplementationFileDeclaration.MemberOrFunctionOrValue(memb, curriedParameterGroups, expr)-&amp;gt;
+      let args = 
+        [ let parameters =
+            [for group in curriedParameterGroups do
+               for param in group do
+                 yield &amp;quot;:&amp;quot; + param.DisplayName] |&amp;gt; List.map (fun name -&amp;gt; Fragment(name, [], Binding &amp;quot;Elixir&amp;quot;))
+        
+          yield Fragment(&amp;quot;:&amp;quot; + memb.DisplayName, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;], Arguments parameters)
+          yield Nested[(&amp;quot;do:&amp;quot;, Arguments [traverseExpr expr] ) ] ]
+      Fragment(&amp;quot;:def&amp;quot;, [&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;; &amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;], Arguments args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the &lt;code&gt;FSharpImplementationFileDeclaration&lt;/code&gt; fails with not implemented as
+it&amp;rsquo;s not needed in this example so we will omit it here.&lt;/p&gt;
+
+&lt;p&gt;One thing I haven&amp;rsquo;t shown in detail in the F# TAST section was the expressions,
+that&amp;rsquo;s because there are 43 different elements that make up F#&amp;rsquo;s&amp;rsquo; full typed
+expressions.  In our example we only need to use &lt;code&gt;Call&lt;/code&gt; and &lt;code&gt;Value&lt;/code&gt; so the
+other expression types fail with not implemented too.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try this out by pumping the F# TAST through our new function and see what we get:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let astElements =
+  [for implFile in checkProjectResults.AssemblyContents.ImplementationFiles do
+    for decl in implFile.Declarations do
+      yield traverse decl]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;[Fragment
+ (&amp;quot;:defmodule&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+  Arguments
+    [Fragment (&amp;quot;:__aliases__&amp;quot;,[(&amp;quot;alias:&amp;quot;, &amp;quot;false&amp;quot;)],Bindings [&amp;quot;:Test&amp;quot;]);
+     Nested
+       [(&amp;quot;do:&amp;quot;,
+         Arguments
+           [Fragment
+              (&amp;quot;:def&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+               Arguments
+                 [Fragment
+                    (&amp;quot;:square&amp;quot;,[(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;)],
+                     Arguments [Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;)]);
+                      Nested
+                        [(&amp;quot;do:&amp;quot;,
+                          Arguments
+                            [Fragment
+                               (&amp;quot;:*&amp;quot;,
+                                [(&amp;quot;context:&amp;quot;, &amp;quot;Elixir&amp;quot;); (&amp;quot;import:&amp;quot;, &amp;quot;Kernel&amp;quot;)],
+                                Arguments
+                                  [Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;);
+                                   Fragment (&amp;quot;:x&amp;quot;,[],Binding &amp;quot;Elixir&amp;quot;)])])]])])]])]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;&amp;ldquo;I have harnessed the shadows that stride from world to world to sow death and madness.&amp;rdquo;&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, From Beyond&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;stringify-the-ast&#34;&gt;Stringify the AST&lt;/h2&gt;
+
+&lt;p&gt;Ok, so now that we have an F# based tree structure that describes the Elixir AST we
+now need it back in stringly form to do anything with it.  We could of just traversed
+the tree writing the AST elements but that wouldn&amp;rsquo;t of given us the flexibility to
+traverse the tree in the future.&lt;/p&gt;
+
+&lt;p&gt;As we will be working with string&amp;rsquo;s and &lt;code&gt;StringBuilder&lt;/code&gt;s let&amp;rsquo;s define a few helper functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let (++) (ctx:StringBuilder) (str:String) = ctx.Append(str)
+let (+&amp;gt;) (ctx:StringBuilder) (f:StringBuilder -&amp;gt; StringBuilder) = f ctx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These will let us pipe two &lt;code&gt;StringBuilder&lt;/code&gt; append operations together and also allow
+us to pipe into other functions that take a &lt;code&gt;StringBuilder&lt;/code&gt; as an argument.&lt;/p&gt;
+
+&lt;p&gt;First we&amp;rsquo;ll define something simple that will just render the metadata:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let printMeta (meta: (string * string) list) (sb:StringBuilder) =
+  meta
+  |&amp;gt; Seq.map (fun (key,value) -&amp;gt; sprintf &amp;quot;%s %s&amp;quot; key value)
+  |&amp;gt; String.concat &amp;quot;, &amp;quot;
+  |&amp;gt; Printf.bprintf sb &amp;quot;[%s]&amp;quot;
+  sb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now a duo of functions that will traverse the &lt;code&gt;ElixirAst&lt;/code&gt;, processing the
+&lt;code&gt;Arguments&lt;/code&gt;, &lt;code&gt;Fragment&lt;/code&gt;, and &lt;code&gt;Nested&lt;/code&gt; elements:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let rec printArgs args (sb:StringBuilder) =
+  match args with
+  | Binding s -&amp;gt; sb ++ s
+  | Bindings xs -&amp;gt; sb ++ sprintf &amp;quot;[%s]&amp;quot; (String.concat &amp;quot;, &amp;quot; xs)
+  | Arguments args -&amp;gt;
+    sb ++ &amp;quot;[&amp;quot; |&amp;gt; ignore
+    args |&amp;gt; List.iteri (fun i item -&amp;gt; printAst item sb |&amp;gt; ignore
+                                      if i &amp;lt; args.Length-1 then sb ++ &amp;quot;, &amp;quot; |&amp;gt; ignore)
+    sb ++ &amp;quot;]&amp;quot;
+
+and printAst ast (sb:StringBuilder) =
+  match ast with
+  | Fragment(atom, metadata, args) -&amp;gt;
+    sb ++ sprintf &amp;quot;{%s, &amp;quot; atom +&amp;gt; printMeta metadata ++ &amp;quot;, &amp;quot; +&amp;gt; printArgs args ++ &amp;quot;}&amp;quot;
+  | Nested(items) -&amp;gt;
+    sb ++ &amp;quot;[&amp;quot; |&amp;gt; ignore
+
+    items
+    |&amp;gt; List.iteri (fun i (name, args) -&amp;gt;
+                     sb ++ sprintf &amp;quot;%s &amp;quot; name +&amp;gt; printArgs args |&amp;gt; ignore
+                     if i &amp;lt; items.Length-1 then sb ++ &amp;quot;, &amp;quot; |&amp;gt; ignore)
+
+    sb ++ &amp;quot;]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally capture the results by iterating over the AST and collecting the
+stringified results:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let elixirAstItems = 
+  let sb = StringBuilder()
+  [for element in astElements do
+     printAst element sb |&amp;gt; ignore
+     yield sb.ToString()]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;vm-execution&#34;&gt;VM execution&lt;/h1&gt;
+
+&lt;blockquote cite=&#34;&#34;&gt;
+  &lt;p&gt;&amp;ldquo;I have brought to light a monstrous abnormality, but I did it for the sake of
+knowledge. Now for the sake of all life and Nature you must help me thrust it
+back into the dark again.&amp;rdquo;&lt;/p&gt;
+
+  &lt;cite&gt;H.P. Lovecraft, The Case of Charles Dexter Ward&lt;/cite&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;helper-process&#34;&gt;Helper Process&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;ll go for the simplest option here: we will create a new process, start up an
+interactive Elixir session, and send across a few commands including the AST that
+we just created.&lt;/p&gt;
+
+&lt;p&gt;Now we&amp;rsquo;ll define a type to help us with this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type public ProcessWrapper(file: string, env:Collections.Generic.IDictionary&amp;lt;_,_&amp;gt;) =
+  let info = ProcessStartInfo(RedirectStandardInput = true,
+                              RedirectStandardOutput = true,
+                              UseShellExecute = false,
+                              CreateNoWindow = true,
+                              FileName = file)
+
+  do 
+    for item in env do
+      info.EnvironmentVariables.[item.Key] &amp;lt;- item.Value
+  let proc = new Process(StartInfo = info)
+  let outputBuffer = StringBuilder()
+  let dataReceived = proc.OutputDataReceived.Subscribe(fun data -&amp;gt; outputBuffer.AppendLine(data.Data) |&amp;gt; ignore)
+
+  [&amp;lt;CLIEvent&amp;gt;]
+  member this.OutputReceived = proc.OutputDataReceived
+
+  [&amp;lt;CLIEvent&amp;gt;]
+  member this.ErrorReceived = proc.ErrorDataReceived
+
+  member this.Start() =
+    proc.Start() |&amp;gt; ignore
+    proc.BeginOutputReadLine()
+
+  member this.Send(line: string) =
+    proc.StandardInput.WriteLine(line)
+
+  member this.Flush() =
+    proc.StandardInput.Flush()
+
+  member x.GetOutputBuffer(?clear) =
+    let data = outputBuffer.ToString()
+    if clear.IsSome then outputBuffer.Clear() |&amp;gt; ignore
+    data
+
+  interface IDisposable with
+    member x.Dispose() =
+      dataReceived.Dispose()
+      proc.Dispose()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;code-execution&#34;&gt;Code Execution&lt;/h2&gt;
+
+&lt;p&gt;Now that we have all of the pieces in place let&amp;rsquo;s start the process and add some
+path variables so that iex can find the things that are normally in your path.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let iex =
+  new ProcessWrapper(&amp;quot;/usr/local/Cellar/elixir/1.0.4/bin/iex&amp;quot;,
+                     dict[&amp;quot;PATH&amp;quot;, &amp;quot;/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin&amp;quot;])
+iex.Start()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can send across out AST definition and assign it to &lt;code&gt;mycode&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;mycode =&amp;quot; + List.head elixirAstItems)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we examined the output of iex now we can see that this has been assigned:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.GetOutputBuffer()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;{:defmodule, [context: Elixir, import: Kernel],
+ [{:__aliases__, [alias: false], [:Test]},
+  [do: [{:def, [context: Elixir, import: Kernel],
+     [{:square, [context: Elixir], [{:x, [], Elixir}]},
+      [do: [{:*, [context: Elixir, import: Kernel],
+         [{:x, [], Elixir}, {:x, [], Elixir}]}]]]}]]]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can use Elixir&amp;rsquo;s metaprogramming capabilities to compile this AST so we can use it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;mycode |&amp;gt; Code.compile_quoted()&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;[{Test, &amp;lt;&amp;lt;70, 79, 82, 49, 0, 0, 4, 104, 66, 69, 65, 77, 69, 120, 68, 99, 0 ...&amp;gt;&amp;gt;}]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes!!  It looks like our AST has now been compiled, we have a module named &lt;code&gt;Test&lt;/code&gt;
+with binary data assigned.  Now let&amp;rsquo;s see if we can execute our &lt;code&gt;square&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;iex.Send(&amp;quot;Test.square(16)&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elixir&#34;&gt;[256]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Woo-hoo job done!  I hope you enjoyed this whistle stop tour through the
+&lt;a href=&#34;https://en.wikipedia.org/wiki/At_the_Mountains_of_Madness&#34;&gt;Mountains Of Madness&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know about you, but I need a cup of tea!&lt;/p&gt;
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Are you my type?</title>
+      <link>http://7sharpnine.com/2015/03/30/2015-03-30-are-you-my-type/</link>
+      <pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/03/30/2015-03-30-are-you-my-type/</guid>
+      <description>&lt;p&gt;Did you know there was more to the type matching operator than just pattern matching and exception handling?&lt;/p&gt;
+
+&lt;p&gt;The type matching operator is defined thus: &lt;code&gt;:?&lt;/code&gt;  It can be used by &lt;a href=&#34;https://msdn.microsoft.com/en-gb/library/dd547125.aspx&#34;&gt;pattern matching&lt;/a&gt; to match on a specific type.  For example, you might want to test that an object is a certain type or deal with an object being one of several different types.  Pattern matching on types is your friend here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;match symbolUse.Symbol with
+| :? FSharpMemberOrFunctionOrValue
+| :? FSharpUnionCase
+| :? FSharpEntity
+| :? FSharpField
+| :? FSharpGenericParameter
+| :? FSharpActivePatternCase
+| :? FSharpParameter
+| :? FSharpStaticParameter -&amp;gt;
+    match getSymbolDeclarationLocation symbolUse currentFile solution with
+    | SymbolDeclarationLocation.External -&amp;gt; false
+    | SymbolDeclarationLocation.Unknown -&amp;gt; false
+    | _ -&amp;gt; true
+| _ -&amp;gt; false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;During pattern matching you can also use the &lt;code&gt;as&lt;/code&gt; assignment operator to assign a named binding to the match so you can use it directly.  This is somewhat akin to using &lt;code&gt;is&lt;/code&gt; and &lt;code&gt;as&lt;/code&gt; in C#, or using an &lt;code&gt;as&lt;/code&gt; and then a &lt;code&gt;null&lt;/code&gt; check.  Yuck!  None of that kind of thing in F#:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let isPrivateToFile = 
+    match symbolUse.Symbol with
+    | :? FSharpMemberOrFunctionOrValue as m -&amp;gt; not m.IsModuleValueOrMember
+    | :? FSharpEntity as m -&amp;gt; m.Accessibility.IsPrivate
+    | :? FSharpGenericParameter -&amp;gt; true
+    | :? FSharpUnionCase as m -&amp;gt; m.Accessibility.IsPrivate
+    | :? FSharpField as m -&amp;gt; m.Accessibility.IsPrivate
+    | _ -&amp;gt; false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It can also be used in &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/dd233194.aspx&#34;&gt;exception handing&lt;/a&gt; to match a specific type of exception, as in this example where &lt;code&gt;TimeoutExceptions&lt;/code&gt; are caught:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.GetDeclarationSymbols(line, col, lineStr) = 
+    match infoOpt with 
+    | None -&amp;gt; None
+    | Some (checkResults, parseResults) -&amp;gt; 
+        let longName,residue = Parsing.findLongIdentsAndResidue(col, lineStr)
+        // Get items &amp;amp; generate output
+        try
+            let results = 
+                Async.RunSynchronously (checkResults.GetDeclarationListSymbols(Some parseResults, line, col, lineStr, longName, residue, fun _ -&amp;gt; false), timeout = ServiceSettings.blockingTimeout )
+            Some (results, residue)
+        with :? TimeoutException -&amp;gt; None
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A final use for &lt;code&gt;:?&lt;/code&gt; that people either don&amp;rsquo;t tend to use or know about, is during a normal expression assignment.  In this example &lt;code&gt;item :? DotNetProject&lt;/code&gt; would evaluate to true when &lt;code&gt;item&lt;/code&gt; is a &lt;code&gt;DotNetProject&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;override x.SupportsItem(item:IBuildTarget) =
+    item :? DotNetProject
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Although not used that often I find the &lt;code&gt;:?&lt;/code&gt; operator to be really useful.&lt;/p&gt;
+
+&lt;p&gt;As usual F# helps to keep things short, succinct, and sweet!&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/5/51/Artofrebellioncover.JPG&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Suicidal Tendencies - The Art Of Rebellion&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Suicidal Tendencies - The Art Of Rebellion&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/7/78/Riseagainsttheblackmarket.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Rise Against - The Black Market&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Rise Against - The Black Market&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>One day you&#39;ll walk alone</title>
+      <link>http://7sharpnine.com/2015/02/13/2015-02-13-one-day-youll-walk-alone/</link>
+      <pubDate>Fri, 13 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/02/13/2015-02-13-one-day-youll-walk-alone/</guid>
+      <description>&lt;p&gt;One thing I never really thought about a great deal before was the term &amp;lsquo;on-line&amp;rsquo; friends and what it might or might not mean. I mean what does that really mean?  Are they just actual friends or just &amp;ldquo;on-line&amp;rdquo; friends?&lt;/p&gt;
+
+&lt;p&gt;As it turns out some will be real friends whereas other will only be in scope of whatever social or online network that they are a part of.  That is to say your Twitter friends will be scoped to Twitter and your Facebook friends ones to Facebook.  Obviously the meshing of more than one social network will reinforce the network, as will other reinforcements like actual physical presence.  Sometimes if a network ever ceases then the friendship ties can also be quickly weakened and even severed completely.&lt;/p&gt;
+
+&lt;p&gt;Maintaining friends can require considerable effort on the participants, it reminds me of simulator games style like the sims where you have to constantly manage contact with friends.&lt;/p&gt;
+
+&lt;p&gt;A lot of computer games now also require on-line friends too, where being part of a clan or party makes the games easier or more enjoyable.  Now here I show my age!  I remember when playing games involved taking your new game cartridge along to a friends house and actually playing together in physical reality!&lt;/p&gt;
+
+&lt;p&gt;So my definition of real fiends are those that transcend the scope of network, and &amp;lsquo;on-line&amp;rsquo; friends as those that are truncated by network scope.&lt;/p&gt;
+
+&lt;p&gt;I think I may have been reading a little too much Philip K. Dick lately!&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;http://upload.wikimedia.org/wikipedia/en/2/24/Megadeth-Youthanasia.jpg&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;Megadeth%20-%20Youthanasia&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;http://upload.wikimedia.org/wikipedia/en/7/72/Exodus_-_Fabulous_Disaster.jpg&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;Exodus%20-%20Fabulous%20Disaste&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Dioptric Dilemmas Of The Third Kind</title>
+      <link>http://7sharpnine.com/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</link>
+      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</guid>
+      <description>
+
+&lt;p&gt;After enjoying owning a 150mm refractor telescope for a year, I decided I wanted to upgrade.&lt;/p&gt;
+
+&lt;p&gt;One of the reasons was the optics, I wanted to reduce the amount of chromatic aberration present, I also wanted to have a better focuser.  The focuser was a real source of frustration with it constantly causing the view to shift while focussing.  I didn&amp;rsquo;t want to spend a great deal of money on a new focuser when I wasn&amp;rsquo;t happy with the overall telescope anyway.&lt;/p&gt;
+
+&lt;p&gt;
+&lt;figure class=&#34;img-left&#34;&gt;
+    
+        &lt;img src=&#34;https://upload.wikimedia.org/wikipedia/commons/a/aa/Chromatic_aberration_lens_diagram.svg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+  In optics, chromatic aberration (CA, also called achromatism, chromatic distortion, and spherochromatism) is a type of distortion in which there is a failure of a lens to focus all colour&amp;rsquo;s to the same convergence point.&lt;/p&gt;
+
+&lt;p&gt;I didn&amp;rsquo;t want to get a &lt;a href=&#34;http://en.wikipedia.org/wiki/Catadioptric_system#Catadioptric_telescopes&#34;&gt;Catadioptric style&lt;/a&gt; telescopes or a &lt;a href=&#34;http://en.wikipedia.org/wiki/Reflecting_telescope&#34;&gt;large reflector&lt;/a&gt; due to the size and also the maintenance aspects of keeping the various mirrors and lenses in alignment, not to mention the size and weight.  To put it simply, I wanted a a telescope that I could take outside (without a crane) and observe that was also low maintenance.&lt;/p&gt;
+
+&lt;p&gt;I did a lot of research other contenders for me were the APM 115mm refractor and the Williams Optics 102mm refractor.  What drew me to the Takahashi TSA 102s was there were a lots of really good reviews available and Takahashi are also renowned for using good quality optics.  I believe the lens cell is manufactured my Cannon.&lt;/p&gt;
+
+&lt;p&gt;At the same time I also decided to upgrade my mount.  I have my 150mm refractor mounted on a SkyWatcher EQ5 mount.  While this was adequate when I started I feel I have outgrown it somewhat.  It is not a driven mount so I wanted something with a drive system to keep the stars centered in the view, and I also wanted something with a goto capability.&lt;/p&gt;
+
+&lt;p&gt;I finally decided, after much research, to purchase a &lt;a href=&#34;http://www.takahashi-europe.com/en/TSA-102.php&#34;&gt;Takahashi TSA 102s&lt;/a&gt; 102mm Triplet refractor with a 3 inch &lt;a href=&#34;http://www.starlightinstruments.com&#34;&gt;Starlight Instruments&lt;/a&gt; feathertouch focuser, along with an &lt;a href=&#34;https://www.ioptron.com/index.cfm?select=productdetails&amp;amp;phid=6c9e0a81-72fb-431d-b6ac-fcc0ae36b242&#34;&gt;iOptron&lt;/a&gt; IEQ45 mount.&lt;/p&gt;
+
+&lt;p&gt;Here they are together in all their glory:&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm8.staticflickr.com/7388/16243537060_3ac01a3e33_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Detail of the iOptron IEQ45 mount and controller:
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm8.staticflickr.com/7440/16404965246_44d6d3a5a5_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Mount detail showing latitude and azimuth adjusters:
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm8.staticflickr.com/7335/16243537230_debf399058_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Detail of the superb Takahashi triplet lens:
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm8.staticflickr.com/7385/16245034187_74f0a7752e_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm8.staticflickr.com/7381/15808430234_44a15157aa_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;All I need now is a clear night to try them out!&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://farm9.staticflickr.com/8615/16404965596_5f9f662e35_z.jpg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;first-light&#34;&gt;First Light&lt;/h2&gt;
+
+&lt;p&gt;A few night later the sky was clear.  At sunset I could see Venus and Mars setting, it was too late to get the mount and telescope setup to look at Mars or Venus, but I did manage to get some nice views with binoculars.&lt;/p&gt;
+
+&lt;h3 id=&#34;setup&#34;&gt;Setup&lt;/h3&gt;
+
+&lt;p&gt;Setup was really easy, align the scope roughly North, then use the polar alignment feature on the hand controller.  A clock face is shown on the controller of the direction that you need to align the telescope to.  You simply have to rotate the adjustment knobs on the mount to get Polaris aligned in the illuminated reticle.&lt;/p&gt;
+
+&lt;h3 id=&#34;double-stars&#34;&gt;Double Stars&lt;/h3&gt;
+
+&lt;p&gt;As a quick test I managed to split a few double stars.  Notably Rigel, Mintaka, Nair al saif, Meissa, Castor, and Polaris.  There were a few more I managed to split with my limited eye pieces but I neglected to keep a log of them!&lt;/p&gt;
+
+&lt;h3 id=&#34;planets&#34;&gt;Planets&lt;/h3&gt;
+
+&lt;p&gt;Well, only Jupiter was visible, but as usual it was a magnificent sight, it was a joy to have the great planet automatically tracked and centered in the eyepiece. I could make out some lovely detail in the cloud bands.&lt;/p&gt;
+
+&lt;h3 id=&#34;deep-sky&#34;&gt;Deep Sky&lt;/h3&gt;
+
+&lt;p&gt;My knowledge of deep sky is not amazing, but I did manage to get great views of Plaides, Orion Nebula, Andromeda Galaxy.  Beehive cluster.&lt;/p&gt;
+
+&lt;p&gt;Oh, I was also lucky enough to see the comet C/2014 Q2, otherwise know as Lovejoy!&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;The Takahashi TSA 102S is built magnificently, the finish is flawless, the lens is superb, the focuser doesn&amp;rsquo;t move the view out of alignment and is super smooth to use.  The stars are crystal clear and pin sharp!&lt;/p&gt;
+
+&lt;p&gt;The iOptron IEQ45 is engineered really well too, the polar alignment is a joy to use with the illuminated view finder and helper function from the controller.  The tracking and moving the mount with the controller works really well too.&lt;/p&gt;
+
+&lt;h2 id=&#34;whats-next&#34;&gt;Whats Next&lt;/h2&gt;
+
+&lt;p&gt;Well now my main optics and mount are in order I need some proper eyepieces.  I only have the stock eyepieces that came with my 150mm: a 10mm and 25mm plössl.  I seriously need to upgrade them pronto.  I have my eye on nice &lt;a href=&#34;http://www.televue.com/engine/TV3b_page.asp?id=183&#34;&gt;TeleVue Delos&lt;/a&gt; eyepiece.&lt;/p&gt;
+
+&lt;p&gt;Now that I have a stable mount I want to try some astrophotography, it would of been great showing you what I saw rather than just describing it.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/6/64/MeteoraLP.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Linkin Park - Meteora&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Linkin Park - Meteora&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/e/e0/Diamond_%28STYG_album%29.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Stick To Your Guns - Diamond&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Stick To Your Guns - Diamond&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Terror From The Deep</title>
+      <link>http://7sharpnine.com/2014/12/10/2014-12-07-terror-from-the-deep/</link>
+      <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/12/10/2014-12-07-terror-from-the-deep/</guid>
+      <description>
+
+
+&lt;figure class=&#34;img-left&#34;&gt;
+    
+        &lt;img src=&#34;https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;So this is my Christmas special.  I&amp;rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the &lt;a href=&#34;https://github.com/fsharp/fsharpbinding&#34;&gt;fsharpbinding repo&lt;/a&gt;, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Actually I&amp;rsquo;m only joking, adding features to the F# compiler and F# addin is fairly easy depending on what you want to do.  You can run into issues along the way which means you might need to delve into more of the F# compilers functionality, essentially to derive and adapt new functions that you might need.&lt;/p&gt;
+
+&lt;p&gt;What I&amp;rsquo;m going to show is how to add a new autocompletion list where instead of a standard completion list, its categorised by the type that the methods are derived from.  As an example you would be able to see the &lt;code&gt;ToString&lt;/code&gt; methods etc on the &lt;code&gt;Obj&lt;/code&gt; type andy other methods defined on their particular derived type.&lt;/p&gt;
+
+&lt;h2 id=&#34;one-door-leads-to-the-source&#34;&gt;One door leads to the source&lt;/h2&gt;
+
+&lt;p&gt;Lets have a look at the current completion list function in the F# compiler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member GetDeclarationsAlternate : 
+	ParsedFileResultsOpt:ParseFileResults option * 
+	line: int * 
+	colAtEndOfPartialName: int * 
+	lineText:string * qualifyingNames: 
+	string list * 
+	partialName: string * 
+	?hasTextChangedSinceLastTypecheck: (obj * range -&amp;gt; bool) 
+	-&amp;gt; Async&amp;lt;DeclarationSet&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Essentially this function takes a lot of parameters, I don&amp;rsquo;t want to go into the details too much as the &lt;a href=&#34;http://fsharp.github.io/FSharp.Compiler.Service/editor.html#Getting-auto-complete-lists&#34;&gt;FCS sample pages&lt;/a&gt; does a good job of that.  So what is a &lt;code&gt;DeclarationSet&lt;/code&gt;?  Well as you expect its a collection of &lt;code&gt;Declarations&lt;/code&gt;.  A Declaration has a &lt;code&gt;Glyph&lt;/code&gt;, &lt;code&gt;Name&lt;/code&gt;, and &lt;code&gt;DescriptionText&lt;/code&gt;.  The &lt;code&gt;DescriptionText&lt;/code&gt; is a &lt;code&gt;ToolTipText&lt;/code&gt; which is a text based rendering of the declaration in question.&lt;/p&gt;
+
+&lt;h3 id=&#34;tooltipelement&#34;&gt;ToolTipElement&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;/// Describe a comment as either a block of text or a file+signature reference into an intellidoc file.
+type XmlComment =
+| XmlCommentNone
+| XmlCommentText of string
+| XmlCommentSignature of (*File and Signature*) string * string
+
+/// A single data tip display element
+type ToolTipElement = 
+| ToolTipElementNone
+/// A single type, method, etc with comment.
+| ToolTipElement of (* text *) string * XmlComment
+// /// A parameter of a method.
+// | ToolTipElementParameter of string * XmlComment * string
+/// For example, a method overload group.
+| ToolTipElementGroup of ((* text *) string * XmlComment) list
+/// An error occurred formatting this element
+| ToolTipElementCompositionError of string
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At first glance this information is quite interesting but in use the limitation of text based rendering becomes apparent.  How can you break down the information into easily renderable parts or know the underlying types that make up the declaration.  Text based manipulation means a lot of work, and also lots of potential bugs, as you would expect with text based or weakly typed system.&lt;/p&gt;
+
+&lt;p&gt;Lets have a look at the &lt;code&gt;GetDeclarationsAlternate&lt;/code&gt; function and see if we have access to any detailed information:&lt;/p&gt;
+
+&lt;h3 id=&#34;getdeclarationsalternate&#34;&gt;GetDeclarationsAlternate&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;    member info.GetDeclarationsAlternate(parseResultsOpt, line, colAtEndOfNamesAndResidue, lineStr, qualifyingNames, partialName, ?hasTextChangedSinceLastTypecheck) = 
+        let hasTextChangedSinceLastTypecheck = defaultArg hasTextChangedSinceLastTypecheck (fun _ -&amp;gt; false)
+        reactorOp DeclarationSet.Empty (fun scope -&amp;gt; scope.GetDeclarations(parseResultsOpt, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, so that just calls &lt;code&gt;GetDeclarations&lt;/code&gt; after doing a check for changes since the last type check, lets go deeper&amp;hellip;&lt;/p&gt;
+
+&lt;h3 id=&#34;getdeclarations&#34;&gt;GetDeclarations&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;    member x.GetDeclarations (parseResultsOpt:ParseFileResults option, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck) : DeclarationSet =
+        let isInterfaceFile = SourceFileImpl.IsInterfaceFile mainInputFileName
+        ErrorScope.Protect 
+            Range.range0 
+            (fun () -&amp;gt; 
+                match GetDeclItemsForNamesAtPosition(parseResultsOpt, Some qualifyingNames, Some partialName, line, lineStr, colAtEndOfNamesAndResidue, ResolveTypeNamesToCtors, ResolveOverloads.Yes, hasTextChangedSinceLastTypecheck) with
+                | None -&amp;gt; DeclarationSet.Empty  
+                | Some(items,denv,m) -&amp;gt; 
+                    let items = items |&amp;gt; filterIntellisenseCompletionsBasedOnParseContext (parseResultsOpt |&amp;gt; Option.bind (fun x -&amp;gt; x.ParseTree)) (mkPos line colAtEndOfNamesAndResidue)
+                    let items = if isInterfaceFile then items |&amp;gt; List.filter IsValidSignatureFileItem else items
+                    DeclarationSet.Create(infoReader,m,denv,items,reactorOps,checkAlive))
+            (fun msg -&amp;gt; DeclarationSet.Error msg)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Right, this is more interesting, if we look at the pattern match &lt;code&gt;match filterIntellisenseCompletionsBasedOnParseContext&lt;/code&gt; you can see we have there are &lt;code&gt;items&lt;/code&gt;, &lt;code&gt;denv&lt;/code&gt;, and &lt;code&gt;m&lt;/code&gt;.  Now what exactly is an &lt;code&gt;Item&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;Lets go deeper still and take a look&amp;hellip;.&lt;/p&gt;
+
+&lt;h3 id=&#34;item&#34;&gt;Item&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;/// Represents an item that results from name resolution
+type Item = 
+    /// Represents the resolution of a name to an F# value or function.
+    | Value of  ValRef
+    /// Represents the resolution of a name to an F# union case.
+    | UnionCase of UnionCaseInfo
+    /// Represents the resolution of a name to an F# active pattern result.
+    | ActivePatternResult of ActivePatternInfo * TType * int  * range
+    /// Represents the resolution of a name to an F# active pattern case within the body of an active pattern.
+    | ActivePatternCase of ActivePatternElemRef 
+    /// Represents the resolution of a name to an F# exception definition.
+    | ExnCase of TyconRef 
+    /// Represents the resolution of a name to an F# record field.
+    | RecdField of RecdFieldInfo
+
+    // The following are never in the items table but are valid results of binding an identitifer in different circumstances. 
+
+    /// Represents the resolution of a name at the point of its own definition.
+    | NewDef of Ident
+    /// Represents the resolution of a name to a .NET field 
+    | ILField of ILFieldInfo
+    /// Represents the resolution of a name to an event
+    | Event of EventInfo
+    /// Represents the resolution of a name to a property
+    | Property of string * PropInfo list
+    /// Represents the resolution of a name to a group of methods
+    | MethodGroup of string * MethInfo list
+    /// Represents the resolution of a name to a constructor
+    | CtorGroup of string * MethInfo list
+    /// Represents the resolution of a name to the fake constructor simulated for an interface type.
+    | FakeInterfaceCtor of TType
+    /// Represents the resolution of a name to a delegate
+    | DelegateCtor of TType
+    /// Represents the resolution of a name to a group of types
+    | Types of string * TType list
+    /// CustomOperation(nm, helpText, methInfo)
+    /// Used to indicate the availability or resolution of a custom query operation such as &#39;sortBy&#39; or &#39;where&#39; in computation expression syntax
+    | CustomOperation of string * (unit -&amp;gt; string option) * MethInfo option
+    /// Represents the resolution of a name to a custom builder in the F# computation expression syntax
+    | CustomBuilder of string * ValRef
+    /// Represents the resolution of a name to a type variable
+    | TypeVar of string * Typar
+    /// Represents the resolution of a name to a module or namespace
+    | ModuleOrNamespaces of Tast.ModuleOrNamespaceRef list
+    /// Represents the resolution of a name to an operator
+    | ImplicitOp of Ident * TraitConstraintSln option ref
+    /// Represents the resolution of a name to a named argument
+    | ArgName of Ident * TType * ArgumentContainer option
+    /// Represents the resolution of a name to a named property setter
+    | SetterArg of Ident * Item 
+    /// Represents the potential resolution of an unqualified name to a type.
+    | UnqualifiedType of TyconRef list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally lets look at the &lt;code&gt;Create&lt;/code&gt; function of &lt;code&gt;DeclarationSet&lt;/code&gt; to see what&amp;rsquo;s involved:&lt;/p&gt;
+
+&lt;h3 id=&#34;declarationset-create&#34;&gt;DeclarationSet - Create&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;// Make a &#39;Declarations&#39; object for a set of selected items
+static member Create(infoReader:InfoReader, m, denv, items, reactor, checkAlive) = 
+    let g = infoReader.g
+     
+    let items = items |&amp;gt; RemoveExplicitlySuppressed g
+    
+    // Sort by name. For things with the same name, 
+    //     - show types with fewer generic parameters first
+    //     - show types before over other related items - they usually have very useful XmlDocs 
+    let items = 
+        items |&amp;gt; List.sortBy (fun d -&amp;gt; 
+            let n = 
+                match d with  
+                | Item.Types (_,(TType_app(tcref,_) :: _)) -&amp;gt; 1 + tcref.TyparsNoRange.Length
+                // Put delegate ctors after types, sorted by #typars. RemoveDuplicateItems will remove FakeInterfaceCtor and DelegateCtor if an earlier type is also reported with this name
+                | Item.FakeInterfaceCtor (TType_app(tcref,_)) 
+                | Item.DelegateCtor (TType_app(tcref,_)) -&amp;gt; 1000 + tcref.TyparsNoRange.Length
+                // Put type ctors after types, sorted by #typars. RemoveDuplicateItems will remove DefaultStructCtors if a type is also reported with this name
+                | Item.CtorGroup (_, (cinfo :: _)) -&amp;gt; 1000 + 10 * (tcrefOfAppTy g cinfo.EnclosingType).TyparsNoRange.Length 
+                | _ -&amp;gt; 0
+            (d.DisplayName,n))
+
+    // Remove all duplicates. We&#39;ve put the types first, so this removes the DelegateCtor and DefaultStructCtor&#39;s.
+    let items = items |&amp;gt; RemoveDuplicateItems g
+
+    if verbose then dprintf &amp;quot;service.ml: mkDecls: %d found groups after filtering\n&amp;quot; (List.length items); 
+
+    // Group by display name
+    let items = items |&amp;gt; List.groupBy (fun d -&amp;gt; d.DisplayName) 
+
+    // Filter out operators (and list)
+    let items = 
+        // Check whether this item looks like an operator.
+        let isOpItem(nm,item) = 
+            match item with 
+            | [Item.Value _]
+            | [Item.MethodGroup(_,[_])] -&amp;gt; 
+                (IsOpName nm) &amp;amp;&amp;amp; nm.[0]=&#39;(&#39; &amp;amp;&amp;amp; nm.[nm.Length-1]=&#39;)&#39;
+            | [Item.UnionCase _] -&amp;gt; IsOpName nm
+            | _ -&amp;gt; false              
+        let isFSharpList nm = (nm = &amp;quot;[]&amp;quot;) // list shows up as a Type and a UnionCase, only such entity with a symbolic name, but want to filter out of intellisense
+        items |&amp;gt; List.filter (fun (nm,items) -&amp;gt; not (isOpItem(nm,items)) &amp;amp;&amp;amp; not(isFSharpList nm)) 
+
+
+    let decls = 
+        // Filter out duplicate names
+        items |&amp;gt; List.map (fun (nm,itemsWithSameName) -&amp;gt; 
+            match itemsWithSameName with
+            | [] -&amp;gt; failwith &amp;quot;Unexpected empty bag&amp;quot;
+            | items -&amp;gt; 
+                new Declaration(nm, GlyphOfItem(denv,items.Head), Choice1Of2 (items, infoReader, m, denv, reactor, checkAlive)))
+
+    new DeclarationSet(Array.ofList decls)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This looks very promising, this information could be just what we need.  If we do a quick search and see what else uses &lt;code&gt;Items&lt;/code&gt; so we can get a better idea of how its used.  Lets just see if there are any pattern matches for Item.Value to get a quick idea:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;nameres.fs&lt;/li&gt;
+&lt;li&gt;tc.fs&lt;/li&gt;
+&lt;li&gt;fsi.fs&lt;/li&gt;
+&lt;li&gt;service.fs&lt;/li&gt;
+&lt;li&gt;ServiceDeclarations.fs&lt;/li&gt;
+&lt;li&gt;Symbols.fs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;you-re-a-symbol-for-your-kind&#34;&gt;You&amp;rsquo;re a symbol for your kind&lt;/h2&gt;
+
+&lt;p&gt;The matches in &lt;code&gt;Symbol.fs&lt;/code&gt; look interesting, you can see it&amp;rsquo;s relatively easy to construct a &lt;code&gt;Symbol&lt;/code&gt; if you have access to the relevant parts.  Having a list of symbols available rather than a &lt;code&gt;DeclarationSet&lt;/code&gt; of &lt;code&gt;ToolTipElement&lt;/code&gt; could be just what we need.&lt;/p&gt;
+
+&lt;p&gt;Lets look at constructing a symbol rather than the declaration set:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.GetDeclarationListSymbols (parseResultsOpt:FSharpParseFileResults option, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck) =
+    let isInterfaceFile = SourceFileImpl.IsInterfaceFile mainInputFileName
+    ErrorScope.Protect 
+        Range.range0 
+        (fun () -&amp;gt; 
+            match GetDeclItemsForNamesAtPosition(parseResultsOpt, Some qualifyingNames, Some partialName, line, lineStr, colAtEndOfNamesAndResidue, ResolveTypeNamesToCtors, ResolveOverloads.Yes, hasTextChangedSinceLastTypecheck) with
+            | None -&amp;gt; List.Empty  
+            | Some(items,_denv,_m) -&amp;gt; 
+                let items = items |&amp;gt; filterIntellisenseCompletionsBasedOnParseContext (parseResultsOpt |&amp;gt; Option.bind (fun x -&amp;gt; x.ParseTree)) (mkPos line colAtEndOfNamesAndResidue)
+                let items = if isInterfaceFile then items |&amp;gt; List.filter IsValidSignatureFileItem else items
+
+                //do filtering like Declarationset
+                let items = items |&amp;gt; RemoveExplicitlySuppressed g
+                
+                // Sort by name. For things with the same name, 
+                //     - show types with fewer generic parameters first
+                //     - show types before over other related items - they usually have very useful XmlDocs 
+                let items = 
+                    items |&amp;gt; List.sortBy (fun d -&amp;gt; 
+                        let n = 
+                            match d with  
+                            | Item.Types (_,(TType_app(tcref,_) :: _)) -&amp;gt; 1 + tcref.TyparsNoRange.Length
+                            // Put delegate ctors after types, sorted by #typars. RemoveDuplicateItems will remove FakeInterfaceCtor and DelegateCtor if an earlier type is also reported with this name
+                            | Item.FakeInterfaceCtor (TType_app(tcref,_)) 
+                            | Item.DelegateCtor (TType_app(tcref,_)) -&amp;gt; 1000 + tcref.TyparsNoRange.Length
+                            // Put type ctors after types, sorted by #typars. RemoveDuplicateItems will remove DefaultStructCtors if a type is also reported with this name
+                            | Item.CtorGroup (_, (cinfo :: _)) -&amp;gt; 1000 + 10 * (tcrefOfAppTy g cinfo.EnclosingType).TyparsNoRange.Length 
+                            | _ -&amp;gt; 0
+                        (d.DisplayName,n))
+
+                // Remove all duplicates. We&#39;ve put the types first, so this removes the DelegateCtor and DefaultStructCtor&#39;s.
+                let items = items |&amp;gt; RemoveDuplicateItems g
+
+                if verbose then dprintf &amp;quot;service.ml: mkDecls: %d found groups after filtering\n&amp;quot; (List.length items); 
+
+                // Group by display name
+                let items = items |&amp;gt; List.groupBy (fun d -&amp;gt; d.DisplayName) 
+
+                // Filter out operators (and list)
+                let items = 
+                    // Check whether this item looks like an operator.
+                    let isOpItem(nm,item) = 
+                        match item with 
+                        | [Item.Value _]
+                        | [Item.MethodGroup(_,[_])] -&amp;gt; 
+                            (IsOpName nm) &amp;amp;&amp;amp; nm.[0]=&#39;(&#39; &amp;amp;&amp;amp; nm.[nm.Length-1]=&#39;)&#39;
+                        | [Item.UnionCase _] -&amp;gt; IsOpName nm
+                        | _ -&amp;gt; false              
+                    let isFSharpList nm = (nm = &amp;quot;[]&amp;quot;) // list shows up as a Type and a UnionCase, only such entity with a symbolic name, but want to filter out of intellisense
+                    items |&amp;gt; List.filter (fun (nm,items) -&amp;gt; not (isOpItem(nm,items)) &amp;amp;&amp;amp; not(isFSharpList nm)) 
+
+                let items = 
+                    // Filter out duplicate names
+                    items |&amp;gt; List.map (fun (_nm,itemsWithSameName) -&amp;gt; 
+                        match itemsWithSameName with
+                        | [] -&amp;gt; failwith &amp;quot;Unexpected empty bag&amp;quot;
+                        | items -&amp;gt;
+                            items 
+                            |&amp;gt; List.map (fun item -&amp;gt; let symbol = FSharpSymbol.Create(g, thisCcu, tcImports, item)
+                                                     FSharpSymbolUse(g, _denv, symbol, ItemOccurence.Use, _m)))
+
+                //end filtering
+                items)
+        (fun _msg -&amp;gt; [])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the code you can see its various pieces &lt;em&gt;cobbled&lt;/em&gt; together to construct an &lt;code&gt;FSharpSymbolUSe&lt;/code&gt; rather than a &lt;code&gt;DeclarationSet&lt;/code&gt;.  This should allow us to create a more elaborate autocompletion which displays members by base type rather than a flat list.&lt;/p&gt;
+
+&lt;h2 id=&#34;there-are-no-flowers-in-the-real-world&#34;&gt;There Are No Flowers in the Real World…&lt;/h2&gt;
+
+&lt;p&gt;So that&amp;rsquo;s the easy bit done, now over to MonoDevelop.  We need to rip out the old completions and splice in the new one, currently it&amp;rsquo;s defined in &lt;code&gt;FSharpTextEditorCompletion&lt;/code&gt; and &lt;code&gt;FSharpMemberCompletionData&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Lets have a look at &lt;code&gt;CompletionData&lt;/code&gt; which we will need to recreate for our purposes:&lt;/p&gt;
+
+&lt;h3 id=&#34;completiondata&#34;&gt;CompletionData&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type CompletionData
+	abstract member Icon : IconId with get, set
+	abstract member DisplayText : string with get, set
+	abstract member Description : string with get, set
+	abstract member CompletionText : string with get, set
+	abstract member GetDisplayDescription : bool -&amp;gt; string
+	abstract member GetRightSideDescription : bool -&amp;gt; string
+	abstract member CompletionCategory : CompletionCategory with get, set
+	abstract member DisplayFlags : DisplayFlags with get, set
+	abstract member CreateTooltipInformation : bool -&amp;gt; TooltipInformation
+	abstract member HasOverloads : () -&amp;gt; bool
+	abstract member OverloadedData : () -&amp;gt; IEnumerable&amp;lt;ICompletionData&amp;gt;
+	abstract member AddOverload : ICompletionData -&amp;gt; () 
+	abstract member InsertCompletionText : CompletionListWindow * ref KeyActions * Gdk.Key * char * Gdk.ModifierType -&amp;gt; ()
+	abstract member CompareTo : obj -&amp;gt; int
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of these are virtual in the &lt;code&gt;CompletionData&lt;/code&gt; type, what we will need to do is add overrides for the &lt;code&gt;HasOverloads&lt;/code&gt;, &lt;code&gt;OverloadedData&lt;/code&gt;, &lt;code&gt;AddOverload&lt;/code&gt;, and &lt;code&gt;CreateTooltipInformation&lt;/code&gt; to give us the functionality we require.  It&amp;rsquo;s going to be vety similar to the old code except we will be using symbols rather than &lt;code&gt;ToolTipElement&lt;/code&gt; data to create the completion data.&lt;/p&gt;
+
+&lt;p&gt;Lets create a new &lt;code&gt;FSharpMemberCompletionData&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type internal FSharpMemberCompletionDataSorted(name, icon, symbol:FSharpSymbol, overloads:FSharpSymbol seq) =
+    inherit CompletionData(CompletionText = Lexhelp.Keywords.QuoteIdentifierIfNeeded name, 
+                           DisplayText = name, 
+                           DisplayFlags = DisplayFlags.DescriptionHasMarkup,
+                           Icon = icon)
+
+    /// Check if the datatip has multiple overloads
+    override x.HasOverloads = not (Seq.isEmpty overloads)
+
+    /// Split apart the elements into separate overloads
+    override x.OverloadedData =
+        overloads
+        |&amp;gt; Seq.map (fun symbol -&amp;gt; FSharpMemberCompletionDataSorted(symbol.DisplayName, icon, symbol, Seq.empty) :&amp;gt; _ )
+
+    override x.AddOverload (data: ICompletionData) = ()
+
+    override x.CreateTooltipInformation (smartWrap: bool) = 
+      let tip = SymbolTooltips.getTooltipFromSymbol symbol FSharpDisplayContext.Empty None
+      match tip  with
+      | ToolTips.ToolTip (signature, xmldoc) -&amp;gt;
+            let toolTipInfo = new TooltipInformation(SignatureMarkup = signature)
+            match xmldoc with
+            | Full(summary) -&amp;gt; toolTipInfo.SummaryMarkup &amp;lt;- summary
+                               toolTipInfo
+            | Lookup(key, potentialFilename) -&amp;gt;
+                let summary = 
+                    maybe {let! filename = potentialFilename
+                           let! markup = TipFormatter.findDocForEntity(filename, key)
+                           let summary = Tooltips.getTooltip Styles.simpleMarkup markup
+                           return summary }
+                summary |&amp;gt; Option.iter (fun summary -&amp;gt; toolTipInfo.SummaryMarkup &amp;lt;- summary)
+                toolTipInfo
+            | EmptyDoc -&amp;gt; toolTipInfo
+      | _ -&amp;gt; TooltipInformation()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this section you can see the use of the &lt;code&gt;maybe&lt;/code&gt; computation expression &lt;em&gt;(You wont find the &amp;rsquo;M&amp;rsquo; word mentioned here thank you very much!)&lt;/em&gt; to simplify the creation of the &lt;code&gt;Lookup&lt;/code&gt; tooltip&amp;rsquo;s.  &lt;code&gt;Lookup&lt;/code&gt; means pulling the information from &lt;a href=&#34;http://www.mono-project.com/docs/tools+libraries/tools/monodoc/&#34;&gt;monodoc&lt;/a&gt; which loads the xmldoc files, and &lt;code&gt;Full&lt;/code&gt; means there is xmldoc&amp;rsquo;s present in the compiler.  &lt;code&gt;Full&lt;/code&gt; will occur in your own files and &lt;code&gt;Lookup&lt;/code&gt; will occur in referenced assemblies.&lt;/p&gt;
+
+&lt;p&gt;We also need a define little type to hold the category as the &lt;code&gt;CompletionCategory&lt;/code&gt; type is abstract:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type Category(category) =
+    inherit CompletionCategory(category, null)
+    override x.CompareTo other = compare x.DisplayText other.DisplayText
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we will add a function called &lt;code&gt;getCompletionData&lt;/code&gt; to the existing &lt;code&gt;FSharpTextEditorCompletion&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let getCompletionData (symbols:FSharpSymbol list list) =
+
+    let categories = Dictionary&amp;lt;string, Category&amp;gt;()
+
+    let getOrAddCategory id =
+        let found, item = categories.TryGetValue id
+        if found then item
+        else let cat = Category id 
+             categories.Add (id,cat)
+             cat
+
+    let (|Function|Val|Unknown|) (symbol:FSharpSymbol) =
+      match symbol with
+      | MemberOrFunctionOrValue symbol
+          when not (isConstructor symbol) -&amp;gt;
+              if symbol.FullType.IsFunctionType &amp;amp;&amp;amp; not symbol.IsPropertyGetterMethod &amp;amp;&amp;amp; not symbol.IsPropertySetterMethod 
+              then Function symbol                         
+              else Val symbol
+      | _ -&amp;gt; Unknown symbol
+
+    let symbolToIcon (s:FSharpSymbol) = 
+        match s with
+        | ActivePatternCase _ -&amp;gt; Stock.Enum
+        | Field _ -&amp;gt; Stock.Field
+        | UnionCase _ -&amp;gt; Stock.Enum
+        | Class -&amp;gt; Stock.Class
+        | Delegate -&amp;gt; Stock.Delegate
+        | Event -&amp;gt; Stock.Event
+        | Property -&amp;gt; Stock.Property
+        | Function _ -&amp;gt; MStock.Method
+        | Val _ -&amp;gt; Stock.Field
+        | Enum -&amp;gt; Stock.Enum
+        | Interface -&amp;gt; Stock.Interface
+        | Module -&amp;gt; Stock.Class
+        | Namespace -&amp;gt; Stock.NameSpace
+        | Record -&amp;gt; Stock.Class
+        | Union -&amp;gt; Stock.Enum
+        | ValueType -&amp;gt; Stock.Struct
+        | _ -&amp;gt; Stock.Struct
+
+    let symbolToCompletionData (symbol:FSharpSymbol) =
+       let cd = FSharpMemberCompletionDataSorted(symbol.Head.DisplayName, symbolToIcon symbol.Head, symbol.Head, symbol.Tail)
+       match symbol.Head with
+       | :? FSharpMemberOrFunctionOrValue as func -&amp;gt;
+           d.CompletionCategory &amp;lt;- getOrAddCategory func.EnclosingEntity.FullName
+       | other -&amp;gt;
+       cd.CompletionCategory &amp;lt;- getOrAddCategory (other.FullName.Substring (0, other.FullName.LastIndexOf &#39;.&#39;))
+
+    symbols
+    |&amp;gt; List.map symbolToCompletionData
+    :&amp;gt; ICompletionData)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have a few helper function&amp;rsquo;s here, &lt;code&gt;getOrAddCategory&lt;/code&gt; to get or add categories.  An active pattern &lt;code&gt;(|Function|Val|Unknown|)&lt;/code&gt; to help to split &lt;code&gt;MemberOrFunctionOrValue&lt;/code&gt; into &lt;code&gt;Function&lt;/code&gt;, &lt;code&gt;Val&lt;/code&gt; or &lt;code&gt;Unknown&lt;/code&gt; sub types.  &lt;code&gt;symbolToIcon&lt;/code&gt; to get a stock icon to represent the different types of item that will appear in the completion list.  And finally we have a map function, &lt;code&gt;symbolToCompletionData&lt;/code&gt; which uses all of the other helper functions to project each symbol into a new &lt;code&gt;FSharpMemberCompletionDataSorted&lt;/code&gt;.  This is done by using either &lt;code&gt;func.EnclosingEntity.FullName&lt;/code&gt; if the type match is &lt;code&gt;FSharpMemberOrFunctionOrValue&lt;/code&gt; or &lt;code&gt;other.FullName.Substring (0, other.FullName.LastIndexOf &#39;.&#39;)&lt;/code&gt; if the type match is anything else.&lt;/p&gt;
+
+&lt;p&gt;You can see that the symbols are mapped using &lt;code&gt;List.map&lt;/code&gt; and &lt;code&gt;symbolToCompletionData&lt;/code&gt; at the end of the function.  The resulting &lt;code&gt;FSharpMemberCompletionDataSorted&lt;/code&gt; is finally coerced into an &lt;code&gt;ICompletionData&lt;/code&gt; with the &lt;code&gt;:&amp;gt;&lt;/code&gt; operator.&lt;/p&gt;
+
+&lt;p&gt;Finally all that&amp;rsquo;s left is to change &lt;code&gt;x.CodeCompletionCommandImpl&lt;/code&gt; in &lt;code&gt;FSharpTextEditorCompletion&lt;/code&gt;, all we need to do is change the match statement to use the functions we defined above:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;match tyRes.GetDeclarations(line, col, lineStr) with
+| Some(decls, residue) when decls.Items.Any() -&amp;gt;
+      let items = decls.Items
+                  |&amp;gt; Array.map (fun mi -&amp;gt; FSharpMemberCompletionData(mi) :&amp;gt; ICompletionData)
+      result.AddRange(items)
+| _ -&amp;gt; ()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To use the new &lt;code&gt;GetDeclarationSymbols&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;match tyRes.GetDeclarationSymbols(line, col, lineStr) with
+| Some (symbols, residue) -&amp;gt; result.AddRange (getCompletionData symbols)
+| None -&amp;gt; ()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Phew! I think we are done.  Spinning up Xamarin Studio with the new addin shows the new completion list:&lt;br /&gt;
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://dl.dropboxusercontent.com/s/hkojvf87qyuxvla/completion.png?dl=0&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We now have completion list sorted by the inheritor, which is especially nice for displaying members on hierarchical API&amp;rsquo;s.  As a little bonus pressing &lt;code&gt;Shift Up/Down&lt;/code&gt; will also move between the categories.&lt;/p&gt;
+
+&lt;p&gt;See, that wasn&amp;rsquo;t so scary was it?&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/4/40/Megadeth_-_Peace_Sells..._But_Who%27s_Buying-.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Megadeth - Peace Sells... But Who&amp;#39;s Buying&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Megadeth - Peace Sells... But Who&amp;#39;s Buying&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/7/7f/Megadeth-SoFar.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Megadeth - So far, so good, so what&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Megadeth - So far, so good, so what&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/d/dc/Megadeth-RustInPeace.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Megadeth - Rust in Peace&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Megadeth - Rust in Peace&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/7/72/Exodus_-_Fabulous_Disaster.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Exodus - Fabulous Disaster&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Exodus - Fabulous Disaster&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>I saw my reflection and cried ...</title>
+      <link>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
+      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
+      <description>
+
+&lt;p&gt;While I was visiting Boston earlier in the year I had the misfortune of kicking myself in the teeth with reflection.  It&amp;rsquo;s something all programmers inevitably go through with reflection API&amp;rsquo;s as they are inherently untyped, a simple typo can leave you tearing out your hair or punching through your monitor!  Yeah there&amp;rsquo;s things the horizon that will help namely the &lt;a href=&#34;http://msdn.microsoft.com/en-us/magazine/dn802602.aspx&#34;&gt;nameof&lt;/a&gt; expression in C#6 which should help in some areas, that&amp;rsquo;s if your willing to pay the price of using C#, but I wont go into that here :-).  In F# we can leverage Type Providers fairly easily to wrap API usages in cases that we are interested in, or even create a general usage with a little more effort.&lt;br /&gt;
+&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;using-the-type-provider&#34;&gt;Using the Type Provider&lt;/h3&gt;
+
+&lt;p&gt;In usage it will look like this vs the usual reflection API:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;
+//traditional reflection using untyped method
+let tt = typeof&amp;lt;DateTime&amp;gt;
+let meth = tt.GetMethod(&amp;quot;Add&amp;quot;)
+let result = meth.Invoke(DateTime.Now, [|TimeSpan.FromDays(1.)|])
+
+//using the type provider to provide a little safety net
+type rt = TypedReflection.Reflection&amp;lt; &amp;quot;System.DateTime&amp;quot;, &amp;quot;AddSeconds&amp;quot;&amp;gt;
+let result = rt.AddSeconds(DateTime.Now, 1.)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you make a mistake the compiler will tell you and you will be forces to fix the typo or add namespace prefixes etc.  You also get intellisense.autocompletion on usage and you can give actual parameters rather than arrays of loose objects etc.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-dump&#34;&gt;Code Dump&lt;/h3&gt;
+
+&lt;p&gt;First of all I&amp;rsquo;m just going to leave the code here, and then talk through it below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[&amp;lt;TypeProvider&amp;gt;]
+type public ReflectionTypeProvider(config : TypeProviderConfig) as this = 
+    inherit TypeProviderForNamespaces()
+
+    let assembly = Assembly.GetExecutingAssembly()
+    let nameSpace = this.GetType().Namespace
+    let providerType =
+        ProvidedTypeDefinition(assembly, nameSpace, &amp;quot;Reflection&amp;quot;, Some typeof&amp;lt;obj&amp;gt;, 
+                               IsErased = true, HideObjectMethods = true)
+
+    let buildReflection typeName (parameters : obj[]) =  
+        let reflectionType = string parameters.[0]
+        let methodName = string parameters.[1]
+
+        let theType = Type.GetType(reflectionType, true)
+        let meth = theType.GetMethod(methodName)
+        if meth = null then failwith &amp;quot;No such method!&amp;quot;
+
+        let wrapper = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some (typeof&amp;lt;obj&amp;gt;),
+                                             HideObjectMethods = true )
+
+        let parameterInfoToProvidedParameter (meth:MethodInfo) =
+            let pi = meth.GetParameters()
+
+            let instance = ProvidedParameter(&amp;quot;instance&amp;quot;, meth.ReflectedType)
+            let parameters =
+                pi
+                |&amp;gt; Seq.map (fun p -&amp;gt; ProvidedParameter(p.Name, p.ParameterType) )
+                |&amp;gt; Seq.toList
+            instance :: parameters
+            
+        let reflectionWrapper =
+            ProvidedMethod (meth.Name, parameterInfoToProvidedParameter meth, meth.ReturnType,
+                            IsStaticMethod = true,
+                            InvokeCode = function
+                                         | instance :: parameters -&amp;gt;
+                                             try Expr.Call (instance, meth, parameters)
+                                             with exn -&amp;gt; failwith &amp;quot;Error creating Invoke code.&amp;quot;
+                                         | _ -&amp;gt; failwith &amp;quot;Error: unexpected number of parameters&amp;quot; )
+        wrapper.AddMember reflectionWrapper
+        wrapper
+
+    do 
+        providerType.DefineStaticParameters
+            ([ ProvidedStaticParameter(&amp;quot;Type&amp;quot;, typeof&amp;lt;string&amp;gt;)
+               ProvidedStaticParameter(&amp;quot;Method&amp;quot;, typeof&amp;lt;string&amp;gt;) ], 
+             buildReflection)
+
+        this.AddNamespace (nameSpace, [ providerType ])
+
+[&amp;lt;assembly:TypeProviderAssembly&amp;gt;] 
+do()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;skeleton-code&#34;&gt;Skeleton code&lt;/h3&gt;
+
+&lt;p&gt;Reading from the bottom up you can see the parameters that our Type Provider accepts are &lt;code&gt;Type&lt;/code&gt; and &lt;code&gt;Method&lt;/code&gt;, those a pretty self explanatory.  You should also notice other boiler plate Type Provider code if you read my last &lt;a href=&#34;http://7sharpnine.com/posts/flux-compression-redux/&#34;&gt;ZipProvider post&lt;/a&gt;.  The important part here is the &lt;code&gt;buildReflection&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;h3 id=&#34;buildreflection&#34;&gt;buildReflection&lt;/h3&gt;
+
+&lt;p&gt;First of all on lines &lt;code&gt;12/13&lt;/code&gt; we scrape of the configuration parameters &lt;code&gt;theType&lt;/code&gt; and &lt;code&gt;meth&lt;/code&gt;, we then do a quick check to ensure the type and method actually exist, if they don&amp;rsquo;t we raise an error on line &lt;code&gt;17&lt;/code&gt; so the use can correct the code.&lt;/p&gt;
+
+&lt;p&gt;Next we create a variable named wrapper which &lt;em&gt;wraps&lt;/em&gt; round the reflection API by creating a &lt;code&gt;ProvidedTypeDefinition&lt;/code&gt; on line &lt;code&gt;19&lt;/code&gt;.  We now have two methods which we use to create our safe API, &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; and &lt;code&gt;reflectionWrapper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;parameterinfotoprovidedparameter&#34;&gt;parameterInfoToProvidedParameter&lt;/h3&gt;
+
+&lt;p&gt;The purpose of this is a mapping function from the reflection API&amp;rsquo;s untyped abstract form to our typed form that we use in the construction of the Provided methods.  Essentially this is pretty simple, we get the parameters for the &lt;code&gt;MethodInfo&lt;/code&gt; which we are wrapping on line &lt;code&gt;23&lt;/code&gt;.  The first parameter will be the instance of the reflected method will be working on, and the rest of the parameters will be those of the reflected method.  To add those we loop over the parameters from the &lt;code&gt;MethodInfo&lt;/code&gt; and map then to &lt;code&gt;ProvidedProperties&lt;/code&gt; by using the &lt;code&gt;Name&lt;/code&gt; and &lt;code&gt;ParameterType&lt;/code&gt; properties.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Thinking about this we could do it slightly differently by adding a &lt;code&gt;ProvidedConstructor&lt;/code&gt; which could take the initial instance, this could be added fairly easily if we really needed it.  )&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;reflectionwrapper&#34;&gt;reflectionWrapper&lt;/h3&gt;
+
+&lt;p&gt;The reflectionWrapper is where the magic happens, we create a &lt;code&gt;ProvidedMethod&lt;/code&gt; using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s name&amp;rsquo;, we add the parameters by using the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function, and we also add the return type by using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s &lt;code&gt;ReturnType&lt;/code&gt; parameter&amp;rsquo;.  We can also take advantage of &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233192.aspx#sectionToggle4&#34;&gt;object initializers&lt;/a&gt; here to set &lt;code&gt;IsStaticMethod&lt;/code&gt; to true, and to add in the invoke code.&lt;/p&gt;
+
+&lt;p&gt;The invoke code uses the &lt;code&gt;function&lt;/code&gt; keyword which is really just a pattern match expression using only a single argument, here we use pattern matching on a list to extract the &lt;code&gt;head|tail&lt;/code&gt; arguments.  If you remember the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function then you will know that it returns a list &lt;code&gt;instance :: parameters&lt;/code&gt;.  We can now use the &lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/ee370577.aspx&#34;&gt;Quotations &lt;code&gt;Expr&lt;/code&gt;&lt;/a&gt; type with the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370395.aspx&#34;&gt;&lt;code&gt;Call&lt;/code&gt;&lt;/a&gt; function and pass in our instance and parameters in directly (instance is the reflected methods instance type, &lt;code&gt;meth&lt;/code&gt; is the &lt;code&gt;MethodInfo&lt;/code&gt; we will be calling, parameters are the parameters the &lt;code&gt;MethodInfo&lt;/code&gt; requires.&lt;/p&gt;
+
+&lt;h3 id=&#34;wrapping-up&#34;&gt;Wrapping up&lt;/h3&gt;
+
+&lt;p&gt;Finally we just add the &lt;code&gt;ProvidedMethod&lt;/code&gt; &lt;em&gt;&lt;code&gt;reflectionWrapper&lt;/code&gt;&lt;/em&gt; to the &lt;code&gt;ProvidedType&lt;/code&gt; &lt;em&gt;&lt;code&gt;wrapper&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This is a fairly simple implementation but it could be &lt;strong&gt;beefed up&lt;/strong&gt; quite easily into something a little more elaborate without too much trouble.  If you use your imagination then there are numerous possibilities with Type Providers!&lt;/p&gt;
+
+&lt;p&gt;Reminds me of an old proverb:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;If you have a problem ...  
+if no one else can help ...  
+and if you cant find an existing one ...  
+maybe you can build ...  
+a Type Provider.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;:-)&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/b/ba/Dirt.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Alice In Chains - Dirt&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Alice In Chains - Dirt&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/2/24/Alice_in_Chains_%28album%29.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Alice In Chains - Alice In Chains&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Alice In Chains - Alice In Chains&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+  </channel>
+</rss>

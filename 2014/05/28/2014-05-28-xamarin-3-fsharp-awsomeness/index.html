@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Xamarin 3 F# Awesomeness &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Xamarin 3 F# Awesomeness</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>With the release of Xamarin 3 there is a swathe of new features to the platform, but obviously the most important one is obviously F# support is now included by default in Xamarin Studio so there is no escape from the awesomeness of F#!</p>
+
+<p>So what else have we got, well loads of other goodies too like Xamarin Designer for iOS, Xamarin.Forms, Major IDE enhancements, Improved code sharing with PCL and Shared projects, and BCL Documentation.  You can see the release blog post here: <a href="http://blog.xamarin.com/announcing-xamarin-3/">announcing Xamarin 3</a></p>
+
+<p>There are tons of things I could show you, but for this post lets have a quick look at Xamarin.Forms<br />
+<!-- more --></p>
+
+<h2 id="xamarin-forms">Xamarin.Forms</h2>
+
+<p>So what is Xamarin.Forms?  Well to paraphrase the Xamarin blurb a little bit:</p>
+
+<blockquote>
+<p>Build native UIs for iOS, Android and Windows Phone
+from a single, shared codebase.  Xamarin.Forms pages represent single screens within an app.</p>
+
+<p>Pages contain layouts, buttons, labels, lists, and other common controls. Connect these controls to shared backend code and you get fully native iOS, Android, and Windows Phone apps built entirely with shared code.</p>
+</blockquote>
+
+<p>So as this just a whistle-stop post I&rsquo;ll quickly show you the code.:</p>
+
+<pre><code class="language-fsharp">let profilePage = 
+   ContentPage(Title=&quot;Profile&quot;,
+               Icon=&quot;Profile.png&quot;,
+               Content=StackLayout.Create(
+                           [ Entry (Placeholder=&quot;Username&quot;) 
+                             Entry (Placeholder=&quot;Password&quot;, IsPassword=true)
+                             Button (Text=&quot;Login&quot;,
+                                     TextColor=Color.White, 
+                                     BackgroundColor=Color.FromHex &quot;77D065&quot;) ], 
+                             spacing=20.0,
+                             padding=thickness 50.0,
+                             verticalOptions=LayoutOptions.Center))
+                        
+let settingsPage = ContentPage(Title=&quot;Settings&quot;, Icon=&quot;Settings.png&quot;)
+
+let mainPage = TabbedPage.create [profilePage;settingsPage]
+</code></pre>
+
+<p>The result is a nice cross platform UI thats easy to build and maintain, sweet!</p>
+
+
+<figure >
+    
+        <img src="https://xamarin.com/content/images/pages/forms/example-app.png" />
+    
+    
+</figure>
+
+
+<p>You can see by the code thats there are several components at play but it&rsquo;s very easy to see how the code relates to the UI layout.  A stack layout with two <code>Entry</code> types followed by a <code>Button</code>.  You can also see at the bottom that there is a <code>TabbedPage</code> comprising of the <code>profilePage</code> and the <code>settingPage</code>.</p>
+
+<p>Nice and easy!</p>
+
+<p>OK, thats it for now, but next time I&rsquo;ll be delving in a little deeper and showing you exactly how to build a PCL backed F# app over multiple platforms.</p>
+
+<p>Until next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/1/1c/Iron_Maiden_-_Powerslave.jpg" style="margin: 0"
+                 alt="Iron Maiden - Powerslave" />
+            <figcaption>
+                <h6>Iron Maiden - Powerslave</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/6/6b/Electric_Sea.jpg" style="margin: 0"
+                 alt="Buckethead - Electric sea" />
+            <figcaption>
+                <h6>Buckethead - Electric sea</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/xamarin/">Xamarin</a>
+            
+                 <a href="/tags/tools/">tools</a>
+            
+                 <a href="/tags/xamarin.forms/">Xamarin.Forms</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Xamarin%203%20F%23%20Awesomeness&url=http%3a%2f%2f7sharpnine.com%2f2014%2f05%2f28%2f2014-05-28-xamarin-3-fsharp-awsomeness%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2014%2f05%2f28%2f2014-05-28-xamarin-3-fsharp-awsomeness%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2014%2f05%2f28%2f2014-05-28-xamarin-3-fsharp-awsomeness%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

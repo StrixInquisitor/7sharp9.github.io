@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tpl Dataflow on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/tpl-dataflow/</link>
+    <description>Recent content in Tpl Dataflow on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Mon, 20 Feb 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/tpl-dataflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>FSharp Dataflow agents III</title>
+      <link>http://7sharpnine.com/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
+      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
+      <description>
+
+&lt;p&gt;This will be the last post on rebuilding the &lt;code&gt;MailboxProcessor&lt;/code&gt; using &lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/gg585582&#34;&gt;TDF&lt;/a&gt;,
+here&amp;rsquo;s a quick discussion of the missing pieces&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;First, lets start with the simple ones, these don&amp;rsquo;t really require much discussion.&lt;/p&gt;
+
+&lt;h3 id=&#34;defaulttimeout&#34;&gt;DefaultTimeout&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let mutable defaultTimeout = Timeout.Infinite
+
+member x.DefaultTimeout
+   with get() = defaultTimeout
+   and set(value) = defaultTimeout &amp;lt;- value
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This simply provides a mutable property using &lt;code&gt;Timeout.Infinite&lt;/code&gt; as a default setting.&lt;/p&gt;
+
+&lt;h3 id=&#34;currentqueuelength&#34;&gt;CurrentQueueLength&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.CurrentQueueLength() = incomingMessages.Count 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another simple one, this methods uses into the underlying &lt;code&gt;BufferBlock&lt;/code&gt; to extract its current queue length using its &lt;code&gt;Count&lt;/code&gt; property.&lt;/p&gt;
+
+&lt;h3 id=&#34;tryreceive&#34;&gt;TryReceive&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.TryReceive(?timeout) = 
+    let ts = TimeSpan.FromMilliseconds(float &amp;lt;| defaultArg time out defaultTimeout)
+    Async.AwaitTask &amp;lt;| incomingMessages.ReceiveAsync(ts)
+                           .ContinueWith(fun (tt:Task&amp;lt;_&amp;gt;) -&amp;gt; 
+                                             if tt.IsCanceled || tt.IsFaulted then None
+                                             else Some tt.Result)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we get a little help from &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd460717.aspx&#34;&gt;TPL&lt;/a&gt; to apply a continuation on completion
+using &lt;code&gt;ContinueWith&lt;/code&gt;.  We use a lambda to return either &lt;code&gt;None&lt;/code&gt;, in a time out condition, or &lt;code&gt;Some tt.Result&lt;/code&gt; when we successfully receive an item.&lt;/p&gt;
+
+&lt;h3 id=&#34;trypostandreply&#34;&gt;TryPostAndReply&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type AsyncResultCell&amp;lt;&#39;a&amp;gt;() = 
+    ...
+	member x.TryWaitResultSynchronously(timeout:int) = 
+	    //early completion check
+	    if source.Task.IsCompleted then 
+	        Some source.Task.Result
+	    //now force a wait for the task to complete
+	    else 
+	        if source.Task.Wait(timeout) then 
+	            Some source.Task.Result
+	        else None
+
+member x.TryPostAndReply(replyChannelMsg, ?timeout) :&#39;Reply option = 
+    let timeout = defaultArg timeout defaultTimeout
+    let resultCell = AsyncResultCell&amp;lt;_&amp;gt;()
+    let msg = replyChannelMsg(new AsyncReplyChannel&amp;lt;_&amp;gt;(fun reply -&amp;gt; resultCell.RegisterResult(reply)))
+    if incomingMessages.Post(msg) then
+        resultCell.TryWaitResultSynchronously(timeout)
+    else None
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Things get a little more interesting from here on in.  Firstly we need to add a new synchronisation member to the &lt;code&gt;AsyncResultCell&amp;lt;&#39;a&amp;gt;&lt;/code&gt; type: &lt;code&gt;TryWaitResultSynchronously&lt;/code&gt;.   We again enlist the help of the TPL primitives to check for the early completion using &lt;code&gt;source.Task.IsCompleted&lt;/code&gt; returning the result if it is there, otherwise we use the &lt;code&gt;Task&lt;/code&gt; property&amp;rsquo;s &lt;code&gt;Wait&lt;/code&gt; method to check the item returns within the time out interval.  In the usual manner, &lt;code&gt;Some source.Task.Result&lt;/code&gt; is returned or &lt;code&gt;None&lt;/code&gt; for a failure.&lt;/p&gt;
+
+&lt;h3 id=&#34;postandreply&#34;&gt;PostAndReply&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.PostAndReply(replyChannelMsg, ?timeout) : &#39;Reply = 
+    match x.TryPostAndReply(replyChannelMsg, ?timeout = timeout) with
+    | None -&amp;gt;  raise (TimeoutException(&amp;quot;PostAndReply timed out&amp;quot;))
+    | Some result -&amp;gt; result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This one wraps a call to &lt;code&gt;TryPostAndReply&lt;/code&gt; with some pattern matching.  In the event of a time out &lt;code&gt;None&lt;/code&gt; is returned from &lt;code&gt;TryPostAndReply&lt;/code&gt; in this instance we raise a &lt;code&gt;TimeoutException&lt;/code&gt; otherwise we unwrap the result from the option using &lt;code&gt;| Some result -&amp;gt; result&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;tryscan&#34;&gt;TryScan&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.TryScan((scanner: &#39;Msg -&amp;gt; Async&amp;lt;_&amp;gt; option), timeout): Async&amp;lt;_ option&amp;gt; = 
+    let ts = TimeSpan.FromMilliseconds( float timeout)
+    let rec loopForMsg = async {
+        let! msg = Async.AwaitTask &amp;lt;| incomingMessages.ReceiveAsync(ts)
+                                      .ContinueWith(fun (tt:Task&amp;lt;_&amp;gt;) -&amp;gt; 
+                                          if tt.IsCanceled || tt.IsFaulted then None
+                                          else Some tt.Result)
+        match msg with
+        | Some m -&amp;gt;  let res = scanner m
+                     match res with
+                     | None -&amp;gt; return! loopForMsg
+                     | Some res -&amp;gt; return! res 
+        | None -&amp;gt; return None}                             
+    loopForMsg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This one also uses the same &lt;code&gt;ContinueWith&lt;/code&gt; functionality in the recursive &lt;code&gt;loopForMsg&lt;/code&gt; function, perhaps some
+of these functions could extracted out and refactored but I prefer to keep the code like this to better explain what&amp;rsquo;s going
+on.  The the code is available on GitHub anyway so feel free to clean up any detritus and send me a pull request.  Again we use pattern matching to keep calling the &lt;code&gt;loopForMsg&lt;/code&gt; function until the result is returned or a time out occurs.&lt;/p&gt;
+
+&lt;h3 id=&#34;scan&#34;&gt;Scan&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.Scan(scanner, timeout) =
+    async { let! res = x.TryScan(scanner, timeout)
+            match res with
+            | None -&amp;gt; return raise(TimeoutException(&amp;quot;Scan TimedOut&amp;quot;))
+            | Some res -&amp;gt; return res }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally we have Scan, this is much like PostAndReply in that it just acts as a wrapper around &lt;code&gt;TryScan&lt;/code&gt; making use of
+pattern matching throwing an exception on a time out.&lt;/p&gt;
+
+&lt;p&gt;That sums up the last few pieces, completing the TDF implementation of the &lt;code&gt;MailboxProcessor&lt;/code&gt;.  I think this series of posts has shown the elegance of F#&amp;rsquo;s asynchronous workflows.  The use of recursive functions and the compositional nature of asynchronous workflows really helps when you are doing this type of programming.  It&amp;rsquo;s also very nice on the eye, each section being clearly defined.&lt;/p&gt;
+
+&lt;p&gt;The more astute of you may have noticed something a little different.  &lt;code&gt;Scan&lt;/code&gt; and &lt;code&gt;TryScan&lt;/code&gt; are destructive in this implementation, the unmatched messages are purged from the internal queue.  Although I could have mirrored the same functionality of the &lt;code&gt;MailboxProcessor&lt;/code&gt; by using an internal list to keep track of unmatched messages, this leads to performing checks during &lt;code&gt;Receive&lt;/code&gt; and &lt;code&gt;Scan&lt;/code&gt; and their derivatives to make sure that this list is used first when switching from &lt;code&gt;Scan&lt;/code&gt; and &lt;code&gt;Receive&lt;/code&gt; functionality.&lt;/p&gt;
+
+&lt;p&gt;I think the separation of concerns are a little fuzzy in the &lt;code&gt;MailboxProcessor&lt;/code&gt;.  The &lt;code&gt;scan&lt;/code&gt; function seems like an after thought, even if you don&amp;rsquo;t use &lt;code&gt;Scan&lt;/code&gt; you still pay a price for it as there are numerous checks between the internal queue and the unmatched messages list.  You can also run into issues while using &lt;code&gt;Scan&lt;/code&gt; and &lt;code&gt;TryScan&lt;/code&gt; that can result in out of memory conditions due to the inherent unbounded nature.  I will briefly describe and explore the conditions that can lead to that in the next post.  In the implementation presented here we can get bounded checking by passing in an optional &lt;code&gt;DataflowBlockOptions&lt;/code&gt; and setting a value for the &lt;code&gt;BoundedCapacity&lt;/code&gt; property.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;EDIT:&lt;/strong&gt; The code for this series of articles is now available on GitHub: &lt;a href=&#34;https://github.com/7sharp9/FSharpDataflow&#34;&gt;FSharpDataflow&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>F# Dataflow Agents Part II</title>
+      <link>http://7sharpnine.com/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
+      <pubDate>Mon, 30 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
+      <description>
+
+&lt;p&gt;Right, no messing about this time, straight to the code.&lt;/p&gt;
+
+&lt;h2 id=&#34;construction&#34;&gt;Construction&lt;/h2&gt;
+
+&lt;p&gt;This is pretty straight forward and I don&amp;rsquo;t want to detract from the important bits of this post, the only thing
+of note is the &lt;code&gt;cancellationToken&lt;/code&gt; which is initialized to a default value using the &lt;code&gt;defaultArg&lt;/code&gt; function if the
+optional parameter  &lt;code&gt;cancellationToken&lt;/code&gt; is not supplied. The TDF construct that we to use to perform most of the hard
+work is &lt;code&gt;incomingMessages&lt;/code&gt; which is a &lt;code&gt;BufferBlock&amp;lt;&#39;Msg&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type DataflowAgent&amp;lt;&#39;Msg&amp;gt;(initial, ?cancellationToken) =
+    let cancellationToken = 
+        defaultArg cancellationToken Async.DefaultCancellationToken
+    let mutable started = false
+    let errorEvent = new Event&amp;lt;System.Exception&amp;gt;()
+    let incomingMessages = new BufferBlock&amp;lt;&#39;Msg&amp;gt;()
+    let mutable defaultTimeout = Timeout.Infinite
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;error&#34;&gt;Error&lt;/h2&gt;
+
+&lt;p&gt;This is the public facing part for the Error event.  The &lt;code&gt;[&amp;lt;CLIEvent&amp;gt;]&lt;/code&gt; attribute exposes the event in a friendly manner to other .Net languages by adding the &lt;code&gt;add_Error&lt;/code&gt; and &lt;code&gt;remove_Error&lt;/code&gt; event handler properties to allow subscription to take place.  The &lt;code&gt;Error&lt;/code&gt; event fires when an exception is thrown in the &lt;code&gt;initial&lt;/code&gt; asynchronous workflow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[&amp;lt;CLIEvent&amp;gt;]
+member this.Error = errorEvent.Publish
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;start&#34;&gt;Start&lt;/h2&gt;
+
+&lt;p&gt;This is implemented the same as the MailboxProcessor.  An exception is thrown if the agent has already started as this is not valid operation.  We set the mutable field &lt;code&gt;started&lt;/code&gt; to true and proceed to start the &lt;code&gt;initial&lt;/code&gt; asynchronous workflow.  This workflow is wrapped in a &lt;code&gt;try with block&lt;/code&gt; so that if an exception is thrown we catch it and trigger the &lt;code&gt;Error&lt;/code&gt; event.  The computation is then started with &lt;code&gt;Async.Start(...)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.Start() =
+    if started 
+        then raise (new InvalidOperationException(&amp;quot;Already Started.&amp;quot;))
+    else
+        started &amp;lt;- true
+        let comp = async { try do! initial this 
+                           with error -&amp;gt; errorEvent.Trigger error }
+        Async.Start(computation = comp, cancellationToken = cancellationToken)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;receive&#34;&gt;Receive&lt;/h2&gt;
+
+&lt;p&gt;The Receive member is used by the agent as a way of waiting for a message to arrive without blocking.  Because the TDF functionality is all TPL Task based we use the the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370232.aspx&#34;&gt;Async&lt;/a&gt; helper functions.  In this instance we utilise the Async.AwaitTask passing in the &lt;code&gt;incomingMessages&lt;/code&gt; &lt;code&gt;ReceiveAsync&lt;/code&gt; method to wait for
+a message to arrive.  The integration between F# async and TDF is nice and succinct here.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.Receive(?timeout) = 
+    Async.AwaitTask &amp;lt;| incomingMessages.ReceiveAsync()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;post&#34;&gt;Post&lt;/h2&gt;
+
+&lt;p&gt;The Post member allows a message to be sent to the agents, this member simply calls the &lt;code&gt;incomingMessages&lt;/code&gt; &lt;code&gt;Post&lt;/code&gt; method passing in the &lt;code&gt;item&lt;/code&gt;.  We raise an exception if there is a problem posting (i.e. the &lt;code&gt;incomingMessages&lt;/code&gt; internal queue is full).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.Post(item) = 
+    let posted = incomingMessages.Post(item)
+    if not posted then
+        raise (InvalidOperationException(&amp;quot;Incoming message buffer full.&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;postandtryasyncreply-postandasyncreply&#34;&gt;PostAndTryAsyncReply / PostAndAsyncReply&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;m grouping both of these together as they are related in functionality.  In the previous post I purposely left
+out some ancillary code as it added unnecessary complexity to the introduction.  There are a two types we need to be able to replicate the &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt; and &lt;code&gt;PostAndAsyncReply&lt;/code&gt; members of the &lt;code&gt;MailboxProcessor&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;asyncreplychannel&#34;&gt;AsyncReplyChannel&lt;/h3&gt;
+
+&lt;p&gt;The first type we need is the &lt;code&gt;AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt;&lt;/code&gt;.  This type takes a function that accepts a generic &lt;code&gt;&#39;Reply&lt;/code&gt; and returns a unit.  It is used as a way of communicating back to the caller of the &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt; and &lt;code&gt;PostAndAsyncReply&lt;/code&gt; members via its single member &lt;code&gt;Reply&lt;/code&gt;.  This should become a little clearer when we see it used in context.&lt;/p&gt;
+
+&lt;p&gt;An &lt;code&gt;AsyncRepyChannel&lt;/code&gt; does actually exist in F# under the Microsoft.FSharp.Control namespace and is used my the &lt;code&gt;MailboxPRocessor&lt;/code&gt;, unfortunately its constructor is marked as internal so we are not able to reuse it here.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt;(replyf : &#39;Reply -&amp;gt; unit) =
+    member x.Reply(reply) = replyf(reply)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;asyncresultcell&#34;&gt;AsyncResultCell&lt;/h3&gt;
+
+&lt;p&gt;The next type we need is the &lt;code&gt;AsyncResultCell&amp;lt;&#39;a&amp;gt;&lt;/code&gt;.  We use this as a way to await for the results of an asynchronous operation.  We create a &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd449174.aspx&#34;&gt;TaskCompletionSource&lt;/a&gt; (&lt;code&gt;source&lt;/code&gt;), which is a TPL type that we use as a way of signalling to a callback / lambda expression when a message has arrived.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;RegisterResult&lt;/strong&gt; is used as a way of notifying when a message has been arrived, this is used internally by our agent as a result of a reply being made to the AsyncReplyChannel.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;AsyncWaitResult&lt;/strong&gt; is a continuation wrapper, it is called when we want to wait indefinitely for the result to be returned.  It wraps a successful completion with a call to task.Result which then returns the result.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;GetWaitHandle&lt;/strong&gt; is used as a mechanism to force the asynchronous result to return within a specified timeout interval.  If a result is not returned within the timeout then this function will return false.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;GrabResult&lt;/strong&gt; returns the result from the TaskCompletionSource object &lt;code&gt;source&lt;/code&gt;.  This is set earlier by the &lt;code&gt;RegisterResult&lt;/code&gt; member.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type AsyncResultCell&amp;lt;&#39;a&amp;gt;() =
+    let source = new TaskCompletionSource&amp;lt;&#39;a&amp;gt;()
+    member x.RegisterResult result = source.SetResult(result)
+
+    member x.AsyncWaitResult =
+        Async.FromContinuations(fun (cont,_,_) -&amp;gt; 
+            let apply = fun (task:Task&amp;lt;_&amp;gt;) -&amp;gt; cont (task.Result)
+            source.Task.ContinueWith(apply) |&amp;gt; ignore)
+
+    member x.GetWaitHandle(timeout:int) =
+        async { let waithandle = source.Task.Wait(timeout)
+                return waithandle }
+                
+    member x.GrabResult() = source.Task.Result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;postandtryasyncreply&#34;&gt;PostAndTryAsyncReply&lt;/h4&gt;
+
+&lt;p&gt;This one is a little more tricky and I have added a few line number references to try and make it easier.  On &lt;strong&gt;line 3&lt;/strong&gt; we
+declare an resultCell to collect the result of the asynchronous operation.  This is used on &lt;strong&gt;line 4&lt;/strong&gt; when we create a &lt;code&gt;msg&lt;/code&gt;
+to post to &lt;code&gt;incomingMessages&lt;/code&gt; on &lt;strong&gt;line 5&lt;/strong&gt;.  The &lt;code&gt;replyChannelMsg&lt;/code&gt; is a function that takes an &lt;code&gt;AsyncReplyChannel&lt;/code&gt; and returns
+a message, so we create an &lt;code&gt;AsyncReplyChannel&lt;/code&gt; with a lambda expression that registers the reply with the &lt;code&gt;resultCell&lt;/code&gt;.  This
+is the key to how this works, you have to remember that will be done the other side of the operation which will be within the
+asynchronous processing loop of the agent when &lt;code&gt;Reply&lt;/code&gt; is called on the &lt;code&gt;AsyncReplyChannel&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally pattern matching is used on &lt;strong&gt;line 7&lt;/strong&gt; to call either &lt;code&gt;AsyncWaitResult&lt;/code&gt; or &lt;code&gt;GetWaitHandle&lt;/code&gt; on the &lt;code&gt;resultCell&lt;/code&gt;.  The &lt;code&gt;AsyncWaitResult&lt;/code&gt; function is used to wait indefinitely and the &lt;code&gt;GetWaitHandle&lt;/code&gt; function is used if we want to use a timeout.  Both of these are asynchronous workflows that either return a result or return an option type containing the result.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.PostAndTryAsyncReply(replyChannelMsg, ?timeout) = 
+    let timeout = defaultArg timeout defaultTimeout
+    let resultCell = AsyncResultCell&amp;lt;_&amp;gt;()
+    let msg = replyChannelMsg(AsyncReplyChannel&amp;lt;_&amp;gt;(fun reply -&amp;gt; resultCell.RegisterResult(reply)))
+    let posted = incomingMessages.Post(msg)
+    if posted then
+        match timeout with
+        |   Threading.Timeout.Infinite -&amp;gt; 
+                async { let! result = resultCell.AsyncWaitResult
+                        return Some(result) }  
+        |   _ -&amp;gt;
+                async { let! ok =  resultCell.GetWaitHandle(timeout)
+                        let res = (if ok then Some(resultCell.GrabResult()) else None)
+                        return res }
+    else async{return None}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;postandasyncreply&#34;&gt;PostAndAsyncReply&lt;/h4&gt;
+
+&lt;p&gt;This member uses the same functionality as &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt;, creating a message using the &lt;code&gt;AsyncReplyChannel&lt;/code&gt;.  The main
+difference is that an asynchronous workflow is created that wraps a call to &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt; if the &lt;code&gt;timeout&lt;/code&gt; is specified.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.PostAndAsyncReply( replyChannelMsg, ?timeout) =
+    let timeout = defaultArg timeout defaultTimeout
+    match timeout with
+    |   Threading.Timeout.Infinite -&amp;gt; 
+        let resCell = AsyncResultCell&amp;lt;_&amp;gt;()
+        let msg = replyChannelMsg (AsyncReplyChannel&amp;lt;_&amp;gt;(fun reply -&amp;gt; resCell.RegisterResult(reply) ))
+        let posted = incomingMessages.Post(msg)
+        if posted then
+            resCell.AsyncWaitResult
+        else
+            raise (InvalidOperationException(&amp;quot;Incoming message buffer full.&amp;quot;))
+    |   _ -&amp;gt;
+        let asyncReply = this.PostAndTryAsyncReply(replyChannelMsg, timeout=timeout) 
+        async { let! res = asyncReply
+                match res with 
+                | None -&amp;gt;  return! raise (TimeoutException(&amp;quot;PostAndAsyncReply TimedOut&amp;quot;))
+                | Some res -&amp;gt; return res }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;static-start&#34;&gt;Static Start&lt;/h2&gt;
+
+&lt;p&gt;The static Start function is used as a way to construct and start the agent than using the constructor and then calling the Start function.  This is really just a simple short cut for this common use case.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;static member Start(initial, ?cancellationToken) =
+    let dfa = DataflowAgent&amp;lt;&#39;Msg&amp;gt;(initial, ?cancellationToken = cancellationToken)
+    dfa.Start()
+    dfa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>F# Dataflow Agents Part I</title>
+      <link>http://7sharpnine.com/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
+      <pubDate>Sun, 22 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
+      <description>
+
+&lt;p&gt;This is going to be a new series on using TPL Dataflow with F#.  First a little bit of history and background.&lt;/p&gt;
+
+&lt;h2 id=&#34;tpl-dataflows-heritage-and-background&#34;&gt;TPL Dataflows heritage and background&lt;/h2&gt;
+
+&lt;p&gt;TPL Dataflow or &lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/gg585582&#34;&gt;(TDF)&lt;/a&gt; has been around for quite a
+while, it first surfaced more than a year ago as the successor to the Concurrency and Coordination Runtime
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/bb648752.aspx&#34;&gt;(CCR)&lt;/a&gt; and with coming release of .Net 4.5 it will
+be part of the &lt;code&gt;System.Threading.Tasks.Dataflow&lt;/code&gt; namespace.  Elements of the now halted project
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/dd795202&#34;&gt;Axum&lt;/a&gt; are also present within the design of TDF.&lt;/p&gt;
+
+&lt;h3 id=&#34;concurrency-and-coordination-runtime-ccr&#34;&gt;Concurrency and Coordination Runtime (CCR)&lt;/h3&gt;
+
+&lt;p&gt;CCR is a library that deals with asynchrony, concurrency, and coordination between blocks of asynchronous
+code so that the programmer doesn&amp;rsquo;t have to.  All of the low level details of synchronization and error
+propagation are taken care of in a consistent fashion.  CCR is still is included in
+&lt;a href=&#34;ttp://www.microsoft.com/robotics/&#34;&gt;Microsoft Robotics Studio&lt;/a&gt; where it is used extensively to exploit
+parallel hardware and deal with partial failure of systems.&lt;/p&gt;
+
+&lt;h3 id=&#34;axum&#34;&gt;Axum&lt;/h3&gt;
+
+&lt;p&gt;Axum was another interesting Microsoft research project, it also utilized the actor model embracing the
+principles of isolation, and message-passing.  There was also extensive use  symbolic operators as a terse
+short hand way to indicate operations between actors.  For example &lt;code&gt;&amp;lt;--&lt;/code&gt; defined a way to pass a message
+to an actor. Theres was also a similarity to CCR as Axum used the concepts of Ports and channels in a similar
+way.  It was a very interesting project and it was a shame it was put on hold.&lt;/p&gt;
+
+&lt;h3 id=&#34;tpl-dataflow-tdf&#34;&gt;TPL Dataflow (TDF)&lt;/h3&gt;
+
+&lt;p&gt;TDF builds on CCR and Axum, consolidating and refine to produce a more friendly fluent interface, much in
+the same vain as Language-Integrated Query &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/bb308959.aspx&#34;&gt;(LINQ)&lt;/a&gt;
+and Reactive Extensions &lt;a href=&#34;http://msdn.microsoft.com/en-us/data/gg577609&#34;&gt;(RX)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;TDF is built around a number of different blocks which can be combined or linked together.  There are three
+different categories of blocks are as follows:&lt;/p&gt;
+
+&lt;h4 id=&#34;buffering-blocks&#34;&gt;Buffering Blocks&lt;/h4&gt;
+
+&lt;p&gt;Buffering blocks simply buffer data in various ways before passing the data on to another block.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;BufferBlock&amp;lt;&amp;rsquo;T&amp;gt;&lt;/strong&gt;  - The BufferBlock act as a first-in-first-out (FIFO) queue, buffering each input.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BroadcastBlock&amp;lt;&amp;rsquo;T&amp;gt;&lt;/strong&gt; - The BroadcastBlock linking to multiple targets copying the data to each of the
+connected blocks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;WriteOnceBlock&amp;lt;&amp;rsquo;T&amp;gt;&lt;/strong&gt; - The WriteOnceBlock acts like an immutable target, after an item first item
+is passed to it, it effectively becomes read only.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;executor-blocks&#34;&gt;Executor Blocks&lt;/h4&gt;
+
+&lt;p&gt;The executor blocks run user supplied code in the form of a lambda expressions or a &lt;code&gt;Task&amp;lt;&#39;T&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ActionBlock&amp;lt;&amp;lsquo;TInput&amp;gt;&lt;/strong&gt; - The ActionBlock acts like the &lt;code&gt;Action&amp;lt;&#39;T&amp;gt;&lt;/code&gt; delegate performing an action
+on each datum posted to it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TransformBlock&amp;lt;&amp;lsquo;TInput,&amp;lsquo;TOutput&amp;gt;&lt;/strong&gt; - The TransformBlock acts just like the ActionBlock except
+that the action performed can have an output, this output is buffered and behaves just like a BufferBlock.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TransformManyBlock&amp;lt;&amp;lsquo;TInput,&amp;lsquo;TOutput&amp;gt;&lt;/strong&gt; - The TransformManyBlock is just like a TransformBlock except
+that is can produce more than one output for a given datum.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;joining-blocks&#34;&gt;Joining Blocks&lt;/h4&gt;
+
+&lt;p&gt;The Joining Blocks Combining or join data together in different ways.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;BatchBlock&amp;lt;&amp;rsquo;T&amp;gt;&lt;/strong&gt; - The BatchBlock Combines multiple single items together, the items are
+represented by arrays of elements.  The items are grouped together is batches and then passed on to
+another block.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JoinBlock&amp;lt;&amp;lsquo;T1,&amp;lsquo;T2,…&amp;gt;&lt;/strong&gt; - The JoinBlock acts as a form of &lt;code&gt;Enumerable.Zip&amp;lt;&#39;T1,&#39;T2,&#39;TResult&amp;gt;&lt;/code&gt;
+except the zip operation is performed on the items in the source array.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BatchedJoinBlock&amp;lt;&amp;lsquo;T1,&amp;lsquo;T2,…&amp;gt;&lt;/strong&gt; This block as the name suggests simply aggregates the JoinBlock and
+the BatchBlock together.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thats an ultra high level tour thats only just scratches the surface.  I recommend you check out the
+&lt;a href=&#34;http://www.microsoft.com/download/en/details.aspx?id=14782&#34;&gt;Introduction to TPL Dataflow&lt;/a&gt; document to read
+up on the details.  Theres a few more resources in the &lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/gg585582&#34;&gt;DevLabs area&lt;/a&gt;
+that you might find useful.  Hopefully this series should also shed a bit more light on TDF as we go along&amp;hellip;&lt;/p&gt;
+
+&lt;h3 id=&#34;f-asynchronous-workflows-and-agents&#34;&gt;F# Asynchronous Workflows and Agents&lt;/h3&gt;
+
+&lt;p&gt;So where does that leave us in F#?&lt;br /&gt;
+In F# we have &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233250.aspx&#34;&gt;Asynchronous Workflows&lt;/a&gt; and
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370357.aspx&#34;&gt;agents&lt;/a&gt; and they help immensely in the concurrency
+and message passing, but that doest mean that we cant take advantage of the new features and refinements
+much in the same way as we can use Asynchronous Workflows to take advantage of Tasks.&lt;/p&gt;
+
+&lt;p&gt;This post is going to be centered around F# agents but with a twist.  First of all are going to be
+reimplementing a MailboxProcessor using TDF for the underlying processing.  This will allow us to to use
+all of our existing agent code and examples and also stay within the F# agent paradigm.  Following this
+approach we could also make use of the &lt;code&gt;DataflowBlockOptions&lt;/code&gt; type, it has some interesting
+properties which we will look at in future posts:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;TaskScheduler&lt;/li&gt;
+&lt;li&gt;CancellationToken&lt;/li&gt;
+&lt;li&gt;MaxMessagesPerTask&lt;/li&gt;
+&lt;li&gt;BoundedCapacity&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;implementation&#34;&gt;Implementation&lt;/h3&gt;
+
+&lt;p&gt;In this post we are going replicate the MailboxProcessor, we will be using Tomas Petricek&amp;rsquo;s caching agent
+example from &lt;a href=&#34;http://fssnip.net/8V&#34;&gt;FSSnip&lt;/a&gt;).  I have made a couple of modification to Tomas&amp;rsquo;s code.&lt;br /&gt;
+I replaced the Dictionary type with a ConcurrentDictionary so that the caching agent could be called multiple
+times successively without the dictionary throwing an exception due to it already containing a key from a
+previous cached result.  I also changed the example code so that it requests cached HTML from the caching
+agent ten times with a 400ms interval in between each.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module TplAgents
+open System
+open System.Collections.Generic
+open System.Collections.Concurrent
+open FsDataflow
+open System.Net
+open Microsoft.FSharp.Control.WebExtensions
+
+type CachingMessage =
+    | Add of string * string
+    | Get of string * AsyncReplyChannel&amp;lt;option&amp;lt;string&amp;gt;&amp;gt;
+    | Clear
+
+let caching = DataflowAgent.Start(fun agent -&amp;gt; async {
+   let table = ConcurrentDictionary&amp;lt;string, string&amp;gt;()
+   while true do
+      let! msg = agent.Receive()
+      match msg with
+      | Add(url, html) -&amp;gt; 
+         // Add downloaded page to the cache
+         table.AddOrUpdate(url, html, fun k v -&amp;gt; html) |&amp;gt; ignore
+      | Get(url, repl) -&amp;gt; 
+         // Get a page from the cache - returns 
+         // None if the value isn&#39;t in the cache
+         if table.ContainsKey(url) then
+            repl.Reply(Some table.[url])
+         else
+            repl.Reply(None) 
+      | Clear -&amp;gt; 
+           table.Clear() })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;/// Prints information about the specified web site using cache
+let printInfo url = async {
+   // Try to get the cached HTML from the caching agent
+   let! htmlOpt = caching.PostAndAsyncReply(fun ch -&amp;gt; Get(url, ch))
+   match htmlOpt with
+   | None -&amp;gt;
+       // New url - download it and add it to the cache
+       use wc = new WebClient()
+       let! text = wc.AsyncDownloadString(Uri(url))
+       caching.Post(Add(url, text))   
+       Console.WriteLine( sprintf &amp;quot;Download: %s (%d)&amp;quot; url text.Length)
+   | Some html -&amp;gt;
+       // The url was downloaded earlier 
+       Console.WriteLine( sprintf &amp;quot;Cached: %s (%d)&amp;quot; url html.Length) }
+
+let printfuncpro = printInfo &amp;quot;http://functional-programming.net&amp;quot;
+// Print information about a web site -
+// Run this repeatedly to use cached value
+for i in 1 .. 10 do
+   printfuncpro |&amp;gt; Async.Start
+   Async.RunSynchronously &amp;lt;| Async.Sleep 400
+
+// Clear the cache - &#39;printInfo&#39; will need to
+// download data from the web site again
+Console.WriteLine(sprintf &amp;quot;Clearing the cache&amp;quot;)
+caching.Post(Clear)
+printfuncpro |&amp;gt; Async.Start
+
+Console.ReadKey() |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the implementation above you can see that we need to implement the following members:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Start:&lt;code&gt;unit -&amp;gt; unit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Receive:&lt;code&gt;?int -&amp;gt; Async&amp;lt;&#39;Msg&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Post:&lt;code&gt;&#39;Msg -&amp;gt; unit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;PostAndTryAsyncReply:&lt;code&gt;(AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt; -&amp;gt; &#39;Msg) * ?int -&amp;gt; Async&amp;lt;&#39;Reply option&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;PostAndAsyncReply:&lt;code&gt;(AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt; -&amp;gt; &#39;Msg) * int option -&amp;gt; Async&amp;lt;&#39;Reply&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;static member Start:&lt;code&gt;(MailboxProcessor&amp;lt;&#39;Msg&amp;gt; -&amp;gt; Async&amp;lt;unit&amp;gt;) * ?CancellationToken -&amp;gt; MailboxProcessor&amp;lt;&#39;Msg&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These are the only members we need to complete the caching agent example, I didn&amp;rsquo;t want bamboozle everyone
+with an explosion of code from the onset so the remaining members will be implemented as and when we need
+them.  When we have implemented all the members from MailboxProcessor Ill post the full source on my
+ &lt;a href=&#34;https://github.com/7sharp9&#34;&gt;GitHub&lt;/a&gt; account.&lt;/p&gt;
+
+&lt;p&gt;The following members will be outstanding but it should be fairly trivial to implement them
+ once we have completed the code here.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;PostAndReply:&lt;code&gt;(AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt; -&amp;gt; &#39;Msg) * int option -&amp;gt; &#39;Reply&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Scan:&lt;code&gt;(&#39;Msg -&amp;gt; Async&amp;lt;&#39;T&amp;gt; option) * ?int -&amp;gt; Async&amp;lt;&#39;T&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;TryPostAndReply:&lt;code&gt;(AsyncReplyChannel&amp;lt;&#39;Reply&amp;gt; -&amp;gt; &#39;Msg) * ?int -&amp;gt; &#39;Reply option&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;TryReceive:&lt;code&gt;?int -&amp;gt; Async&amp;lt;&#39;Msg option&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;TryScan:&lt;code&gt;(&#39;Msg -&amp;gt; Async&amp;lt;&#39;T&amp;gt; option) * ?int -&amp;gt; Async&amp;lt;&#39;T option&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;CurrentQueueLength:&lt;code&gt;int&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;DefaultTimeout:&lt;code&gt;int with get, set&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So here we go, this is the Dataflow implementation of the MailboxProcessor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module FsDataflow
+open System
+open System.Threading
+open System.Threading.Tasks
+open System.Threading.Tasks.Dataflow
+open System.Collections.Concurrent
+
+type DataflowAgent&amp;lt;&#39;Msg&amp;gt;(initial, ?cancellationToken) =
+    let cancellationToken = 
+        defaultArg cancellationToken Async.DefaultCancellationToken
+    let mutable started = false
+    let errorEvent = new Event&amp;lt;System.Exception&amp;gt;()
+    let incomingMessages = new BufferBlock&amp;lt;&#39;Msg&amp;gt;()
+    let mutable defaultTimeout = Timeout.Infinite
+    
+    [&amp;lt;CLIEvent&amp;gt;]
+    member this.Error = errorEvent.Publish
+
+    member this.Start() =
+        if started 
+            then raise (new InvalidOperationException(&amp;quot;Already Started.&amp;quot;))
+        else
+            started &amp;lt;- true
+            let comp = async { try do! initial this 
+                               with error -&amp;gt; errorEvent.Trigger error }
+            Async.Start(computation = comp, cancellationToken = cancellationToken)
+
+    member this.Receive(?timeout) = 
+        Async.AwaitTask &amp;lt;| incomingMessages.ReceiveAsync()
+
+    member this.Post(item) = 
+        let posted = incomingMessages.Post(item)
+        if not posted then
+            raise (InvalidOperationException(&amp;quot;Incoming message buffer full.&amp;quot;))
+
+    member this.PostAndTryAsyncReply(replyChannelMsg, ?timeout) = 
+        let timeout = defaultArg timeout defaultTimeout
+        let resultCell = AsyncResultCell&amp;lt;_&amp;gt;()
+        let msg = replyChannelMsg(AsyncReplyChannel&amp;lt;_&amp;gt;(fun reply -&amp;gt; resultCell.RegisterResult(reply)))
+        let posted = incomingMessages.Post(msg)
+        if posted then
+            match timeout with
+            |   Threading.Timeout.Infinite -&amp;gt; 
+                    async { let! result = resultCell.AsyncWaitResult
+                            return Some(result) }  
+            |   _ -&amp;gt;
+                    async { let! ok =  resultCell.GetWaitHandle(timeout)
+                            let res = (if ok then Some(resultCell.GrabResult()) else None)
+                            return res }
+        else async{return None}
+
+    member this.PostAndAsyncReply( replyChannelMsg, ?timeout) =                 
+            let timeout = defaultArg timeout defaultTimeout
+            match timeout with
+            |   Threading.Timeout.Infinite -&amp;gt; 
+                let resCell = AsyncResultCell&amp;lt;_&amp;gt;()
+                let msg = replyChannelMsg (AsyncReplyChannel&amp;lt;_&amp;gt;(fun reply -&amp;gt; resCell.RegisterResult(reply) ))
+                let posted = incomingMessages.Post(msg)
+                if posted then
+                    resCell.AsyncWaitResult  
+                else
+                    raise (InvalidOperationException(&amp;quot;Incoming message buffer full.&amp;quot;))
+            |   _ -&amp;gt;            
+                let asyncReply = this.PostAndTryAsyncReply(replyChannelMsg, timeout=timeout) 
+                async { let! res = asyncReply
+                        match res with 
+                        | None -&amp;gt;  return! raise (TimeoutException(&amp;quot;PostAndAsyncReply TimedOut&amp;quot;))
+                        | Some res -&amp;gt; return res }           
+                    
+    static member Start(initial, ?cancellationToken) =
+        let dfa = DataflowAgent&amp;lt;&#39;Msg&amp;gt;(initial, ?cancellationToken = cancellationToken)
+        dfa.Start()
+        dfa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The crux of the implementation from TDF&amp;rsquo;s point of view is the use of the BufferBlock.&lt;br /&gt;
+This is one of the most fundamental blocks within TDF.  Its the equivalent of the &lt;code&gt;Port&amp;lt;&#39;T&amp;gt;&lt;/code&gt;
+type from CCR and the &lt;code&gt;Mailbox&lt;/code&gt; type from F# which is used internally within the
+MailboxProcessor.  As mentioned abouve the BufferBlock type is a first-in-first-out (FIFO) buffer
+and is responsible for buffering any data that is Posted to it.&lt;/p&gt;
+
+&lt;p&gt;OK, I&amp;rsquo;m going to leave it at that for now while you digest the code presented here.&lt;/p&gt;
+
+&lt;p&gt;In part II I will be drilling into the detail on whats going on internally and also describing more
+of the TDF model, so tune in soon for Part II.&lt;/p&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Fixing a hole... &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Fixing a hole...</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    <p>Due to popular demand&hellip; well, I had a couple of requests anyway :-) Heres
+a post inspired by my recent encounters profiling some of the code in
+<a href="https://github.com/fractureio/fracture">Fracture-IO</a>.  <!-- more -->I have recently been
+profiling the code in fracture to remove any so called low hanging fruits.
+During this time I also noticed an increase in memory allocation.  I
+remembered I had recently been experimenting in a branch using pipelets as a
+buffer between the send and receive stages in the Http Server, so I set up a
+simple test to see if pipelets were contributing to the memory allocation
+issues I was seeing.  Here&rsquo;s the simple iteration test code I used for the
+memory profiling:</p>
+
+<pre><code class="language-fsharp">open System
+open System.Diagnostics
+open System.Threading
+open Fracture.Pipelets  
+let reverse (s:string) =
+  String(s |&gt; Seq.toArray |&gt; Array.rev)  
+let oneToSingleton a b f=
+  let result = b |&gt; f
+  result |&gt; Seq.singleton  
+/// Total number to run through test cycle
+let number = 100  
+/// To Record when we are done
+let counter = ref 0
+let sw = new Stopwatch()
+let countThis (a:String) =
+  do Interlocked.Increment(counter) |&gt; ignore
+  if !counter % number = 0 then
+    sw.Stop()
+    printfn &quot;Execution time: %A&quot; sw.Elapsed.TotalMilliseconds
+    printfn &quot;Items input: %d&quot; number
+    printfn &quot;Time per item: %A ms (Elapsed Time / Number of items)&quot;
+      (TimeSpan.FromTicks(sw.Elapsed.Ticks / int64 number).TotalMilliseconds)
+    printfn &quot;Press any key to repeat, press 'q' to exit.&quot;
+    sw.Reset()
+  counter |&gt; Seq.singleton  
+let OneToSeqRev a b =
+  oneToSingleton a b reverse   
+let generateCircularSeq (s) =
+  let rec next () =
+    seq {
+      for element in s do
+        yield element
+      yield! next()
+    }
+  next()  
+    let stage1 = new Pipelet&lt;_,_&gt;(&quot;Stage1&quot;, OneToSeqRev &quot;1&quot;, Routers.roundRobin, number, -1)
+    let stage2 = new Pipelet&lt;_,_&gt;(&quot;Stage2&quot;, OneToSeqRev &quot;2&quot;, Routers.basicRouter, number, -1)
+    let stage3 = new Pipelet&lt;_,_&gt;(&quot;Stage3&quot;, OneToSeqRev &quot;3&quot;, Routers.basicRouter, number, -1)
+    let stage4 = new Pipelet&lt;_,_&gt;(&quot;Stage4&quot;, OneToSeqRev &quot;4&quot;, Routers.basicRouter, number, -1)
+    let stage5 = new Pipelet&lt;_,_&gt;(&quot;Stage5&quot;, OneToSeqRev &quot;5&quot;, Routers.basicRouter, number, -1)
+    let stage6 = new Pipelet&lt;_,_&gt;(&quot;Stage6&quot;, OneToSeqRev &quot;6&quot;, Routers.basicRouter, number, -1)
+    let stage7 = new Pipelet&lt;_,_&gt;(&quot;Stage7&quot;, OneToSeqRev &quot;7&quot;, Routers.basicRouter, number, -1)
+    let stage8 = new Pipelet&lt;_,_&gt;(&quot;Stage8&quot;, OneToSeqRev &quot;8&quot;, Routers.basicRouter, number, -1)
+    let stage9 = new Pipelet&lt;_,_&gt;(&quot;Stage9&quot;, OneToSeqRev &quot;9&quot;, Routers.basicRouter, number, -1)
+    let stage10 = new Pipelet&lt;_,_&gt;(&quot;Stage10&quot;, OneToSeqRev &quot;10&quot;, Routers.basicRouter, number, -1)
+    let final = new Pipelet&lt;_,_&gt;(&quot;Final&quot;, countThis, Routers.basicRouter, number, -1)  
+    let manyStages = [stage2;stage3;stage4;stage5;stage6;stage7;stage8;stage9;stage10]  
+    oneToMany stage1 manyStages
+    manyToOne manyStages final  
+    System.AppDomain.CurrentDomain.UnhandledException |&gt; Observable.add (fun x -&gt;
+      printfn &quot;%A&quot; (x.ExceptionObject :?&gt; Exception); Console.ReadKey() |&gt; ignore)  
+    let circ = [&quot;John&quot;; &quot;Paul&quot;; &quot;George&quot;; &quot;Ringo&quot;; &quot;Nord&quot;; &quot;Bert&quot;] |&gt; generateCircularSeq   
+    let startoperations() =
+      sw.Start()
+      for str in circ |&gt; Seq.take number
+        do  str --&gt; stage1
+      printfn &quot;Insert complete waiting for operation to complete.&quot;  
+    printfn &quot;Press any key to process %i items&quot; number
+    while not (Console.ReadKey().Key = ConsoleKey.Q) do
+      startoperations()
+</code></pre>
+
+<p>Using process explorer from Mark Russinovich I watched the allocated memory
+grow as the iterations progressed:</p>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-VP1-Vo2VINU/TuS7yZFTTlI/AAAAAAAABNw/3ksn5vNXTtw/s400/leak.png" />
+    
+    
+</figure>
+
+
+<p>Theres definitely something leaking in there! So what can we do to find this?
+Simple, we use a memory profiler.  There are several really good memory
+profilers out there.  I have listed some of the best ones below:</p>
+
+<ul>
+<li><a href="http://memprofiler.com/">SciTech memory profiler</a></li>
+<li><a href="http://www.red-gate.com/products/dotnet-development/ants-memory-profiler/">RedGates ANTS Memory Profiler</a></li>
+<li><a href="http://www.jetbrains.com/profiler/">JetBrains dotTrace</a></li>
+<li><a href="http://www.yourkit.com/dotnet/features/index.jsp">YourKit Profiler for .NET</a>
+To demonstrate finding the leak I will be using <a href="http://www.red-gate.com/products/dotnet-development/ants-memory-
+profiler/">RedGates ANTS MemoryProfiler</a>.</li>
+</ul>
+
+<p>First of all we launch the profiler and set it up to profile the application,
+this is just a simple case of browsing to the release folder and picking the
+application so I won&rsquo;t bore with those trivial details here. Now that the
+application is running we hit any key which caused the test application to
+post 100 operations into the pipeline.  We want to create a baseline snapshot
+of the memory allocation so we can see where our leak is.  To do this click
+Take Memory Snapshot at the top right of the screen.  Next we hit any key
+again in the test application, again causing it to post another 100 operations
+into the pipeline.  Now we click Take Memory Snapshot again. Now we have a
+snapshot of the difference between the two operations.  The summery screen is
+shown below:</p>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-N72POVbq0ZA/TuS7v0xBt1I/AAAAAAAABNQ/ExKfkJDCb50/s912/3%2Bsummary.png" />
+    
+    
+</figure>
+
+
+<p>From this screen you can see that there is 51.56KB of new memory allocated
+since the last snapshot, and you can see some nice piecharts showing the
+various allocations in G1, G2 etc.  On the right hand side of the pie chart
+you can see that the largest classes are: object[], AsyncParamsAux,
+Pipelets+loop@37-7<Unit, string,string>, and AsyncParams<Unit>.</p>
+
+<p>Now if we click on Class List button we can investigate these further, heres
+the Class List:</p>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-UDU20rPk7ck/TuS7xvK_67I/AAAAAAAABNg/tnxTlpBYBJg/s912/4%2Bclass%2Blist.png" />
+    
+    
+</figure>
+
+
+<p>Here things start to get interesting.  If you click on the instance Diff (+/-)
+column you can sort the list of classed by the differences to the last
+snapshot.</p>
+
+<p>Now looking at the results we have:</p>
+
+<ul>
+<li>300 more instances of AsyncBuilderImpl, AsyncParamsArgs, and AsyncParams</li>
+<li>200 more instances of Pipelets+loop@37-7<Unit, string, string></li>
+<li>100 more instances of Pipelets+loop@37-7<Unit, string, FSharpRef<int>&gt;</li>
+</ul>
+
+<p>Is it a coincidence that we just pushed 100 operations through the pipeline?
+I think not!</p>
+
+<p>Now that we have a target for further inspection we can highlight the row for
+the function <strong>Pipelets+loop@37-7<Unit, string, FSharpRef<int>&gt;&gt;</strong> and then
+click on the icon that has three little blue boxes on it.  This will take us
+to the instance List as shown below:</p>
+
+
+<figure >
+    
+        <img src="https://lh6.googleusercontent.com/-csF589rWobQ/TuS7wzT6NWI/AAAAAAAABNY/TM95SUmaCEQ/s912/5%2Binstance%2Blist.png" />
+    
+    
+</figure>
+
+
+<p>I have sorted the instance list by the distance from the GC Root, you can see
+there is a strange pattern emerging, the GC root distant increase by three
+each time.  Now lets look at the Instance Retention graph for the first one
+with a GC Root distance of 9, this is the icon on the right hand side of the
+function name, it looks like a few rectangles joined up with a line:</p>
+
+
+<figure >
+    
+        <img src="https://lh3.googleusercontent.com/-9orgQ4etsdI/TuS7yE-Dh7I/AAAAAAAABNs/0-dc3x8u-Mo/s525/first.png" />
+    
+    
+</figure>
+
+
+<p>The Pipelets+loop function is linked from the mailbox processor shown at the
+top of the graph and flows into the Async infrastructure, and finally to the
+loop function at the bottom.</p>
+
+<p>Lets look at the next one, this has a GC Root distance of 12:</p>
+
+
+<figure >
+    
+        <img src="https://lh3.googleusercontent.com/-j1eALRVz0kA/TuS7z0ycXDI/AAAAAAAABN8/SGPVpPQbSz0/s531/second.png" />
+    
+    
+</figure>
+
+
+<p>If you look carefully there is another pattern here, the field references
+args, aux@, econt@ are repeated in the red boxes.  The functions look to be
+quite similar too.  Lets look at the next one GC Root Distance  of 15:</p>
+
+
+<figure >
+    
+        <img src="https://lh6.googleusercontent.com/-d3V1WkCktTM/TuS7zxVnizI/AAAAAAAABOA/wA5xlP-UTxA/s646/third.png" />
+    
+    
+</figure>
+
+
+<p>Looking at this we have a definite repeat of the functions and arguments,  if
+we look down to GC Root at a depth of 60 we get this:</p>
+
+
+<figure >
+    
+        <img src="https://lh3.googleusercontent.com/-X3v-_UfEkI4/TuS7xzETTHI/AAAAAAAABNk/js7xg3GTHIo/s640/60.png" />
+    
+    
+</figure>
+
+
+<p>So whats happening here is that there is a continuation that has been built
+around the asynchronous calls that gets bigger and bigger on each iteration.</p>
+
+<p>Now that we have identified the leak, lets look at the code and see whats
+going on.  That would be the loop function in Pipelets:</p>
+
+<pre><code class="language-fsharp">let mailbox = MailboxProcessor.Start(fun inbox -&gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&gt;
+      ss.Release() |&gt; ignore
+      try
+        data |&gt; transform |&gt; router &lt;| routes
+        return! loop routes
+      with //force loop resume on error
+      | ex -&gt; errors ex
+          return! loop routes
+    | Attach(stage) -&gt; return! loop (stage::routes)
+    | Detach(stage) -&gt; return! loop (List.filter (fun x -&gt; x &lt;&gt; stage) routes)
+  }
+  loop [])
+</code></pre>
+
+<p>Have a look at lines 9 and 12.  Can you guess whats wrong?</p>
+
+<p>Well, to quote the <a href="http://blogs.msdn.com/b/fsharpteam/archive/2011/07/08/tail-calls-in-fsharp.aspx">F# Teams blog</a>:</p>
+
+<blockquote>
+<p>On the .NET platform, there are limitations on where tail calls may occur.
+One restriction is that tail calls cannot be performed in try-catch or try-
+finally blocks (neither in the body of the try nor in the catch or finally
+handlers).</p>
+</blockquote>
+
+<p>It goes on further to discuss another subtle issue with use bindings:</p>
+
+<blockquote>
+<p>use bindings implicitly generate a try-finally around the code that follows
+them to ensure that the Dispose method is called on the bound value.  This
+means that no calls following a use binding will be tail calls.</p>
+</blockquote>
+
+<p>So all we have to do change the way the try catch block is formulated in that
+section.  The most idiomatic way of dealing with this is to use the
+<a href="http://msdn.microsoft.com/en-us/library/ee353899.aspx">Async.Catch function</a>
+which would result in code something like the following:</p>
+
+<pre><code class="language-fsharp">let mailbox = MailboxProcessor.Start(fun inbox -&gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&gt;
+      ss.Release() |&gt; ignore
+      let result = async{data |&gt; transform |&gt; router &lt;| routes} 
+      |&gt; Async.Catch 
+      |&gt; Async.RunSynchronously
+      match result with
+      | Choice1Of2() -&gt; ()
+      | Choice2Of2 exn -&gt; errors exn
+      return! loop routes
+    | Attach(stage) -&gt; return! loop (stage::routes)
+    | Detach(stage) -&gt; return! loop (List.filter (fun x -&gt; x &lt;&gt; stage) routes)
+  }
+  loop [])
+</code></pre>
+
+<p>Alternatively you could move the entire try with section out to a more local
+section thats not in the recursive async loop construct:</p>
+
+<pre><code class="language-fsharp">let computeAndRoute data routes =
+  try
+    data |&gt; transform |&gt; router &lt;| routes
+    Choice1Of2()
+  with
+  | ex -&gt; Choice2Of2 ex  
+
+let mailbox = MailboxProcessor.Start(fun inbox -&gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&gt;
+      ss.Release() |&gt; ignore
+      match computeAndRoute data routes with
+      | Choice2Of2 exn -&gt; errors exn
+      | _ -&gt; ()
+      return! loop routes
+    | Attach(stage) -&gt; return! loop (stage::routes)
+    | Detach(stage) -&gt; return! loop (List.filter (fun x -&gt; x &lt;&gt; stage) routes)}
+  loop [])
+</code></pre>
+
+<p>Anyway I hope that sheds a bit of light on how to spot where memory leaks are
+stemming from, and also some of the little known and often forgotten caveats
+with tail recursion.</p>
+
+<p>Until next time&hellip;</p>
+
+<p><strong>EDIT</strong>: Just to make things a little bit clearer.  The memory leak here is caused by the async block being transformed into chains of continuation passing-style functions, and due to tail call elimination not being possible inside of the try catch blocks, the continuation grows and grows during each recursion.</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/async-workflows/">Async Workflows</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/fractureio/">fractureIO</a>
+            
+                 <a href="/tags/gc/">GC</a>
+            
+                 <a href="/tags/memory-profiling/">memory profiling</a>
+            
+                 <a href="/tags/performance/">Performance</a>
+            
+                 <a href="/tags/pipelets/">pipelets</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Fixing%20a%20hole...&url=http%3a%2f%2f7sharpnine.com%2f2011%2f12%2f11%2f2011-12-11-fixing-a-hole%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2011%2f12%2f11%2f2011-12-11-fixing-a-hole%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2011%2f12%2f11%2f2011-12-11-fixing-a-hole%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

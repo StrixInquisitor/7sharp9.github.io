@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Elm on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/elm/</link>
+    <description>Recent content in Elm on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Thu, 30 Jun 2016 13:53:45 +0100</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/elm/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Elmtastic Updates</title>
+      <link>http://7sharpnine.com/2016/06/30/elmtastic-updates/</link>
+      <pubDate>Thu, 30 Jun 2016 13:53:45 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/06/30/elmtastic-updates/</guid>
+      <description>
+
+&lt;p&gt;With the release of Elm 0.17 there were some fundamental changes to the Elm language.  This post
+is my attempt to help those that may be struggling with these changes&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve played with lots of new languages over the last year or so namely Elixir, Rust, and Elm.  Elm
+and Elixir have been my favorites and I hope to cover those much more in this and future blog posts.&lt;/p&gt;
+
+&lt;h1 id=&#34;so-whats-new-in-elm-0-17-why-do-i-need-to-upgrade-anything&#34;&gt;So whats new in Elm 0.17 why do I need to upgrade anything?&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;ll summarise here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Signals have been removed (Hence some upgrade is required if you had any code using signals.)&lt;/li&gt;
+&lt;li&gt;Faster HTML renderer&lt;/li&gt;
+&lt;li&gt;Libraries for geolocation, page visibility, and web sockets&lt;/li&gt;
+&lt;li&gt;Generated JS is smaller and works with Google&amp;rsquo;s Closure Compiler&lt;/li&gt;
+&lt;li&gt;Generated JS works with RequireJS and CommonJS&lt;/li&gt;
+&lt;li&gt;Features in place for services like GraphQL and Elixir Phoenix&lt;/li&gt;
+&lt;li&gt;Improved documentation at guide.elm-lang.org&lt;/li&gt;
+&lt;li&gt;Helpful messages when decoding JSON fails&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The big things are that are going to throw a spanner in the works are Signals have been removed
+and the following packages have moved around:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;evancz/elm-html    -&amp;gt; elm-lang/html
+evancz/elm-svg     -&amp;gt; elm-lang/svg
+evancz/virtual-dom -&amp;gt; elm-lang/virtual-dom
+evancz/start-app   -&amp;gt; elm-lang/html
+evancz/elm-effects -&amp;gt; elm-lang/core
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Be sure to read the &lt;a href=&#34;http://elm-lang.org/blog/farewell-to-frp&#34;&gt;official post&lt;/a&gt; on the subject for the full information.&lt;/p&gt;
+
+&lt;h2 id=&#34;how-do-i-upgrade-are-there-any-resources-to-help&#34;&gt;How Do I upgrade?  Are there any resources to help?&lt;/h2&gt;
+
+&lt;p&gt;There are a few guides already that do help, the &lt;a href=&#34;https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md&#34;&gt;official upgrade plan&lt;/a&gt; is
+really useful as is &lt;a href=&#34;http://www.lambdacat.com/migrating-from-elm-0-16-to-0-17-from-startapp/&#34;&gt;migrating from elm 0.16 to 0.17&lt;/a&gt; and I would advise that
+you read the official plan before this or any other guides.  Hopefully my whistle stop
+tour of upgrading an existing package may be of help.&lt;/p&gt;
+
+&lt;h2 id=&#34;example-upgrade&#34;&gt;Example Upgrade&lt;/h2&gt;
+
+&lt;p&gt;Lets take the &lt;a href=&#34;https://github.com/Fresheyeball/elm-sprite&#34;&gt;elm-sprite&lt;/a&gt; package as an example, its fairly simple with only a few
+dependencies.&lt;/p&gt;
+
+&lt;h3 id=&#34;elm-package-json&#34;&gt;elm.package.json&lt;/h3&gt;
+
+&lt;p&gt;Lets look at the elm.package.json file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;quot;,
+    &amp;quot;summary&amp;quot;: &amp;quot;Simple sprite rendering for elm-html&amp;quot;,
+    &amp;quot;repository&amp;quot;: &amp;quot;https://github.com/Fresheyeball/elm-sprite.git&amp;quot;,
+    &amp;quot;license&amp;quot;: &amp;quot;MIT&amp;quot;,
+    &amp;quot;source-directories&amp;quot;: [
+        &amp;quot;src&amp;quot;
+    ],
+    &amp;quot;exposed-modules&amp;quot;: [
+        &amp;quot;Sprite&amp;quot;
+    ],
+    &amp;quot;dependencies&amp;quot;: {
+        &amp;quot;elm-lang/core&amp;quot;: &amp;quot;3.0.0 &amp;lt;= v &amp;lt; 4.0.0&amp;quot;
+    },
+    &amp;quot;elm-version&amp;quot;: &amp;quot;0.16.0 &amp;lt;= v &amp;lt; 0.17.0&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to update the dependencies for &lt;code&gt;elm-lang/core&lt;/code&gt; to &lt;code&gt;4.0.1 &amp;lt;= v &amp;lt; 5.0.0&lt;/code&gt;
+and &lt;code&gt;elm-version&lt;/code&gt; to &lt;code&gt;0.17.0 &amp;lt;= v &amp;lt; 0.18.0&lt;/code&gt;.  Pretty easy in terms of dependencies.&lt;/p&gt;
+
+&lt;h3 id=&#34;sprite-elm&#34;&gt;Sprite.elm&lt;/h3&gt;
+
+&lt;p&gt;This ones pretty easy, the only thing to change is the module definition which is
+using an obsolete syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module Sprite (..) where
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now becomes&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module Sprite exposing (..)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Actually the Elm compiler does a fantastic job here by actually telling us what the problem is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;-- SYNTAX PROBLEM --------------------------------------------------- Sprite.elm
+
+I ran into something unexpected when parsing your code!
+
+1| module Sprite (..) where
+                 ^
+I am looking for one of the following things:
+
+    something like `exposing (..)` which replaced `where` in 0.17
+    whitespace
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So that was pretty painless, lets have a look at the example file: &lt;code&gt;One.elm&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;one-elm&#34;&gt;One.elm&lt;/h3&gt;
+
+&lt;p&gt;This ones a bit more tricky as there are signals involved and packages that have moved about.&lt;br /&gt;
+Lets have a look at the changes needed.&lt;/p&gt;
+
+&lt;p&gt;First of all lets address the obsolete &lt;code&gt;where&lt;/code&gt; syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module One exposing (..)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to remove the &lt;code&gt;Signal&lt;/code&gt;, &lt;code&gt;Html.Events&lt;/code&gt; and &lt;code&gt;Effects&lt;/code&gt; imports packages, let&amp;rsquo;s remove these:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Signal exposing (message, Address)
+import Html.Events exposing (on, targetValue)
+import Effects exposing (Effects, none)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to address the changes in the Time package as &lt;code&gt;fps&lt;/code&gt; is no longer available, we can use milliseconds instead.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Time exposing (Time, millisecond)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to adjust the &lt;code&gt;StartpApp&lt;/code&gt; import and use &lt;code&gt;Html.App&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;import Html.App as Html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So all in all the imports section will look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module One exposing (..)
+
+import Html exposing (..)
+import Html.App as Html
+import Time exposing (Time, millisecond)
+import Html.Attributes as A
+import Sprite exposing (..)
+import Array
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;action&#34;&gt;Action&lt;/h3&gt;
+
+&lt;p&gt;The first thing we will tackle is the Action which flows though this application.  It now looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Action
+    = Tick Time
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As &lt;code&gt;Action&lt;/code&gt; has now been replaced with &lt;code&gt;Msg&lt;/code&gt; so we need to change this to the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Msg
+  = Tick Time
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;init&#34;&gt;init&lt;/h3&gt;
+
+&lt;p&gt;Next lets look at the init function its signature is slightly different now.  &lt;code&gt;Html.Program&lt;/code&gt; now &lt;a href=&#34;http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-App#program&#34;&gt;starts the application&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : (model, Cmd msg)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So rather than:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : Sprite {}
+init =
+   { sheet = &amp;quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&amp;quot;
+     , rows = 16
+     , columns = 16
+     , size = ( 2048, 2048 )
+     , frame = 0
+     , dope = idle
+     }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It will now become:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;init : (Sprite {}, Cmd Msg)
+init = (
+  { sheet = &amp;quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&amp;quot;
+    , rows = 16
+    , columns = 16
+    , size = ( 2048, 2048 )
+    , frame = 0
+    , dope = idle
+    } , Cmd.none)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;view&#34;&gt;view&lt;/h3&gt;
+
+&lt;p&gt;This is what view looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;view : Address Action -&amp;gt; Sprite {} -&amp;gt; Html
+view address s =
+    let
+        onInput address contentToValue =
+            on
+                &amp;quot;input&amp;quot;
+                targetValue
+                (message address &amp;lt;&amp;lt; contentToValue)
+    in
+        div
+            []
+            [ node
+                &amp;quot;sprite&amp;quot;
+                [ A.style (sprite s) ]
+                []
+            ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At first glance this looks a bit more complex but when you look at the code a little
+more you come to realise that the &lt;code&gt;onInput&lt;/code&gt; function is not even used anymore this is
+just dead code.  So no all that remains is to change &lt;code&gt;view&lt;/code&gt; to match the new Elm 0.17
+architecture, so instead of &lt;code&gt;Address Action -&amp;gt; Sprite {} -&amp;gt; Html&lt;/code&gt; it will now be
+&lt;code&gt;Sprite {} -&amp;gt; Html Msg&lt;/code&gt; as &lt;code&gt;Address&lt;/code&gt; and &lt;code&gt;Action&lt;/code&gt; are now no longer needed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;view : Sprite {} -&amp;gt; Html Msg
+view s =
+  div
+      []
+      [
+        node
+          &amp;quot;sprite&amp;quot;
+          [ A.style (sprite s)]
+          []
+      ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update&#34;&gt;update&lt;/h3&gt;
+
+&lt;p&gt;Ok, now for &lt;code&gt;update&lt;/code&gt; lets have a look at that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;update : Action -&amp;gt; Sprite {} -&amp;gt; ( Sprite {}, Effects Action )
+update action s =
+    let
+        s&#39; =
+            case action of
+                Tick _ -&amp;gt;
+                    advance s
+    in
+        ( s&#39;, none )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;update&lt;/code&gt; now has a signature of &lt;code&gt;msg -&amp;gt; model -&amp;gt; (model, Cmd msg)&lt;/code&gt; so all we really have
+to do is replace &lt;code&gt;Action&lt;/code&gt; with &lt;code&gt;Msg&lt;/code&gt;, and &lt;code&gt;Effects Action&lt;/code&gt; with &lt;code&gt;Cmd Msg&lt;/code&gt;.  Finally I
+change the return to: &lt;code&gt;Cmd.none&lt;/code&gt; which was previously &lt;code&gt;Effects.none&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;update : Msg -&amp;gt; Sprite {} -&amp;gt; (Sprite {}, Cmd Msg)
+update action s =
+    let
+        s&#39; =
+            case action of
+                Tick _ -&amp;gt;
+                    advance s
+    in
+        ( s&#39;, Cmd.none )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;subs&#34;&gt;subs&lt;/h3&gt;
+
+&lt;p&gt;This part is new, with the old 0.16 based version there was a signal which was mapping
+time to a sprite update:&lt;code&gt;[ Signal.map Tick (fps 30) ]&lt;/code&gt;.  Now that we will be using
+subscriptions this is a simple function like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;subs : Sprite {} -&amp;gt; Sub Msg
+subs model =
+  Time.every (millisecond * 33) Tick
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So every 33 milliseconds (30 frames per second) we are sending a Tick command to the update function.&lt;/p&gt;
+
+&lt;h3 id=&#34;application-start&#34;&gt;application start&lt;/h3&gt;
+
+&lt;p&gt;The last part is the application start, heres what it looks like in 0.16:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;app : StartApp.App (Sprite {})
+app =
+    StartApp.start
+        { view = view
+        , update = update
+        , init = ( init, none )
+        , inputs = [ Signal.map Tick (fps 30) ]
+        }
+
+
+main : Signal Html
+main =
+    app.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the &lt;code&gt;signal&lt;/code&gt; I talked about above.  This whole section has now become a lot simpler in Elm 0.17.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;main : Program Never
+main =
+  Html.program
+    { view = view
+    , update = update
+    , init = init
+    , subscriptions = subs
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;StartApp&lt;/code&gt; has now become &lt;code&gt;Html.App&lt;/code&gt; which we aliased to &lt;code&gt;Html&lt;/code&gt; at the beginning &lt;code&gt;import Html.App as Html&lt;/code&gt;
+and we use the &lt;code&gt;program&lt;/code&gt; function to feed in all the functions we just declared.&lt;/p&gt;
+
+&lt;p&gt;Ok, we&amp;rsquo;re all done, hopefully someone found this useful!&lt;/p&gt;
+
+&lt;p&gt;One tip I can give is to update the function signatures for each function first and it should make
+things a little clearer on what you need to do.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr /&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
