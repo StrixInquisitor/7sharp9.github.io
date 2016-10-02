@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Anything you can do ... &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Anything you can do ...</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    <p>For any of you that are aware of the newly updated Xamarin Web site, you may have seen the <a href="https://xamarin.com/platform">following</a>:</p>
+
+<blockquote>
+<p>Objective-C was ahead of its time 30 years ago.
+C# is ahead of its time today.
+Anything you can do in Objective-C or Java, you can do in C# with Xamarin—usually more succinctly and with fewer bugs.</p>
+</blockquote>
+
+<p>What is also true is that F# is way ahead of its time, and you can produce even more succinct code with even fewer bugs than C#!<br />
+<!-- more -->
+Take the code snippets from that page.</p>
+
+<p>First up the Objective C version:</p>
+
+<pre><code>@interface Person : NSObject
+@property (strong, nonatomic) NSString *name;
+@end
+
+@implementation Person
+- (id)initWithName:(NSString *)name {
+    self = [super init];
+    if (self) {
+        self.name = name;
+    }
+    return self;
+}
+
++ (NSArray *)getNames
+{
+    NSArray *people = @[
+      [[Person alloc] initWithName:@&quot;David&quot;],
+      [[Person alloc] initWithName:@&quot;Vinicius&quot;],
+      [[Person alloc] initWithName:@&quot;Serena&quot;],
+    ];
+    NSMutableArray *names = [NSMutableArray array];
+    for (Person *person in people) {
+        [names addObject:person.name];
+    }
+    return names;
+}
+@end
+</code></pre>
+
+<p>Heres the C# version:</p>
+
+<pre><code class="language-csharp">class Person : NSObject {
+  public string Name { get; set; }
+  
+  public static string[] GetNames() {
+    var people = new[] {
+        new Person { Name=&quot;David&quot; },
+        new Person { Name=&quot;Vinicius&quot; },
+        new Person { Name=&quot;Serena&quot; },
+    };
+    return people.Select(person =&gt; person.Name).ToArray();
+  }
+}
+</code></pre>
+
+<p>And finally the F# version:</p>
+
+<pre><code class="language-fsharp">type Person() =
+   inherit NSObject()
+   member val Name = &quot;&quot; with get, set
+   static member GetNames() =
+      [| new Person(Name=&quot;David&quot;)
+         new Person(Name=&quot;Vinicius&quot;)
+         new Person(Name=&quot;Serena&quot;) |]
+      |&gt; Array.map(fun person -&gt; person.Name)
+</code></pre>
+
+<p>You can see the F# version is doing exactly the same, although we are using the <code>map</code> function from the <a href="http://msdn.microsoft.com/en-us/library/ee370273.aspx"><code>Array</code> module</a> rather than the <a href="http://msdn.microsoft.com/en-us/library/bb397926.aspx">Linq</a> <code>Select</code> extension method.</p>
+
+<p>Its not all about the lines of code though, using F# gives you all many advantages:</p>
+
+<ul>
+<li>Using the type system to make sure the code is behaving how you expect before you even compile.<br /></li>
+<li><a href="http://msdn.microsoft.com/en-gb/library/dd547125.aspx">Pattern matching</a> in F# is amazing!  It can vastly simplify complex control logic, add Active patterns to that and you are ready to take on the world!<br /></li>
+<li>Problems are approached from a functional perspective which often leads to succinct functions that are easy to reason about, test, and compose.<br /></li>
+<li>F# emphasizes immutability and functional composition rather than inheritance, again this boils down to simplicity.<br /></li>
+<li>Features like <a href="http://msdn.microsoft.com/en-gb/library/hh156509.aspx">Type providers</a> can vastly simplify how you deal with data within your application, making access to data really easy and intuitive.<br /></li>
+</ul>
+
+<p>Theres are many areas that F# can really help productivity during development.  I hope to write a few more short posts to really bring attention to these.  I use F# all the time and often forget how awesome it is until I go back to another language thats missing those features.</p>
+
+<p>Until next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/a/a6/Sr_independent.jpg" style="margin: 0"
+                 alt="Sacred Reich - Independent" />
+            <figcaption>
+                <h6>Sacred Reich - Independent</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/4/46/For_Whose_Advantage.jpg" style="margin: 0"
+                 alt="Xentrix - For Whose Advantage" />
+            <figcaption>
+                <h6>Xentrix - For Whose Advantage</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/xamarin/">Xamarin</a>
+            
+                 <a href="/tags/csharp/">CSharp</a>
+            
+                 <a href="/tags/objc/">ObjC</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Anything%20you%20can%20do%20...&url=http%3a%2f%2f7sharpnine.com%2f2014%2f06%2f01%2f2014-06-01-anything-you-can-do%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2014%2f06%2f01%2f2014-06-01-anything-you-can-do%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2014%2f06%2f01%2f2014-06-01-anything-you-can-do%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

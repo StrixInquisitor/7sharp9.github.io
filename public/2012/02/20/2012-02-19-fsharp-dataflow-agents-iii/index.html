@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>FSharp Dataflow agents III &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">FSharp Dataflow agents III</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>This will be the last post on rebuilding the <code>MailboxProcessor</code> using <a href="http://msdn.microsoft.com/en-us/devlabs/gg585582">TDF</a>,
+here&rsquo;s a quick discussion of the missing pieces&hellip;</p>
+
+<p>First, lets start with the simple ones, these don&rsquo;t really require much discussion.</p>
+
+<h3 id="defaulttimeout">DefaultTimeout</h3>
+
+<pre><code class="language-fsharp">let mutable defaultTimeout = Timeout.Infinite
+
+member x.DefaultTimeout
+   with get() = defaultTimeout
+   and set(value) = defaultTimeout &lt;- value
+</code></pre>
+
+<p>This simply provides a mutable property using <code>Timeout.Infinite</code> as a default setting.</p>
+
+<h3 id="currentqueuelength">CurrentQueueLength</h3>
+
+<pre><code class="language-fsharp">member x.CurrentQueueLength() = incomingMessages.Count 
+</code></pre>
+
+<p>Another simple one, this methods uses into the underlying <code>BufferBlock</code> to extract its current queue length using its <code>Count</code> property.</p>
+
+<h3 id="tryreceive">TryReceive</h3>
+
+<pre><code class="language-fsharp">member x.TryReceive(?timeout) = 
+    let ts = TimeSpan.FromMilliseconds(float &lt;| defaultArg time out defaultTimeout)
+    Async.AwaitTask &lt;| incomingMessages.ReceiveAsync(ts)
+                           .ContinueWith(fun (tt:Task&lt;_&gt;) -&gt; 
+                                             if tt.IsCanceled || tt.IsFaulted then None
+                                             else Some tt.Result)
+</code></pre>
+
+<p>Here we get a little help from <a href="http://msdn.microsoft.com/en-us/library/dd460717.aspx">TPL</a> to apply a continuation on completion
+using <code>ContinueWith</code>.  We use a lambda to return either <code>None</code>, in a time out condition, or <code>Some tt.Result</code> when we successfully receive an item.</p>
+
+<h3 id="trypostandreply">TryPostAndReply</h3>
+
+<pre><code class="language-fsharp">type AsyncResultCell&lt;'a&gt;() = 
+    ...
+	member x.TryWaitResultSynchronously(timeout:int) = 
+	    //early completion check
+	    if source.Task.IsCompleted then 
+	        Some source.Task.Result
+	    //now force a wait for the task to complete
+	    else 
+	        if source.Task.Wait(timeout) then 
+	            Some source.Task.Result
+	        else None
+
+member x.TryPostAndReply(replyChannelMsg, ?timeout) :'Reply option = 
+    let timeout = defaultArg timeout defaultTimeout
+    let resultCell = AsyncResultCell&lt;_&gt;()
+    let msg = replyChannelMsg(new AsyncReplyChannel&lt;_&gt;(fun reply -&gt; resultCell.RegisterResult(reply)))
+    if incomingMessages.Post(msg) then
+        resultCell.TryWaitResultSynchronously(timeout)
+    else None
+</code></pre>
+
+<p>Things get a little more interesting from here on in.  Firstly we need to add a new synchronisation member to the <code>AsyncResultCell&lt;'a&gt;</code> type: <code>TryWaitResultSynchronously</code>.   We again enlist the help of the TPL primitives to check for the early completion using <code>source.Task.IsCompleted</code> returning the result if it is there, otherwise we use the <code>Task</code> property&rsquo;s <code>Wait</code> method to check the item returns within the time out interval.  In the usual manner, <code>Some source.Task.Result</code> is returned or <code>None</code> for a failure.</p>
+
+<h3 id="postandreply">PostAndReply</h3>
+
+<pre><code class="language-fsharp">member x.PostAndReply(replyChannelMsg, ?timeout) : 'Reply = 
+    match x.TryPostAndReply(replyChannelMsg, ?timeout = timeout) with
+    | None -&gt;  raise (TimeoutException(&quot;PostAndReply timed out&quot;))
+    | Some result -&gt; result
+</code></pre>
+
+<p>This one wraps a call to <code>TryPostAndReply</code> with some pattern matching.  In the event of a time out <code>None</code> is returned from <code>TryPostAndReply</code> in this instance we raise a <code>TimeoutException</code> otherwise we unwrap the result from the option using <code>| Some result -&gt; result</code>.</p>
+
+<h3 id="tryscan">TryScan</h3>
+
+<pre><code class="language-fsharp">member x.TryScan((scanner: 'Msg -&gt; Async&lt;_&gt; option), timeout): Async&lt;_ option&gt; = 
+    let ts = TimeSpan.FromMilliseconds( float timeout)
+    let rec loopForMsg = async {
+        let! msg = Async.AwaitTask &lt;| incomingMessages.ReceiveAsync(ts)
+                                      .ContinueWith(fun (tt:Task&lt;_&gt;) -&gt; 
+                                          if tt.IsCanceled || tt.IsFaulted then None
+                                          else Some tt.Result)
+        match msg with
+        | Some m -&gt;  let res = scanner m
+                     match res with
+                     | None -&gt; return! loopForMsg
+                     | Some res -&gt; return! res 
+        | None -&gt; return None}                             
+    loopForMsg
+</code></pre>
+
+<p>This one also uses the same <code>ContinueWith</code> functionality in the recursive <code>loopForMsg</code> function, perhaps some
+of these functions could extracted out and refactored but I prefer to keep the code like this to better explain what&rsquo;s going
+on.  The the code is available on GitHub anyway so feel free to clean up any detritus and send me a pull request.  Again we use pattern matching to keep calling the <code>loopForMsg</code> function until the result is returned or a time out occurs.</p>
+
+<h3 id="scan">Scan</h3>
+
+<pre><code class="language-fsharp">member x.Scan(scanner, timeout) =
+    async { let! res = x.TryScan(scanner, timeout)
+            match res with
+            | None -&gt; return raise(TimeoutException(&quot;Scan TimedOut&quot;))
+            | Some res -&gt; return res }
+</code></pre>
+
+<p>Finally we have Scan, this is much like PostAndReply in that it just acts as a wrapper around <code>TryScan</code> making use of
+pattern matching throwing an exception on a time out.</p>
+
+<p>That sums up the last few pieces, completing the TDF implementation of the <code>MailboxProcessor</code>.  I think this series of posts has shown the elegance of F#&rsquo;s asynchronous workflows.  The use of recursive functions and the compositional nature of asynchronous workflows really helps when you are doing this type of programming.  It&rsquo;s also very nice on the eye, each section being clearly defined.</p>
+
+<p>The more astute of you may have noticed something a little different.  <code>Scan</code> and <code>TryScan</code> are destructive in this implementation, the unmatched messages are purged from the internal queue.  Although I could have mirrored the same functionality of the <code>MailboxProcessor</code> by using an internal list to keep track of unmatched messages, this leads to performing checks during <code>Receive</code> and <code>Scan</code> and their derivatives to make sure that this list is used first when switching from <code>Scan</code> and <code>Receive</code> functionality.</p>
+
+<p>I think the separation of concerns are a little fuzzy in the <code>MailboxProcessor</code>.  The <code>scan</code> function seems like an after thought, even if you don&rsquo;t use <code>Scan</code> you still pay a price for it as there are numerous checks between the internal queue and the unmatched messages list.  You can also run into issues while using <code>Scan</code> and <code>TryScan</code> that can result in out of memory conditions due to the inherent unbounded nature.  I will briefly describe and explore the conditions that can lead to that in the next post.  In the implementation presented here we can get bounded checking by passing in an optional <code>DataflowBlockOptions</code> and setting a value for the <code>BoundedCapacity</code> property.</p>
+
+<p><strong>EDIT:</strong> The code for this series of articles is now available on GitHub: <a href="https://github.com/7sharp9/FSharpDataflow">FSharpDataflow</a></p>
+
+<p>Until next time&hellip;</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/async-workflows/">Async Workflows</a>
+            
+                 <a href="/tags/asynchronous/">asynchronous</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/agents/">Agents</a>
+            
+                 <a href="/tags/tpl-dataflow/">TPL Dataflow</a>
+            
+                 <a href="/tags/concurrency/">concurrency</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=FSharp%20Dataflow%20agents%20III&url=http%3a%2f%2f7sharpnine.com%2f2012%2f02%2f20%2f2012-02-19-fsharp-dataflow-agents-iii%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2012%2f02%2f20%2f2012-02-19-fsharp-dataflow-agents-iii%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2012%2f02%2f20%2f2012-02-19-fsharp-dataflow-agents-iii%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

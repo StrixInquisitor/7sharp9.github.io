@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Elmtastic Updates &middot; Dave Thomas</title>
+        <meta name="description" content="Getting your head around Elm 17 updates">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Elmtastic Updates</h1>
+    
+        <p class="post-description" itemprop="description">Getting your head around Elm 17 updates</p>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2016-06-30" itemprop="datePublished">Thu, Jun 30, 2016</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<p>With the release of Elm 0.17 there were some fundamental changes to the Elm language.  This post
+is my attempt to help those that may be struggling with these changes</p>
+
+<p>I&rsquo;ve played with lots of new languages over the last year or so namely Elixir, Rust, and Elm.  Elm
+and Elixir have been my favorites and I hope to cover those much more in this and future blog posts.</p>
+
+<h1 id="so-whats-new-in-elm-0-17-why-do-i-need-to-upgrade-anything">So whats new in Elm 0.17 why do I need to upgrade anything?</h1>
+
+<p>I&rsquo;ll summarise here:</p>
+
+<ul>
+<li>Signals have been removed (Hence some upgrade is required if you had any code using signals.)</li>
+<li>Faster HTML renderer</li>
+<li>Libraries for geolocation, page visibility, and web sockets</li>
+<li>Generated JS is smaller and works with Google&rsquo;s Closure Compiler</li>
+<li>Generated JS works with RequireJS and CommonJS</li>
+<li>Features in place for services like GraphQL and Elixir Phoenix</li>
+<li>Improved documentation at guide.elm-lang.org</li>
+<li>Helpful messages when decoding JSON fails</li>
+</ul>
+
+<p>The big things are that are going to throw a spanner in the works are Signals have been removed
+and the following packages have moved around:</p>
+
+<pre><code class="language-bash">evancz/elm-html    -&gt; elm-lang/html
+evancz/elm-svg     -&gt; elm-lang/svg
+evancz/virtual-dom -&gt; elm-lang/virtual-dom
+evancz/start-app   -&gt; elm-lang/html
+evancz/elm-effects -&gt; elm-lang/core
+</code></pre>
+
+<p>Be sure to read the <a href="http://elm-lang.org/blog/farewell-to-frp">official post</a> on the subject for the full information.</p>
+
+<h2 id="how-do-i-upgrade-are-there-any-resources-to-help">How Do I upgrade?  Are there any resources to help?</h2>
+
+<p>There are a few guides already that do help, the <a href="https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md">official upgrade plan</a> is
+really useful as is <a href="http://www.lambdacat.com/migrating-from-elm-0-16-to-0-17-from-startapp/">migrating from elm 0.16 to 0.17</a> and I would advise that
+you read the official plan before this or any other guides.  Hopefully my whistle stop
+tour of upgrading an existing package may be of help.</p>
+
+<h2 id="example-upgrade">Example Upgrade</h2>
+
+<p>Lets take the <a href="https://github.com/Fresheyeball/elm-sprite">elm-sprite</a> package as an example, its fairly simple with only a few
+dependencies.</p>
+
+<h3 id="elm-package-json">elm.package.json</h3>
+
+<p>Lets look at the elm.package.json file:</p>
+
+<pre><code class="language-json">{
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;summary&quot;: &quot;Simple sprite rendering for elm-html&quot;,
+    &quot;repository&quot;: &quot;https://github.com/Fresheyeball/elm-sprite.git&quot;,
+    &quot;license&quot;: &quot;MIT&quot;,
+    &quot;source-directories&quot;: [
+        &quot;src&quot;
+    ],
+    &quot;exposed-modules&quot;: [
+        &quot;Sprite&quot;
+    ],
+    &quot;dependencies&quot;: {
+        &quot;elm-lang/core&quot;: &quot;3.0.0 &lt;= v &lt; 4.0.0&quot;
+    },
+    &quot;elm-version&quot;: &quot;0.16.0 &lt;= v &lt; 0.17.0&quot;
+}
+</code></pre>
+
+<p>We need to update the dependencies for <code>elm-lang/core</code> to <code>4.0.1 &lt;= v &lt; 5.0.0</code>
+and <code>elm-version</code> to <code>0.17.0 &lt;= v &lt; 0.18.0</code>.  Pretty easy in terms of dependencies.</p>
+
+<h3 id="sprite-elm">Sprite.elm</h3>
+
+<p>This ones pretty easy, the only thing to change is the module definition which is
+using an obsolete syntax:</p>
+
+<pre><code class="language-elm">module Sprite (..) where
+</code></pre>
+
+<p>Now becomes</p>
+
+<pre><code class="language-elm">module Sprite exposing (..)
+</code></pre>
+
+<p>Actually the Elm compiler does a fantastic job here by actually telling us what the problem is:</p>
+
+<pre><code class="language-ini">-- SYNTAX PROBLEM --------------------------------------------------- Sprite.elm
+
+I ran into something unexpected when parsing your code!
+
+1| module Sprite (..) where
+                 ^
+I am looking for one of the following things:
+
+    something like `exposing (..)` which replaced `where` in 0.17
+    whitespace
+</code></pre>
+
+<p>So that was pretty painless, lets have a look at the example file: <code>One.elm</code></p>
+
+<h3 id="one-elm">One.elm</h3>
+
+<p>This ones a bit more tricky as there are signals involved and packages that have moved about.<br />
+Lets have a look at the changes needed.</p>
+
+<p>First of all lets address the obsolete <code>where</code> syntax:</p>
+
+<pre><code class="language-elm">module One exposing (..)
+</code></pre>
+
+<p>We need to remove the <code>Signal</code>, <code>Html.Events</code> and <code>Effects</code> imports packages, let&rsquo;s remove these:</p>
+
+<pre><code class="language-elm">import Signal exposing (message, Address)
+import Html.Events exposing (on, targetValue)
+import Effects exposing (Effects, none)
+</code></pre>
+
+<p>Now we need to address the changes in the Time package as <code>fps</code> is no longer available, we can use milliseconds instead.</p>
+
+<pre><code class="language-elm">import Time exposing (Time, millisecond)
+</code></pre>
+
+<p>Now we need to adjust the <code>StartpApp</code> import and use <code>Html.App</code> instead.</p>
+
+<pre><code class="language-elm">import Html.App as Html
+</code></pre>
+
+<p>So all in all the imports section will look like this:</p>
+
+<pre><code class="language-elm">module One exposing (..)
+
+import Html exposing (..)
+import Html.App as Html
+import Time exposing (Time, millisecond)
+import Html.Attributes as A
+import Sprite exposing (..)
+import Array
+</code></pre>
+
+<h3 id="action">Action</h3>
+
+<p>The first thing we will tackle is the Action which flows though this application.  It now looks like this:</p>
+
+<pre><code class="language-elm">type Action
+    = Tick Time
+</code></pre>
+
+<p>As <code>Action</code> has now been replaced with <code>Msg</code> so we need to change this to the following:</p>
+
+<pre><code class="language-elm">type Msg
+  = Tick Time
+</code></pre>
+
+<h3 id="init">init</h3>
+
+<p>Next lets look at the init function its signature is slightly different now.  <code>Html.Program</code> now <a href="http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-App#program">starts the application</a></p>
+
+<pre><code class="language-elm">init : (model, Cmd msg)
+</code></pre>
+
+<p>So rather than:</p>
+
+<pre><code class="language-elm">init : Sprite {}
+init =
+   { sheet = &quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&quot;
+     , rows = 16
+     , columns = 16
+     , size = ( 2048, 2048 )
+     , frame = 0
+     , dope = idle
+     }
+</code></pre>
+
+<p>It will now become:</p>
+
+<pre><code class="language-elm">init : (Sprite {}, Cmd Msg)
+init = (
+  { sheet = &quot;https://10firstgames.files.wordpress.com/2012/02/actionstashhd.png&quot;
+    , rows = 16
+    , columns = 16
+    , size = ( 2048, 2048 )
+    , frame = 0
+    , dope = idle
+    } , Cmd.none)
+</code></pre>
+
+<h3 id="view">view</h3>
+
+<p>This is what view looks like:</p>
+
+<pre><code class="language-elm">view : Address Action -&gt; Sprite {} -&gt; Html
+view address s =
+    let
+        onInput address contentToValue =
+            on
+                &quot;input&quot;
+                targetValue
+                (message address &lt;&lt; contentToValue)
+    in
+        div
+            []
+            [ node
+                &quot;sprite&quot;
+                [ A.style (sprite s) ]
+                []
+            ]
+</code></pre>
+
+<p>At first glance this looks a bit more complex but when you look at the code a little
+more you come to realise that the <code>onInput</code> function is not even used anymore this is
+just dead code.  So no all that remains is to change <code>view</code> to match the new Elm 0.17
+architecture, so instead of <code>Address Action -&gt; Sprite {} -&gt; Html</code> it will now be
+<code>Sprite {} -&gt; Html Msg</code> as <code>Address</code> and <code>Action</code> are now no longer needed.</p>
+
+<pre><code class="language-elm">view : Sprite {} -&gt; Html Msg
+view s =
+  div
+      []
+      [
+        node
+          &quot;sprite&quot;
+          [ A.style (sprite s)]
+          []
+      ]
+</code></pre>
+
+<h3 id="update">update</h3>
+
+<p>Ok, now for <code>update</code> lets have a look at that:</p>
+
+<pre><code class="language-elm">update : Action -&gt; Sprite {} -&gt; ( Sprite {}, Effects Action )
+update action s =
+    let
+        s' =
+            case action of
+                Tick _ -&gt;
+                    advance s
+    in
+        ( s', none )
+</code></pre>
+
+<p><code>update</code> now has a signature of <code>msg -&gt; model -&gt; (model, Cmd msg)</code> so all we really have
+to do is replace <code>Action</code> with <code>Msg</code>, and <code>Effects Action</code> with <code>Cmd Msg</code>.  Finally I
+change the return to: <code>Cmd.none</code> which was previously <code>Effects.none</code>.</p>
+
+<pre><code class="language-elm">update : Msg -&gt; Sprite {} -&gt; (Sprite {}, Cmd Msg)
+update action s =
+    let
+        s' =
+            case action of
+                Tick _ -&gt;
+                    advance s
+    in
+        ( s', Cmd.none )
+</code></pre>
+
+<h3 id="subs">subs</h3>
+
+<p>This part is new, with the old 0.16 based version there was a signal which was mapping
+time to a sprite update:<code>[ Signal.map Tick (fps 30) ]</code>.  Now that we will be using
+subscriptions this is a simple function like this:</p>
+
+<pre><code class="language-elm">subs : Sprite {} -&gt; Sub Msg
+subs model =
+  Time.every (millisecond * 33) Tick
+</code></pre>
+
+<p>So every 33 milliseconds (30 frames per second) we are sending a Tick command to the update function.</p>
+
+<h3 id="application-start">application start</h3>
+
+<p>The last part is the application start, heres what it looks like in 0.16:</p>
+
+<pre><code class="language-elm">app : StartApp.App (Sprite {})
+app =
+    StartApp.start
+        { view = view
+        , update = update
+        , init = ( init, none )
+        , inputs = [ Signal.map Tick (fps 30) ]
+        }
+
+
+main : Signal Html
+main =
+    app.html
+</code></pre>
+
+<p>You can see the <code>signal</code> I talked about above.  This whole section has now become a lot simpler in Elm 0.17.</p>
+
+<pre><code class="language-elm">main : Program Never
+main =
+  Html.program
+    { view = view
+    , update = update
+    , init = init
+    , subscriptions = subs
+    }
+</code></pre>
+
+<p><code>StartApp</code> has now become <code>Html.App</code> which we aliased to <code>Html</code> at the beginning <code>import Html.App as Html</code>
+and we use the <code>program</code> function to feed in all the functions we just declared.</p>
+
+<p>Ok, we&rsquo;re all done, hopefully someone found this useful!</p>
+
+<p>One tip I can give is to update the function signatures for each function first and it should make
+things a little clearer on what you need to do.</p>
+
+<p>Until next time!</p>
+
+<hr />
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/elm/">Elm</a>
+            
+                 <a href="/tags/functional-programming/">Functional Programming</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Elmtastic%20Updates&url=http%3a%2f%2f7sharpnine.com%2f2016%2f06%2f30%2felmtastic-updates%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2016%2f06%2f30%2felmtastic-updates%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2016%2f06%2f30%2felmtastic-updates%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = '7sharp9';
+    var disqus_identifier = 'http:\/\/7sharpnine.com\/2016\/06\/30\/elmtastic-updates\/';
+    var disqus_title = 'Elmtastic Updates';
+    var disqus_url = 'http:\/\/7sharpnine.com\/2016\/06\/30\/elmtastic-updates\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Adding Touch To SpriteKit &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Adding Touch To SpriteKit</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    <p>Only a quick post this week.  Last time we looked at <a href="https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html">SpriteKit</a> and how to add some particle emmiters to simulate a star-field and exhaust on a spaceship, this time lets look at adding some touch based input to move the spaceship around.  <!-- more --></p>
+
+<p>The first thing we need to do is add a type of gesture recogniser, there are various built in <a href="https://developer.apple.com/library/ios/documentation/uikit/reference/UIGestureRecognizer_Class/Reference/Reference.html#//apple_ref/occ/cl/UIGestureRecognizer">gestures</a>:</p>
+
+<ul>
+<li>UITapGestureRecognizer</li>
+<li>UIPinchGestureRecognizer</li>
+<li>UIRotationGestureRecognizer</li>
+<li>UISwipeGestureRecognizer</li>
+<li>UIPanGestureRecognizer</li>
+<li>UIScreenEdgePanGestureRecognizer</li>
+<li>UILongPressGestureRecognizer</li>
+</ul>
+
+<p>From the names above it&rsquo;s pretty easy to get a feel for how they should be used, you can create your own subclass of <code>UIGestureRecognizer</code> if you need a custom one.</p>
+
+<p>Gesture recognizers come in two types continuous and discrete.  A discrete gesture is single action like tap or double tap and results in a single action been sent.  A continuous gesture is like pan, swipe, or rotate which is interpreted as a series of messages being sent.</p>
+
+<p>For our purposes we are going to be using the <code>UIPanGestureRecognizer</code> which is a continuous gesture.  What we need to do is create a function that sets up the <code>UIPanGestureRecognizer</code> ready for us to use.  We do that by creating an instance of the <code>UIPanGestureRecognizer</code> and add it to our view:</p>
+
+<pre><code class="language-fsharp">let setupGestures() =
+    use panRecogniser = new UIPanGestureRecognizer(x, MonoTouch.ObjCRuntime.Selector(&quot;PanSelector&quot;))
+    x.View.AddGestureRecognizer(panRecogniser)
+</code></pre>
+
+<p>Here we are also using a selector, which means we can use an attribute like <code>[&lt;Export(&quot;PanSelector&quot;)&gt;]</code> to define the function that will be used as the callback.  Lets define that function now:</p>
+
+<pre><code class="language-fsharp">let OnLabelPan( sender: UIGestureRecognizer) =
+    match sender with
+    | :? UIPanGestureRecognizer as pan -&gt;
+        match pan.State with
+        | UIGestureRecognizerState.Changed -&gt;
+            let movement = pan.TranslationInView(x.View)
+            let move = SKAction.MoveBy(movement.X * 1.75f, -movement.Y * 1.75f, 0.05)
+            let ship = scene.GetChildNode(&quot;Ship&quot;)
+            ship.RunAction(move)
+            pan.SetTranslation(PointF.Empty, x.View)
+        | _ -&gt; ()
+    | _ -&gt; ()
+</code></pre>
+
+<p>First of all we use pattern matching to do a type match <code>| :? UIPanGestureRecognizer as pan -&gt;</code>.  This ensures we are dealing with the <code>UIPanGestureRecognizer</code> type.  We might of applied multiple gesture recognisers to the view like swipe and rotate and had this function deal with all of them, we can handle this nicely with the type match.</p>
+
+<p>We can now use a pattern match on the state of the gesture recogniser to react to just the changed event <code>UIGestureRecognizerState.Changed</code>.</p>
+
+<p>As mentioned previously the pan gesture is continuous and will send a changed action whenever the finger moves on the screen, this gives us a chance to retrieve the current translation of the pan in the current view.  We do this by calling <code>pan.TranslationInView(x.View)</code>.  We can now apply a movement to our spaceship sprite by creating an action using <code>SKAction.MoveBy</code>.   We multiply the translation retrieved by 1.75 to allow for the initial distance the the pan gesture moves before triggering.  We also invert the Y axis so that the spaceship sprite moves in the correct Y direction.  The final parameter is the time the action runs for, we use a really small time of 0.05 (50ms).  This stops the spaceship sprite from moving like an ordinary mouse pointer, just enough inertia to make it feel smooth.</p>
+
+<p>To apply the action to the spaceship all we need to do is retrieve it from the scene using <code>scene.GetChildNode</code> and call the <code>RunAction</code> function passing in the action we just created.</p>
+
+<p>Finally we set the pan translation back to zero using: <code>pan.SetTranslation(PointF.Empty, x.View)</code>, this ensures that the spaceship only moves by last changed translation action.  Failure to reset the translation would result in the spaceship having too much inertia from the previous actions making it very difficult to control.</p>
+
+<p>We could also use another overload of <code>UIPanGestureRecognizer</code> which takes an <code>Action&lt;UIPanGestureRecognizer&gt;</code>, we can pass this in as a lambda function:</p>
+
+<pre><code class="language-fsharp">let setupGestures() =
+    use panRecogniser = 
+        new UIPanGestureRecognizer
+            (fun (pan:UIPanGestureRecognizer) -&gt; 
+                match pan.State with
+                | UIGestureRecognizerState.Changed -&gt;
+                    let movement = pan.TranslationInView(x.View)
+                    let move = SKAction.MoveBy(movement.X * 1.75f, -movement.Y * 1.75f, 0.05)
+                    let ship = scene.GetChildNode(&quot;Ship&quot;)
+                    ship.RunAction(move)
+                    pan.SetTranslation(PointF.Empty, x.View)
+                | _ -&gt; ())
+</code></pre>
+
+<p>I think the attribute based version is a little cleaner as you can move the callback functionality away from the definition.  To be honest I don&rsquo;t mind either way, although if the lambda definition gets too big you will definitely be better off with the former.</p>
+
+<p>Finally we need to plug in the <code>setupGestures</code> function, we do that by calling it at the end of <code>ViewDidLoad</code>:</p>
+
+<pre><code class="language-fsharp">override x.ViewDidLoad () =
+    base.ViewDidLoad()
+    setupScene()
+    setupGestures()
+</code></pre>
+
+<p>Here&rsquo;s a quick YouTube video so you can see this in action:</p>
+
+
+<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/j5JK5zWLdK0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0"></iframe>
+ </div>
+
+
+<p>If you want to check out the project then you can find it in my <a href="https://github.com/7sharp9/SpriteKit-Fsharp-Samples">GitHub repo </a>.</p>
+
+<p>That&rsquo;s all for now, see you next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/e/e5/In_Utero_%28Nirvana%29_album_cover.jpg" style="margin: 0"
+                 alt="Nirvana - In Utero" />
+            <figcaption>
+                <h6>Nirvana - In Utero</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/8/85/Axiscover.jpg" style="margin: 0"
+                 alt="Jimi Hendrix Experience - Axis: Bold as Love" />
+            <figcaption>
+                <h6>Jimi Hendrix Experience - Axis: Bold as Love</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/games/">Games</a>
+            
+                 <a href="/tags/spritekit/">SpriteKit</a>
+            
+                 <a href="/tags/ios/">iOS</a>
+            
+                 <a href="/tags/xamarin/">Xamarin</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Adding%20Touch%20To%20SpriteKit&url=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f29%2f2013-09-29-adding-touch-to-spritekit%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f29%2f2013-09-29-adding-touch-to-spritekit%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f29%2f2013-09-29-adding-touch-to-spritekit%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

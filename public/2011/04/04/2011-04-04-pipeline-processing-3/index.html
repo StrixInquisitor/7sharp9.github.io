@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Pipeline processing 3 &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Pipeline processing 3</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>Ok so I have been offline for a while now, what with starting a new financial contract in London and not having any broadband access for a while.  I have
+been working on something, honest!</p>
+
+<p>Since the last post I have been reflecting on the pipeline design and it had a distinct object orientated feel to it that I wasnt happy with, so I have
+amended the structure of the code and come up with the following which simplifies in some areas and expands in others&hellip;<!-- more --></p>
+
+<pre><code class="language-fsharp">module Pipeline
+  open System.Collections.Concurrent
+
+  [&lt;Interface&gt;]
+  type IPipelineInput&lt;'a&gt; =
+    abstract Insert: 'a -&gt; unit
+ 
+  [&lt;Interface&gt;]
+  type IPipelineConnection&lt;'a&gt; =
+    abstract Attach: IPipelineInput&lt;'a&gt; -&gt; unit
+    abstract Detach: IPipelineInput&lt;'a&gt; -&gt; unit
+ 
+  [&lt;Interface&gt;]
+  type IPipeline&lt;'a,'b&gt; =
+    inherit IPipelineConnection&lt;'b&gt;
+    inherit IPipelineInput&lt;'a&gt;
+
+  type PipelineStage&lt;'a,'b&gt;(processor, router: seq&lt;IPipelineInput&lt;'b&gt;&gt; * 'b -&gt; seq&lt;IPipelineInput&lt;'b&gt;&gt;, ?overflow, ?capacity, ?blockingTime) =
+    let processor = processor
+    let router = router  
+    let createBlockingCollection x =
+        match x with
+        | Some c -&gt; new BlockingCollection&lt;'a&gt;(c:int)
+        | None -&gt; new BlockingCollection&lt;'a&gt;()  
+    let buffer = createBlockingCollection capacity
+    let routes = ref List.empty&lt;IPipelineInput&lt;'b&gt;&gt;
+    let queuedOrRunning = ref false  
+    let blocktime =
+      match blockingTime with
+      | Some b -&gt; b
+      | None -&gt; 250  
+    let consumerLoop = async {
+      try
+        let rec loop()=
+          let item = ref Unchecked.defaultof&lt;_&gt;
+          let taken = buffer.TryTake(item, blocktime)
+          if taken then
+              do !item
+              |&gt; processor
+              |&gt; Seq.iter (fun z -&gt;
+              (match !routes with
+               | [] -&gt; ()(*we cant route with no routes*)
+               | _ -&gt; do router (!routes, z) |&gt; Seq.iter (fun r -&gt; (r.Insert z ))) )
+              loop()
+          else ()(*exit nothing to consume in time limit*)
+        loop()
+      with e -&gt; raise e
+      }  
+    member this.ClearRoutes = routes := []  
+    interface IPipelineInput&lt;'a&gt; with
+      member this.Insert payload =
+        let added = buffer.TryAdd(payload, blocktime)
+        if added then
+          //begin consumer loop
+          if not !queuedOrRunning then
+            lock consumerLoop (fun() -&gt;
+            Async.Start(async {do! consumerLoop })
+            queuedOrRunning := true)
+          else()
+        else
+          //overflow here if function passed
+          match overflow with
+          | Some t -&gt;  payload |&gt; overflow.Value
+          | None -&gt; ()  
+    interface IPipelineConnection&lt;'b&gt; with
+      member this.Attach (stage) =
+        let current = !routes
+        routes := stage :: current  
+      member this.Detach (stage) =
+        let current = !routes
+        routes := List.filter (fun el -&gt; el &lt;&gt; stage) current  
+    static member Attach (a:IPipelineConnection&lt;_&gt;) (b) =
+      a.Attach b ;b  
+    static member Detach (a: IPipelineConnection&lt;_&gt;) (b) =
+      a.Detach b ;a  
+    static member (++&gt;) (a:IPipelineConnection&lt;_&gt;, b) =
+      a.Attach (b) ;b  
+    static member (--&gt;) (a:IPipelineConnection&lt;_&gt;, b) =
+      a.Detach b ;a  
+    static member (&lt;&lt;--) (a:IPipelineInput&lt;_&gt;, b:'b) =
+      a.Insert b  
+    static member (--&gt;&gt;) (b,a:IPipelineInput&lt;_&gt;) =
+      a.Insert b
+</code></pre>
+
+<h3 id="summary">Summary.</h3>
+
+<p>I only want to summarise the code as I think its fairly straight forward to
+see whats going on.</p>
+
+<h3 id="interfaces">Interfaces</h3>
+
+<p>We have two main interfaces defined <strong>IPipelineInput&lt;&lsquo;a&gt;</strong> and
+**IPipelineConnection&lt;&lsquo;a&gt;, **as you can tell by the names they are involved
+with connecting the pipeline together and getting information into the
+pipeline.  Those two interfaces are merged together in the IPipeline&lt;&lsquo;a, &lsquo;b&gt;
+interface, this keeps a nice separation between connecting and inserting into
+the pipeline, it also makes implementation easier and allows the interfaces to
+be implemented in other areas of code that need to talk to or connect to a
+pipeline.</p>
+
+<h3 id="internals">Internals</h3>
+
+<p>Inside the pipeline we have the bounded blocking queue which is implemented by
+the BlockingCollection from TPL. This is used to store the pipeline payloads
+that are waiting to be processed.</p>
+
+<p>The consumerLoop function is recursive and continually tries to take items
+from the blocking collection processing and routing each one to the next
+pipeline stage.</p>
+
+<p>The processor is a function that transforms from type &lsquo;a to type &lsquo;b.</p>
+
+<p>The router is a function that takes a sequence of IPipelineInput&lt;&lsquo;b&gt; and also
+the payload &lsquo;b it returns a sequence of IPipelineInput&lt;&lsquo;b&gt;.  What this
+effectively means is that we can route by the connected stages (i.e. round
+robin routing, multi-cast routing.)   Or we could route by payload contents
+(i.e. if the payload contains a certain bytes sequence we could choose a
+certain IPipelineInput&lt;&lsquo;b&gt;.)</p>
+
+<p>Each item taken is passed to the processor and router via pipeline (<strong>|&gt;</strong>) and
+Seq operations, recursively calling itself until an item can no longer be
+retrieved from the buffer.</p>
+
+<p>The implementation of IPipelineInput&lt;&lsquo;a&gt;.Insert is the counterpart to the
+previous function. It first tries to inset the item into the bounded blocking
+queue, if this cannot be done then the overflow function is called if one is
+present. Next the async consumer loop is started if it is not already running.
+The idea behind this is that by keeping the payload processing running on the
+thread pool while there is work to do it will cut down on the number of
+context switches between threads.  Once an item cannot be taken from the
+bounding blocking queue the loop will exit.</p>
+
+<p>The rest of the code is pretty standard stuff and should be pretty easy to
+follow.</p>
+
+<p>I also define some symbolic operations to simply constructing and using the
+pipeline:</p>
+
+<p><strong>++&gt;</strong> Attaches the pipeline stage on the right hand side to the one on the left. <strong>&ndash;&gt;</strong> Detaches the pipelinestage on the right from the one on the left. <strong>&lt;&lt;&ndash;</strong> Inserts a payload on the right into the pipeline stage on the left. <strong>&ndash;&gt;&gt;</strong> Inserts a payload on the left hand side into the pipeline stage on the right.<br />
+These help to keep a nice terse description of the pipeline, once things get a little more complex other operators may be required, the now discontinued
+<a href="http://msdn.microsoft.com/en-us/devlabs/dd795202.aspx">Axiom</a> had a whole host of these, its a pity Microsoft dropped the language.</p>
+
+<h3 id="example">Example</h3>
+
+<p>Heres a quick sample pipeline showing the pipeline in use:</p>
+
+<ul>
+<li>Stage 1 takes a string and splits it based on the &lsquo;,&rsquo;.</li>
+<li>Stage 2 reverses each string.</li>
+<li>Stage 3 reverses the string back to the original.</li>
+</ul>
+
+<pre><code class="language-fsharp">module program
+  open System
+  open Pipeline  
+  let consoleLock = new obj()  
+  let split del n (s:string) =
+    lock consoleLock (fun() -&gt;
+    do printfn &quot;%A:before split %A&quot; n s
+    let split = s.Split([|del|])
+    do printfn &quot;%A:after: split into: %A&quot; n split
+    split |&gt; Array.toSeq)  
+  let reverse (s:string) =
+    new string(s |&gt; Seq.toArray |&gt; Array.rev)  
+  let oneToSingleton a b f=
+    lock consoleLock (fun() -&gt;
+      printfn &quot;%A:before reverse %A&quot; a b
+      let result = b |&gt; f
+      printfn &quot;%A:after reverse %A&quot; a result
+      result|&gt; Seq.singleton)  
+  let OneToSeqRev a b = oneToSingleton a b reverse   
+  ///Simply picks the first route
+  let basicRouter( r, i) =
+    let head = Seq.head r
+    Seq.singleton head  
+  let p1 = PipelineStage( split ',' &quot;1&quot;, basicRouter)
+  let p2 = PipelineStage( OneToSeqRev &quot;2&quot;, basicRouter)
+  let p3 = PipelineStage( OneToSeqRev &quot;3&quot;, basicRouter)  
+  p1 ++&gt; p2 ++&gt; p3 |&gt; ignore  
+  let generateCircularSeq (lst:'a list) =
+    let rec next () =
+      seq {
+        for element in lst do
+          yield element
+        yield! next()
+      }
+    next()  
+  for str in [&quot;John,Paul,George,Ringo&quot;]
+  |&gt; generateCircularSeq
+  |&gt; Seq.take 10
+    do  str --&gt;&gt; p1  
+  let x = Console.ReadKey()
+</code></pre>
+
+<p>As you can see the assignment of the pipeline stages is pretty simple as is the composition of multiple stages.  This was often one of the most difficult
+areas while developing a similar pipelines in C# you could often find yourself with a few hundred lines of setup code which was a often a nightmare to debug
+a few weeks later.</p>
+
+<p>Hopefully I have whet your appetite with pipelines, in a future article I will be combining socket operations with pipeline stages to produce a flexible
+framework to deal with high throughput network applications.</p>
+
+<p>As always I appreciate any comments, until next time&hellip;</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/async-workflows/">Async Workflows</a>
+            
+                 <a href="/tags/asynchronous/">asynchronous</a>
+            
+                 <a href="/tags/complexity/">Complexity</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/pipeline/">Pipeline</a>
+            
+                 <a href="/tags/sockets/">Sockets</a>
+            
+                 <a href="/tags/tpl/">TPL</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Pipeline%20processing%203&url=http%3a%2f%2f7sharpnine.com%2f2011%2f04%2f04%2f2011-04-04-pipeline-processing-3%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2011%2f04%2f04%2f2011-04-04-pipeline-processing-3%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2011%2f04%2f04%2f2011-04-04-pipeline-processing-3%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

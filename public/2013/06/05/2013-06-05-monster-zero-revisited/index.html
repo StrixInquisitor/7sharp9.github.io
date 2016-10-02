@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Monster Zero - Revisited &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Monster Zero - Revisited</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>
+<figure class="img-left">
+    
+        <img src="http://upload.wikimedia.org/wikipedia/en/c/ce/KingGhidorah.jpg" />
+    
+    
+</figure>
+<br />
+This creature is capable of tremendous destruction due to it&rsquo;s size, flight <em>(with the creature&rsquo;s wings also generating hurricane strength winds)</em> and possesses several breath weapons <em>(e.g., heat and energy)</em>.</p>
+
+<p>What am I talking about here?  Maybe it&rsquo;s <a href="http://en.wikipedia.org/wiki/King_Ghidorah">Monster Zero</a> or <a href="http://en.wikipedia.org/wiki/King_Ghidorah">King Ghidorah</a> as it&rsquo;s sometimes known.  No it&rsquo;s <a href="http://msdn.microsoft.com/en-us/library/hh228603.aspx">TPL Dataflow</a>!  <!-- more --></p>
+
+<p>Yeah, yeah, I have a penchant for being over dramatic and writing quirky intros.  This post is about <a href="http://msdn.microsoft.com/en-us/library/hh228603.aspx">TPL Dataflow</a> otherwise known as TDF.  I have blogged about this before in my <a href="http://7sharpnine.com/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/">TDF agent series</a> but I thought it might be worth while returning to it while on the subject of monsters.</p>
+
+<p>The purpose of these posts is not to put you of using these libraries but to give you feel of how they might be used from an F# viewpoint.  Its not always easy to use these libraries even from C#, so jumping to another paradigm can sometimes leave you feeling bewildered, frustrated and lost.</p>
+
+<h3 id="what-is-tpl-dataflow">What is TPL Dataflow</h3>
+
+<p>According to MSDN here&rsquo;s the description of TPL dataflow:</p>
+
+<blockquote>
+<p>The Task Parallel Library (TPL) provides dataflow components to help increase the robustness of concurrency-enabled applications. These dataflow components are collectively referred to as the TPL Dataflow Library. This dataflow model promotes actor-based programming by providing in-process message passing for coarse-grained dataflow and pipelining tasks.</p>
+</blockquote>
+
+<p>Checkout the <a href="http://msdn.microsoft.com/en-us/library/hh228603.aspx">MSDN</a> if you want to read a more in depth outline on TDF, or you could also refer to my <a href="http://7sharpnine.com/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/">earlier posts</a> too.</p>
+
+<h3 id="sample-problem">Sample problem</h3>
+
+<p>Here&rsquo;s a sample problem:  We have two documents that we want to use to collate a list of word occurrences, we then want to collect the results from both documents and print out the combined results.</p>
+
+<p>Although we&rsquo;re using TDF to solve this problem, we could of also used F# agents, Reactive Extensions, Linq, TPL, or a mix of all of those.</p>
+
+<p>We will stick to using the <a href="http://msdn.microsoft.com/en-us/library/dd233175.aspx">F# REPL</a> for this post as it&rsquo;s fairly simple example and allows for a bit of interactivity.  Lets start by adding a reference, open up a few namespace&rsquo;s and read a couple of text files in.  In this instance we&rsquo;re going to use <a href="http://en.wikipedia.org/wiki/Jane_Eyre">Jane Eyre</a> by Charlotte Bronte, and <a href="http://en.wikipedia.org/wiki/Algernon_Blackwood#Novels">The Wendigo</a> by Algernon Blackwood, for no reason other than they were free to download and use as samples.</p>
+
+<pre><code class="language-fsharp">#r &quot;System.Threading.Tasks.Dataflow&quot;
+open System
+open System.IO
+open System.Threading.Tasks.Dataflow
+
+let janeEyre = File.ReadAllText(@&quot;Jane Eyre [Charlotte Bronte].txt&quot;)
+let theWendigo = File.ReadAllText(@&quot;The Wendigo [Algernon Blackwood].txt&quot;)
+</code></pre>
+
+<p>The next thing we need to think about is how to count the words.  Let&rsquo;s create a recursive function that counts each occurrence of a passed in word against the full text.  The <code>wordCount</code> function recurses until <code>-1</code> is returned from the <code>IndexOf</code> function.  Before you argue about memory allocation, laziness etc, we&rsquo;re not interested in that at the moment, we just want to solve the problem at hand.  It would be fairly easy to split the input into a lazy sequence and iterate over it so we only keep a single line in memory.</p>
+
+<pre><code class="language-fsharp">let wordCount (text: String) word =
+   let rec loop position count =
+      match text.IndexOf(word, position, StringComparison.InvariantCultureIgnoreCase) with
+      | -1 -&gt; count
+      | i -&gt;  loop (i + word.Length) (count + 1)
+   loop 0 0
+</code></pre>
+
+<p>Now we can start to create some TDF blocks, we shall create a <a href="http://msdn.microsoft.com/en-us/library/hh160447.aspx">BroadcastBlock</a> first.</p>
+
+<blockquote>
+<p>A BroadcastBlock provides a buffer for storing at most one element at time, overwriting each message with the next as it arrives.</p>
+</blockquote>
+
+<p>Messages are broadcast to all linked targets, all of which may consume a clone of the message.</p>
+
+<p>The lambda expression passed into the <code>BroadcastBlock</code> is it&rsquo;s clone function, in this case we will just use the string that is passed in: <code>fun s -&gt; s</code>.  We will be using the <code>BroadcastBlock</code> to send the same message to multiple destinations later on.</p>
+
+<pre><code class="language-fsharp">let broadcast = BroadcastBlock(fun s -&gt; s)
+</code></pre>
+
+<p>Now we will create a couple of <a href="http://msdn.microsoft.com/en-us/library/hh194782.aspx">TransformBlocks</a>.</p>
+
+<blockquote>
+<p>A TransformBlock provides a dataflow block that invokes a provided Func(T, TResult) delegate for every data element received.</p>
+</blockquote>
+
+<p>The <code>TransformBlock</code> will accept a data element and transform it by invoking it&rsquo;s transform function.  Here we will <a href="http://msdn.microsoft.com/en-us/library/dd233229.aspx">partially apply</a> the <code>wordCount</code> function by passing in the first parameter <code>text</code>.  This means that whenever the <code>TransformBlock</code> is passed data the <code>wordCount</code> function will already have the <code>text</code> parameter applied and will return the number of matches from the document.  The context of passed data here will be the word that we want to find.  We&rsquo;ll create one for Jane Eyre and one for The Wendigo:</p>
+
+<pre><code class="language-fsharp">let transformJaneEyre = TransformBlock(wordCount janeEyre)
+let transformTheWendigo  = TransformBlock(wordCount theWendigo)
+</code></pre>
+
+<p>Now that we have created three blocks we need to think about linking them together.  You can do this with the <code>LinkTo</code> method that every dataflow block has.  We could do that by calling the <code>LinkTo</code> methods as usual like this:</p>
+
+<pre><code class="language-fsharp">broadcast.LinkTo(transformJaneEyre) |&gt; ignore
+broadcast.LinkTo(transformTheWendigo) |&gt; ignore
+</code></pre>
+
+<p>That seems a little awkward, especially as we&rsquo;re not interested in the return parameter in this example, so instead we&rsquo;re going to create a little function to make this a little bit easier for ourselves:</p>
+
+<pre><code class="language-fsharp">let (--&gt;) source target = DataflowBlock.LinkTo(source, target) |&gt; ignore
+</code></pre>
+
+<p>The <code>LinkTo</code> method returns an <code>IDisposable</code> that can be use to sever the link between the blocks that have just been joined.  There are also overloads of <code>LinkTo</code> that allow you to specify a predicate.  There is also an overload that takes a <code>DataflowLinkOptions</code> type which allows you to specify whether the new link is appended (<code>Append</code>), the maximum message that can be passed before the block is unlinked (<code>MaxMessages</code>), and finally and whether or not the completion of the former block is propagated to the latter (<code>PropagateCompletion</code>).</p>
+
+<p>We can now use the <code>--&gt;</code> symbolic operator and use <a href="http://msdn.microsoft.com/en-us/library/dd233204.aspx">infix notation</a> to link the blocks together.  Infix operators are expected to be placed between the two operands, which means we can define the links between the block like this:</p>
+
+<pre><code class="language-fsharp">broadcast --&gt; transformJaneEyre
+broadcast --&gt; transformTheWendigo
+</code></pre>
+
+<p>Next we create a <a href="http://msdn.microsoft.com/en-us/library/hh160286.aspx">JoinBlock</a>.</p>
+
+<blockquote>
+<p>A JoinBlock provides a dataflow block that joins across multiple dataflow sources, which are not necessarily of the same type, waiting for one item to arrive for each type before they’re all released together as a tuple that contains one item per type.</p>
+</blockquote>
+
+<pre><code class="language-fsharp">let join = JoinBlock&lt;_,_,_&gt;()
+
+broadcast           --&gt; join.Target1
+transformJaneEyre   --&gt; join.Target2
+transformTheWendigo --&gt; join.Target3
+</code></pre>
+
+<p>We create the <code>JoinBlock</code> then link the <code>broadcast</code>, <code>transformJaneEyre</code>, and <code>transformTheWendigo</code> to it.  This means that the <code>JoinBlock</code> will wait for data from <strong>all</strong> three blocks before sending the data on as a tuple of the three values.</p>
+
+<p>Finally we create the last block which is an <a href="http://msdn.microsoft.com/en-us/library/hh194684.aspx">ActionBlock</a></p>
+
+<blockquote>
+<p>An ActionBlock provides a dataflow block that invokes a provided Action(T) delegate for every data element received.</p>
+</blockquote>
+
+<pre><code class="language-fsharp">let writeOutput = 
+    ActionBlock(fun(word:String, count1, count2) -&gt; 
+       Console.WriteLine(&quot;Word: {0}, Jane Eyre: {1}, The Wendigo: {2}&quot;, 
+                         word.PadRight(10),
+                         (string count1).PadLeft(3), 
+                         (string count2).PadLeft(3) ) )
+    
+join --&gt; writeOutput
+</code></pre>
+
+<p>Right, that completes the hook up, now all that&rsquo;s left is to test it.</p>
+
+<pre><code class="language-fsharp">let words = [|&quot;cat&quot;;&quot;cake&quot;;&quot;anything&quot;;&quot;laugh&quot;;&quot;breeze&quot;;&quot;hysterical&quot;;&quot;ball&quot;;&quot;them&quot;;&quot;home&quot;;&quot;bird&quot;|]
+for word in words do 
+  broadcast.Post(word) |&gt; ignore
+</code></pre>
+
+<p>If we execute this then we we get the following output:</p>
+
+<pre><code>Word: cat       , Jane Eyre: 212, The Wendigo:  73
+Word: cake      , Jane Eyre:  15, The Wendigo:   0
+Word: anything  , Jane Eyre:  60, The Wendigo:  19
+Word: laugh     , Jane Eyre:  68, The Wendigo:  17
+Word: breeze    , Jane Eyre:  11, The Wendigo:   0
+Word: hysterical, Jane Eyre:   1, The Wendigo:   1
+Word: ball      , Jane Eyre:  11, The Wendigo:   1
+Word: them      , Jane Eyre: 432, The Wendigo:  72
+Word: home      , Jane Eyre:  90, The Wendigo:  11
+Word: bird      , Jane Eyre:  35, The Wendigo:   0
+</code></pre>
+
+<h3 id="summary">Summary</h3>
+
+<p>From a conceptual viewpoint of view we&rsquo;re creating a BroadcastBlock which connects to two TransformBlocks.  The two TransformBlocks are then connected to the JoinBlock along with the BroadcastBlock.  Finally, the JoinBlock is connected to the ActionBlock.</p>
+
+<p>This creates a mini network where you can simply post a message to the input of the dataflow network and it will propagate through the network.  As with Reactive Extensions marble diagrams and pipeline diagrams are a great way to visualise the process flow.</p>
+
+
+<figure >
+    
+        <img src="https://lh5.googleusercontent.com/-r5TZAl6VERo/UbCwd4MXGTI/AAAAAAAABpg/MmQIb_0nwb8/w769-h218-no/Screen&#43;Shot&#43;2013-06-06&#43;at&#43;16.50.31.png" />
+    
+    
+</figure>
+
+
+<p>I hope that sheds a little bit of light on how a dataflow network can be created with TDF.  Extremely complex behaviour&rsquo;s can be created by connecting up the simple dataflow building blocks, especially as the different block&rsquo;s can run with multiple degrees of parallelism an also run asynchronously using <code>Task&lt;T&gt;</code>.</p>
+
+<p>Until next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/4/43/AIC_Unplugged.jpg" style="margin: 0"
+                 alt="Alice In Chains - Unplugged" />
+            <figcaption>
+                <h6>Alice In Chains - Unplugged</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/6/64/MeteoraLP.jpg" style="margin: 0"
+                 alt="Linkin Park - Meteora" />
+            <figcaption>
+                <h6>Linkin Park - Meteora</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/4/44/Soilscars.jpg" style="margin: 0"
+                 alt="Soil - Scars" />
+            <figcaption>
+                <h6>Soil - Scars</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/tdf/">TDF</a>
+            
+                 <a href="/tags/mono/">Mono</a>
+            
+                 <a href="/tags/csharp/">CSharp</a>
+            
+                 <a href="/tags/dataflow/">Dataflow</a>
+            
+                 <a href="/tags/tpl/">TPL</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Monster%20Zero%20-%20Revisited&url=http%3a%2f%2f7sharpnine.com%2f2013%2f06%2f05%2f2013-06-05-monster-zero-revisited%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2013%2f06%2f05%2f2013-06-05-monster-zero-revisited%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2013%2f06%2f05%2f2013-06-05-monster-zero-revisited%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

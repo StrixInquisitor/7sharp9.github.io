@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Terror From The Deep &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Terror From The Deep</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+
+<figure class="img-left">
+    
+        <img src="https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0" />
+    
+    
+</figure>
+
+
+<p>So this is my Christmas special.  I&rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the <a href="https://github.com/fsharp/fsharpbinding">fsharpbinding repo</a>, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&hellip;</p>
+
+<p>Actually I&rsquo;m only joking, adding features to the F# compiler and F# addin is fairly easy depending on what you want to do.  You can run into issues along the way which means you might need to delve into more of the F# compilers functionality, essentially to derive and adapt new functions that you might need.</p>
+
+<p>What I&rsquo;m going to show is how to add a new autocompletion list where instead of a standard completion list, its categorised by the type that the methods are derived from.  As an example you would be able to see the <code>ToString</code> methods etc on the <code>Obj</code> type andy other methods defined on their particular derived type.</p>
+
+<h2 id="one-door-leads-to-the-source">One door leads to the source</h2>
+
+<p>Lets have a look at the current completion list function in the F# compiler:</p>
+
+<pre><code class="language-fsharp">member GetDeclarationsAlternate : 
+	ParsedFileResultsOpt:ParseFileResults option * 
+	line: int * 
+	colAtEndOfPartialName: int * 
+	lineText:string * qualifyingNames: 
+	string list * 
+	partialName: string * 
+	?hasTextChangedSinceLastTypecheck: (obj * range -&gt; bool) 
+	-&gt; Async&lt;DeclarationSet&gt;
+</code></pre>
+
+<p>Essentially this function takes a lot of parameters, I don&rsquo;t want to go into the details too much as the <a href="http://fsharp.github.io/FSharp.Compiler.Service/editor.html#Getting-auto-complete-lists">FCS sample pages</a> does a good job of that.  So what is a <code>DeclarationSet</code>?  Well as you expect its a collection of <code>Declarations</code>.  A Declaration has a <code>Glyph</code>, <code>Name</code>, and <code>DescriptionText</code>.  The <code>DescriptionText</code> is a <code>ToolTipText</code> which is a text based rendering of the declaration in question.</p>
+
+<h3 id="tooltipelement">ToolTipElement</h3>
+
+<pre><code class="language-fsharp">/// Describe a comment as either a block of text or a file+signature reference into an intellidoc file.
+type XmlComment =
+| XmlCommentNone
+| XmlCommentText of string
+| XmlCommentSignature of (*File and Signature*) string * string
+
+/// A single data tip display element
+type ToolTipElement = 
+| ToolTipElementNone
+/// A single type, method, etc with comment.
+| ToolTipElement of (* text *) string * XmlComment
+// /// A parameter of a method.
+// | ToolTipElementParameter of string * XmlComment * string
+/// For example, a method overload group.
+| ToolTipElementGroup of ((* text *) string * XmlComment) list
+/// An error occurred formatting this element
+| ToolTipElementCompositionError of string
+</code></pre>
+
+<p>At first glance this information is quite interesting but in use the limitation of text based rendering becomes apparent.  How can you break down the information into easily renderable parts or know the underlying types that make up the declaration.  Text based manipulation means a lot of work, and also lots of potential bugs, as you would expect with text based or weakly typed system.</p>
+
+<p>Lets have a look at the <code>GetDeclarationsAlternate</code> function and see if we have access to any detailed information:</p>
+
+<h3 id="getdeclarationsalternate">GetDeclarationsAlternate</h3>
+
+<pre><code class="language-fsharp">    member info.GetDeclarationsAlternate(parseResultsOpt, line, colAtEndOfNamesAndResidue, lineStr, qualifyingNames, partialName, ?hasTextChangedSinceLastTypecheck) = 
+        let hasTextChangedSinceLastTypecheck = defaultArg hasTextChangedSinceLastTypecheck (fun _ -&gt; false)
+        reactorOp DeclarationSet.Empty (fun scope -&gt; scope.GetDeclarations(parseResultsOpt, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck))
+</code></pre>
+
+<p>OK, so that just calls <code>GetDeclarations</code> after doing a check for changes since the last type check, lets go deeper&hellip;</p>
+
+<h3 id="getdeclarations">GetDeclarations</h3>
+
+<pre><code class="language-fsharp">    member x.GetDeclarations (parseResultsOpt:ParseFileResults option, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck) : DeclarationSet =
+        let isInterfaceFile = SourceFileImpl.IsInterfaceFile mainInputFileName
+        ErrorScope.Protect 
+            Range.range0 
+            (fun () -&gt; 
+                match GetDeclItemsForNamesAtPosition(parseResultsOpt, Some qualifyingNames, Some partialName, line, lineStr, colAtEndOfNamesAndResidue, ResolveTypeNamesToCtors, ResolveOverloads.Yes, hasTextChangedSinceLastTypecheck) with
+                | None -&gt; DeclarationSet.Empty  
+                | Some(items,denv,m) -&gt; 
+                    let items = items |&gt; filterIntellisenseCompletionsBasedOnParseContext (parseResultsOpt |&gt; Option.bind (fun x -&gt; x.ParseTree)) (mkPos line colAtEndOfNamesAndResidue)
+                    let items = if isInterfaceFile then items |&gt; List.filter IsValidSignatureFileItem else items
+                    DeclarationSet.Create(infoReader,m,denv,items,reactorOps,checkAlive))
+            (fun msg -&gt; DeclarationSet.Error msg)
+</code></pre>
+
+<p>Right, this is more interesting, if we look at the pattern match <code>match filterIntellisenseCompletionsBasedOnParseContext</code> you can see we have there are <code>items</code>, <code>denv</code>, and <code>m</code>.  Now what exactly is an <code>Item</code>?</p>
+
+<p>Lets go deeper still and take a look&hellip;.</p>
+
+<h3 id="item">Item</h3>
+
+<pre><code class="language-fsharp">/// Represents an item that results from name resolution
+type Item = 
+    /// Represents the resolution of a name to an F# value or function.
+    | Value of  ValRef
+    /// Represents the resolution of a name to an F# union case.
+    | UnionCase of UnionCaseInfo
+    /// Represents the resolution of a name to an F# active pattern result.
+    | ActivePatternResult of ActivePatternInfo * TType * int  * range
+    /// Represents the resolution of a name to an F# active pattern case within the body of an active pattern.
+    | ActivePatternCase of ActivePatternElemRef 
+    /// Represents the resolution of a name to an F# exception definition.
+    | ExnCase of TyconRef 
+    /// Represents the resolution of a name to an F# record field.
+    | RecdField of RecdFieldInfo
+
+    // The following are never in the items table but are valid results of binding an identitifer in different circumstances. 
+
+    /// Represents the resolution of a name at the point of its own definition.
+    | NewDef of Ident
+    /// Represents the resolution of a name to a .NET field 
+    | ILField of ILFieldInfo
+    /// Represents the resolution of a name to an event
+    | Event of EventInfo
+    /// Represents the resolution of a name to a property
+    | Property of string * PropInfo list
+    /// Represents the resolution of a name to a group of methods
+    | MethodGroup of string * MethInfo list
+    /// Represents the resolution of a name to a constructor
+    | CtorGroup of string * MethInfo list
+    /// Represents the resolution of a name to the fake constructor simulated for an interface type.
+    | FakeInterfaceCtor of TType
+    /// Represents the resolution of a name to a delegate
+    | DelegateCtor of TType
+    /// Represents the resolution of a name to a group of types
+    | Types of string * TType list
+    /// CustomOperation(nm, helpText, methInfo)
+    /// Used to indicate the availability or resolution of a custom query operation such as 'sortBy' or 'where' in computation expression syntax
+    | CustomOperation of string * (unit -&gt; string option) * MethInfo option
+    /// Represents the resolution of a name to a custom builder in the F# computation expression syntax
+    | CustomBuilder of string * ValRef
+    /// Represents the resolution of a name to a type variable
+    | TypeVar of string * Typar
+    /// Represents the resolution of a name to a module or namespace
+    | ModuleOrNamespaces of Tast.ModuleOrNamespaceRef list
+    /// Represents the resolution of a name to an operator
+    | ImplicitOp of Ident * TraitConstraintSln option ref
+    /// Represents the resolution of a name to a named argument
+    | ArgName of Ident * TType * ArgumentContainer option
+    /// Represents the resolution of a name to a named property setter
+    | SetterArg of Ident * Item 
+    /// Represents the potential resolution of an unqualified name to a type.
+    | UnqualifiedType of TyconRef list
+</code></pre>
+
+<p>Finally lets look at the <code>Create</code> function of <code>DeclarationSet</code> to see what&rsquo;s involved:</p>
+
+<h3 id="declarationset-create">DeclarationSet - Create</h3>
+
+<pre><code class="language-fsharp">// Make a 'Declarations' object for a set of selected items
+static member Create(infoReader:InfoReader, m, denv, items, reactor, checkAlive) = 
+    let g = infoReader.g
+     
+    let items = items |&gt; RemoveExplicitlySuppressed g
+    
+    // Sort by name. For things with the same name, 
+    //     - show types with fewer generic parameters first
+    //     - show types before over other related items - they usually have very useful XmlDocs 
+    let items = 
+        items |&gt; List.sortBy (fun d -&gt; 
+            let n = 
+                match d with  
+                | Item.Types (_,(TType_app(tcref,_) :: _)) -&gt; 1 + tcref.TyparsNoRange.Length
+                // Put delegate ctors after types, sorted by #typars. RemoveDuplicateItems will remove FakeInterfaceCtor and DelegateCtor if an earlier type is also reported with this name
+                | Item.FakeInterfaceCtor (TType_app(tcref,_)) 
+                | Item.DelegateCtor (TType_app(tcref,_)) -&gt; 1000 + tcref.TyparsNoRange.Length
+                // Put type ctors after types, sorted by #typars. RemoveDuplicateItems will remove DefaultStructCtors if a type is also reported with this name
+                | Item.CtorGroup (_, (cinfo :: _)) -&gt; 1000 + 10 * (tcrefOfAppTy g cinfo.EnclosingType).TyparsNoRange.Length 
+                | _ -&gt; 0
+            (d.DisplayName,n))
+
+    // Remove all duplicates. We've put the types first, so this removes the DelegateCtor and DefaultStructCtor's.
+    let items = items |&gt; RemoveDuplicateItems g
+
+    if verbose then dprintf &quot;service.ml: mkDecls: %d found groups after filtering\n&quot; (List.length items); 
+
+    // Group by display name
+    let items = items |&gt; List.groupBy (fun d -&gt; d.DisplayName) 
+
+    // Filter out operators (and list)
+    let items = 
+        // Check whether this item looks like an operator.
+        let isOpItem(nm,item) = 
+            match item with 
+            | [Item.Value _]
+            | [Item.MethodGroup(_,[_])] -&gt; 
+                (IsOpName nm) &amp;&amp; nm.[0]='(' &amp;&amp; nm.[nm.Length-1]=')'
+            | [Item.UnionCase _] -&gt; IsOpName nm
+            | _ -&gt; false              
+        let isFSharpList nm = (nm = &quot;[]&quot;) // list shows up as a Type and a UnionCase, only such entity with a symbolic name, but want to filter out of intellisense
+        items |&gt; List.filter (fun (nm,items) -&gt; not (isOpItem(nm,items)) &amp;&amp; not(isFSharpList nm)) 
+
+
+    let decls = 
+        // Filter out duplicate names
+        items |&gt; List.map (fun (nm,itemsWithSameName) -&gt; 
+            match itemsWithSameName with
+            | [] -&gt; failwith &quot;Unexpected empty bag&quot;
+            | items -&gt; 
+                new Declaration(nm, GlyphOfItem(denv,items.Head), Choice1Of2 (items, infoReader, m, denv, reactor, checkAlive)))
+
+    new DeclarationSet(Array.ofList decls)
+</code></pre>
+
+<p>This looks very promising, this information could be just what we need.  If we do a quick search and see what else uses <code>Items</code> so we can get a better idea of how its used.  Lets just see if there are any pattern matches for Item.Value to get a quick idea:</p>
+
+<ul>
+<li>nameres.fs</li>
+<li>tc.fs</li>
+<li>fsi.fs</li>
+<li>service.fs</li>
+<li>ServiceDeclarations.fs</li>
+<li>Symbols.fs</li>
+</ul>
+
+<h2 id="you-re-a-symbol-for-your-kind">You&rsquo;re a symbol for your kind</h2>
+
+<p>The matches in <code>Symbol.fs</code> look interesting, you can see it&rsquo;s relatively easy to construct a <code>Symbol</code> if you have access to the relevant parts.  Having a list of symbols available rather than a <code>DeclarationSet</code> of <code>ToolTipElement</code> could be just what we need.</p>
+
+<p>Lets look at constructing a symbol rather than the declaration set:</p>
+
+<pre><code class="language-fsharp">member x.GetDeclarationListSymbols (parseResultsOpt:FSharpParseFileResults option, line, lineStr, colAtEndOfNamesAndResidue, qualifyingNames, partialName, hasTextChangedSinceLastTypecheck) =
+    let isInterfaceFile = SourceFileImpl.IsInterfaceFile mainInputFileName
+    ErrorScope.Protect 
+        Range.range0 
+        (fun () -&gt; 
+            match GetDeclItemsForNamesAtPosition(parseResultsOpt, Some qualifyingNames, Some partialName, line, lineStr, colAtEndOfNamesAndResidue, ResolveTypeNamesToCtors, ResolveOverloads.Yes, hasTextChangedSinceLastTypecheck) with
+            | None -&gt; List.Empty  
+            | Some(items,_denv,_m) -&gt; 
+                let items = items |&gt; filterIntellisenseCompletionsBasedOnParseContext (parseResultsOpt |&gt; Option.bind (fun x -&gt; x.ParseTree)) (mkPos line colAtEndOfNamesAndResidue)
+                let items = if isInterfaceFile then items |&gt; List.filter IsValidSignatureFileItem else items
+
+                //do filtering like Declarationset
+                let items = items |&gt; RemoveExplicitlySuppressed g
+                
+                // Sort by name. For things with the same name, 
+                //     - show types with fewer generic parameters first
+                //     - show types before over other related items - they usually have very useful XmlDocs 
+                let items = 
+                    items |&gt; List.sortBy (fun d -&gt; 
+                        let n = 
+                            match d with  
+                            | Item.Types (_,(TType_app(tcref,_) :: _)) -&gt; 1 + tcref.TyparsNoRange.Length
+                            // Put delegate ctors after types, sorted by #typars. RemoveDuplicateItems will remove FakeInterfaceCtor and DelegateCtor if an earlier type is also reported with this name
+                            | Item.FakeInterfaceCtor (TType_app(tcref,_)) 
+                            | Item.DelegateCtor (TType_app(tcref,_)) -&gt; 1000 + tcref.TyparsNoRange.Length
+                            // Put type ctors after types, sorted by #typars. RemoveDuplicateItems will remove DefaultStructCtors if a type is also reported with this name
+                            | Item.CtorGroup (_, (cinfo :: _)) -&gt; 1000 + 10 * (tcrefOfAppTy g cinfo.EnclosingType).TyparsNoRange.Length 
+                            | _ -&gt; 0
+                        (d.DisplayName,n))
+
+                // Remove all duplicates. We've put the types first, so this removes the DelegateCtor and DefaultStructCtor's.
+                let items = items |&gt; RemoveDuplicateItems g
+
+                if verbose then dprintf &quot;service.ml: mkDecls: %d found groups after filtering\n&quot; (List.length items); 
+
+                // Group by display name
+                let items = items |&gt; List.groupBy (fun d -&gt; d.DisplayName) 
+
+                // Filter out operators (and list)
+                let items = 
+                    // Check whether this item looks like an operator.
+                    let isOpItem(nm,item) = 
+                        match item with 
+                        | [Item.Value _]
+                        | [Item.MethodGroup(_,[_])] -&gt; 
+                            (IsOpName nm) &amp;&amp; nm.[0]='(' &amp;&amp; nm.[nm.Length-1]=')'
+                        | [Item.UnionCase _] -&gt; IsOpName nm
+                        | _ -&gt; false              
+                    let isFSharpList nm = (nm = &quot;[]&quot;) // list shows up as a Type and a UnionCase, only such entity with a symbolic name, but want to filter out of intellisense
+                    items |&gt; List.filter (fun (nm,items) -&gt; not (isOpItem(nm,items)) &amp;&amp; not(isFSharpList nm)) 
+
+                let items = 
+                    // Filter out duplicate names
+                    items |&gt; List.map (fun (_nm,itemsWithSameName) -&gt; 
+                        match itemsWithSameName with
+                        | [] -&gt; failwith &quot;Unexpected empty bag&quot;
+                        | items -&gt;
+                            items 
+                            |&gt; List.map (fun item -&gt; let symbol = FSharpSymbol.Create(g, thisCcu, tcImports, item)
+                                                     FSharpSymbolUse(g, _denv, symbol, ItemOccurence.Use, _m)))
+
+                //end filtering
+                items)
+        (fun _msg -&gt; [])
+</code></pre>
+
+<p>Looking at the code you can see its various pieces <em>cobbled</em> together to construct an <code>FSharpSymbolUSe</code> rather than a <code>DeclarationSet</code>.  This should allow us to create a more elaborate autocompletion which displays members by base type rather than a flat list.</p>
+
+<h2 id="there-are-no-flowers-in-the-real-world">There Are No Flowers in the Real World…</h2>
+
+<p>So that&rsquo;s the easy bit done, now over to MonoDevelop.  We need to rip out the old completions and splice in the new one, currently it&rsquo;s defined in <code>FSharpTextEditorCompletion</code> and <code>FSharpMemberCompletionData</code>.</p>
+
+<p>Lets have a look at <code>CompletionData</code> which we will need to recreate for our purposes:</p>
+
+<h3 id="completiondata">CompletionData</h3>
+
+<pre><code class="language-fsharp">type CompletionData
+	abstract member Icon : IconId with get, set
+	abstract member DisplayText : string with get, set
+	abstract member Description : string with get, set
+	abstract member CompletionText : string with get, set
+	abstract member GetDisplayDescription : bool -&gt; string
+	abstract member GetRightSideDescription : bool -&gt; string
+	abstract member CompletionCategory : CompletionCategory with get, set
+	abstract member DisplayFlags : DisplayFlags with get, set
+	abstract member CreateTooltipInformation : bool -&gt; TooltipInformation
+	abstract member HasOverloads : () -&gt; bool
+	abstract member OverloadedData : () -&gt; IEnumerable&lt;ICompletionData&gt;
+	abstract member AddOverload : ICompletionData -&gt; () 
+	abstract member InsertCompletionText : CompletionListWindow * ref KeyActions * Gdk.Key * char * Gdk.ModifierType -&gt; ()
+	abstract member CompareTo : obj -&gt; int
+</code></pre>
+
+<p>All of these are virtual in the <code>CompletionData</code> type, what we will need to do is add overrides for the <code>HasOverloads</code>, <code>OverloadedData</code>, <code>AddOverload</code>, and <code>CreateTooltipInformation</code> to give us the functionality we require.  It&rsquo;s going to be vety similar to the old code except we will be using symbols rather than <code>ToolTipElement</code> data to create the completion data.</p>
+
+<p>Lets create a new <code>FSharpMemberCompletionData</code>:</p>
+
+<pre><code class="language-fsharp">type internal FSharpMemberCompletionDataSorted(name, icon, symbol:FSharpSymbol, overloads:FSharpSymbol seq) =
+    inherit CompletionData(CompletionText = Lexhelp.Keywords.QuoteIdentifierIfNeeded name, 
+                           DisplayText = name, 
+                           DisplayFlags = DisplayFlags.DescriptionHasMarkup,
+                           Icon = icon)
+
+    /// Check if the datatip has multiple overloads
+    override x.HasOverloads = not (Seq.isEmpty overloads)
+
+    /// Split apart the elements into separate overloads
+    override x.OverloadedData =
+        overloads
+        |&gt; Seq.map (fun symbol -&gt; FSharpMemberCompletionDataSorted(symbol.DisplayName, icon, symbol, Seq.empty) :&gt; _ )
+
+    override x.AddOverload (data: ICompletionData) = ()
+
+    override x.CreateTooltipInformation (smartWrap: bool) = 
+      let tip = SymbolTooltips.getTooltipFromSymbol symbol FSharpDisplayContext.Empty None
+      match tip  with
+      | ToolTips.ToolTip (signature, xmldoc) -&gt;
+            let toolTipInfo = new TooltipInformation(SignatureMarkup = signature)
+            match xmldoc with
+            | Full(summary) -&gt; toolTipInfo.SummaryMarkup &lt;- summary
+                               toolTipInfo
+            | Lookup(key, potentialFilename) -&gt;
+                let summary = 
+                    maybe {let! filename = potentialFilename
+                           let! markup = TipFormatter.findDocForEntity(filename, key)
+                           let summary = Tooltips.getTooltip Styles.simpleMarkup markup
+                           return summary }
+                summary |&gt; Option.iter (fun summary -&gt; toolTipInfo.SummaryMarkup &lt;- summary)
+                toolTipInfo
+            | EmptyDoc -&gt; toolTipInfo
+      | _ -&gt; TooltipInformation()
+</code></pre>
+
+<p>In this section you can see the use of the <code>maybe</code> computation expression <em>(You wont find the &rsquo;M&rsquo; word mentioned here thank you very much!)</em> to simplify the creation of the <code>Lookup</code> tooltip&rsquo;s.  <code>Lookup</code> means pulling the information from <a href="http://www.mono-project.com/docs/tools+libraries/tools/monodoc/">monodoc</a> which loads the xmldoc files, and <code>Full</code> means there is xmldoc&rsquo;s present in the compiler.  <code>Full</code> will occur in your own files and <code>Lookup</code> will occur in referenced assemblies.</p>
+
+<p>We also need a define little type to hold the category as the <code>CompletionCategory</code> type is abstract:</p>
+
+<pre><code class="language-fsharp">type Category(category) =
+    inherit CompletionCategory(category, null)
+    override x.CompareTo other = compare x.DisplayText other.DisplayText
+</code></pre>
+
+<p>Next we will add a function called <code>getCompletionData</code> to the existing <code>FSharpTextEditorCompletion</code>.</p>
+
+<pre><code class="language-fsharp">let getCompletionData (symbols:FSharpSymbol list list) =
+
+    let categories = Dictionary&lt;string, Category&gt;()
+
+    let getOrAddCategory id =
+        let found, item = categories.TryGetValue id
+        if found then item
+        else let cat = Category id 
+             categories.Add (id,cat)
+             cat
+
+    let (|Function|Val|Unknown|) (symbol:FSharpSymbol) =
+      match symbol with
+      | MemberOrFunctionOrValue symbol
+          when not (isConstructor symbol) -&gt;
+              if symbol.FullType.IsFunctionType &amp;&amp; not symbol.IsPropertyGetterMethod &amp;&amp; not symbol.IsPropertySetterMethod 
+              then Function symbol                         
+              else Val symbol
+      | _ -&gt; Unknown symbol
+
+    let symbolToIcon (s:FSharpSymbol) = 
+        match s with
+        | ActivePatternCase _ -&gt; Stock.Enum
+        | Field _ -&gt; Stock.Field
+        | UnionCase _ -&gt; Stock.Enum
+        | Class -&gt; Stock.Class
+        | Delegate -&gt; Stock.Delegate
+        | Event -&gt; Stock.Event
+        | Property -&gt; Stock.Property
+        | Function _ -&gt; MStock.Method
+        | Val _ -&gt; Stock.Field
+        | Enum -&gt; Stock.Enum
+        | Interface -&gt; Stock.Interface
+        | Module -&gt; Stock.Class
+        | Namespace -&gt; Stock.NameSpace
+        | Record -&gt; Stock.Class
+        | Union -&gt; Stock.Enum
+        | ValueType -&gt; Stock.Struct
+        | _ -&gt; Stock.Struct
+
+    let symbolToCompletionData (symbol:FSharpSymbol) =
+       let cd = FSharpMemberCompletionDataSorted(symbol.Head.DisplayName, symbolToIcon symbol.Head, symbol.Head, symbol.Tail)
+       match symbol.Head with
+       | :? FSharpMemberOrFunctionOrValue as func -&gt;
+           d.CompletionCategory &lt;- getOrAddCategory func.EnclosingEntity.FullName
+       | other -&gt;
+       cd.CompletionCategory &lt;- getOrAddCategory (other.FullName.Substring (0, other.FullName.LastIndexOf '.'))
+
+    symbols
+    |&gt; List.map symbolToCompletionData
+    :&gt; ICompletionData)
+</code></pre>
+
+<p>We have a few helper function&rsquo;s here, <code>getOrAddCategory</code> to get or add categories.  An active pattern <code>(|Function|Val|Unknown|)</code> to help to split <code>MemberOrFunctionOrValue</code> into <code>Function</code>, <code>Val</code> or <code>Unknown</code> sub types.  <code>symbolToIcon</code> to get a stock icon to represent the different types of item that will appear in the completion list.  And finally we have a map function, <code>symbolToCompletionData</code> which uses all of the other helper functions to project each symbol into a new <code>FSharpMemberCompletionDataSorted</code>.  This is done by using either <code>func.EnclosingEntity.FullName</code> if the type match is <code>FSharpMemberOrFunctionOrValue</code> or <code>other.FullName.Substring (0, other.FullName.LastIndexOf '.')</code> if the type match is anything else.</p>
+
+<p>You can see that the symbols are mapped using <code>List.map</code> and <code>symbolToCompletionData</code> at the end of the function.  The resulting <code>FSharpMemberCompletionDataSorted</code> is finally coerced into an <code>ICompletionData</code> with the <code>:&gt;</code> operator.</p>
+
+<p>Finally all that&rsquo;s left is to change <code>x.CodeCompletionCommandImpl</code> in <code>FSharpTextEditorCompletion</code>, all we need to do is change the match statement to use the functions we defined above:</p>
+
+<pre><code class="language-fsharp">match tyRes.GetDeclarations(line, col, lineStr) with
+| Some(decls, residue) when decls.Items.Any() -&gt;
+      let items = decls.Items
+                  |&gt; Array.map (fun mi -&gt; FSharpMemberCompletionData(mi) :&gt; ICompletionData)
+      result.AddRange(items)
+| _ -&gt; ()
+</code></pre>
+
+<p>To use the new <code>GetDeclarationSymbols</code> function:</p>
+
+<pre><code class="language-fsharp">match tyRes.GetDeclarationSymbols(line, col, lineStr) with
+| Some (symbols, residue) -&gt; result.AddRange (getCompletionData symbols)
+| None -&gt; ()
+</code></pre>
+
+<p>Phew! I think we are done.  Spinning up Xamarin Studio with the new addin shows the new completion list:<br />
+
+<figure >
+    
+        <img src="https://dl.dropboxusercontent.com/s/hkojvf87qyuxvla/completion.png?dl=0" />
+    
+    
+</figure>
+</p>
+
+<p>We now have completion list sorted by the inheritor, which is especially nice for displaying members on hierarchical API&rsquo;s.  As a little bonus pressing <code>Shift Up/Down</code> will also move between the categories.</p>
+
+<p>See, that wasn&rsquo;t so scary was it?</p>
+
+<p>Until next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/4/40/Megadeth_-_Peace_Sells..._But_Who%27s_Buying-.jpg" style="margin: 0"
+                 alt="Megadeth - Peace Sells... But Who&#39;s Buying" />
+            <figcaption>
+                <h6>Megadeth - Peace Sells... But Who&#39;s Buying</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/7/7f/Megadeth-SoFar.jpg" style="margin: 0"
+                 alt="Megadeth - So far, so good, so what" />
+            <figcaption>
+                <h6>Megadeth - So far, so good, so what</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/d/dc/Megadeth-RustInPeace.jpg" style="margin: 0"
+                 alt="Megadeth - Rust in Peace" />
+            <figcaption>
+                <h6>Megadeth - Rust in Peace</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/7/72/Exodus_-_Fabulous_Disaster.jpg" style="margin: 0"
+                 alt="Exodus - Fabulous Disaster" />
+            <figcaption>
+                <h6>Exodus - Fabulous Disaster</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/monodevelop/">MonoDevelop</a>
+            
+                 <a href="/tags/xamarin-studio/">Xamarin Studio</a>
+            
+                 <a href="/tags/fsharp.compiler.services/">FSharp.Compiler.Services</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Terror%20From%20The%20Deep&url=http%3a%2f%2f7sharpnine.com%2f2014%2f12%2f10%2f2014-12-07-terror-from-the-deep%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2014%2f12%2f10%2f2014-12-07-terror-from-the-deep%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2014%2f12%2f10%2f2014-12-07-terror-from-the-deep%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

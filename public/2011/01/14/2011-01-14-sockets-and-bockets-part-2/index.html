@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Sockets and Bockets 2 &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Sockets and Bockets 2</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<h3 id="welcome-to-part-two">Welcome to part two</h3>
+
+<p>Lets jump in at the deep end and take a look at some code&hellip;</p>
+
+<p>When you look at the method syntax for the xxxAsync methods you will notice
+they return a boolean value that indicates if the method completed
+synchronously, this means that you have to check the return value every time
+you use one of the methods and invoke the callback yourself if it completes
+synchronously.  In practice this hardly ever happens, and normally only on a
+send operation.  But as it is a possibility we will add module with a some
+extension methods in to help us out, this will make the code more readable and
+avoid unnecessary duplication.<!-- more --></p>
+
+<h3 id="socketextensions">SocketExtensions</h3>
+
+<pre><code class="language-fsharp">module SocketExtensions
+  open System
+  open System.Net
+  open System.Net.Sockets  
+  type Socket with
+    /// extension method to make async based call easier, this ensures the callback always gets
+    /// called even if there is an error or the async method completed syncronously
+    member s.InvokeAsyncMethod( asyncmethod, callback, args:SocketAsyncEventArgs) =
+      let result = asyncmethod args
+      if result &lt;&gt; true then callback args
+    member s.AcceptAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.AcceptAsync, callback, args)
+    member s.ReceiveAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.ReceiveAsync, callback, args)
+    member s.SendAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.SendAsync, callback, args)
+    member s.DisconnectAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.DisconnectAsync, callback, args)
+</code></pre>
+
+<p>Now lets get down to business, the next few types have a fair bit of code in
+them so I will briefly explain each type in turn:</p>
+
+<h3 id="bocketpool">BocketPool</h3>
+
+<p>A BocketPool is a combination of a
+<a href="http://msdn.microsoft.com/en-
+us/library/system.net.sockets.socketasynceventargs.aspx">SocketAsyncEventArgs</a> object and a chunk of
+memory allocated in an array.  The array is sliced up into sections and
+allocated for each send or receive operation by setting a start and end index
+using <a href="http://msdn.microsoft.com/en-us/library/bb549836.aspx">SetBuffer()</a>.
+If you remember last time I mentioned that a lot of memory fragmentation can
+occur during sending and receiving due to continuously allocating memory
+buffers on the Socket object, this is primarily done through the BeginSend and
+BeginReceive methods passing in a byte array.  Using the BocketPool it a great
+way of reducing the amount of garbage collection during heavy traffic.</p>
+
+<p>The other major difference with SocketAsyncEventArgs is the way in which you
+make the send and receive calls, heres the general flow that occurs:</p>
+
+<ul>
+<li>Create a SocketAsyncEventArgs object or get one from a pool.</li>
+<li>Allocate an array to the buffer.</li>
+<li>Allocate an offset and length to the buffer.</li>
+<li>Allocate a callback method.</li>
+<li>Call Socket.xxxAsync passing in the SocketAsyncEventArgs, the operation will complete and invoke the callback.<br /></li>
+</ul>
+
+<p>What we are going to do is wrap the whole creation, array allocation, and
+offsetting to the BocketPool:</p>
+
+<pre><code class="language-fsharp">namespace Fes
+  open System
+  open System.Net.Sockets
+  open System.Collections.Concurrent  
+  type BocketPool( number, size, callback) as this =
+    let number = number
+    let size = size
+    let totalsize = (number * size)
+    let buffer = Array.create totalsize 0uy
+    let pool = new BlockingCollection&lt;SocketAsyncEventArgs&gt;(number:int)
+    let mutable disposed = false
+    let cleanUp() =
+      if not disposed then
+        disposed &lt;- true
+        pool.CompleteAdding()
+        while pool.Count &gt; 1 do
+          (pool.Take() :&gt; IDisposable).Dispose()
+        pool.Dispose()
+    do
+      let rec loop n =
+        match n with
+        | x when x &lt; totalsize -&gt;
+          let saea = new SocketAsyncEventArgs()
+          saea.Completed |&gt; Observable.add( fun saea -&gt; (callback saea))
+          saea.SetBuffer(buffer, n, size)
+          this.CheckIn(saea)
+          loop (n + size)
+        | _ -&gt; ()
+      loop 0
+    member this.CheckOut()=
+      pool.Take()
+    member this.CheckIn(saea)=
+      pool.Add(saea)
+    member this.Count =
+      pool.Count
+    interface IDisposable with
+      member this.Dispose() = cleanUp()
+</code></pre>
+
+<p>Next up we have to look at the Connection and the Tcplistener types as two
+interconnected entities:</p>
+
+<ul>
+<li>The TcpListener listens for a connection on a socket and port number.</li>
+<li>The client connects to the server.</li>
+<li>An accept socket is allocated to the client, at this point we have one socket for the server and once for each client.</li>
+<li>We also need to allocate a BocketPool for send and receive operation for each client
+To simplify things we are going to encapsulate the accept socket management
+into a type, it will also need a corresponding BocketPool to service any send
+and receive operations to and from the client</li>
+</ul>
+
+<h3 id="connection">Connection</h3>
+
+<pre><code class="language-fsharp">namespace Fes
+  open System
+  open System.Net
+  open System.Net.Sockets
+  open System.Collections.Generic
+  open System.Collections.Concurrent
+  open System.Threading
+  open SocketExtensions  
+  type Connection(maxreceives, maxsends, size, socket:Socket) as this =
+    let socket = socket
+    let maxreceives = maxreceives
+    let maxsends = maxsends
+    let sendPool = new BocketPool(maxsends, size, this.sendCompleted )
+    let receivePool = new BocketPool(maxreceives, size, this.receiveCompleted)
+    let mutable disposed = false
+    let mutable anyErrors = false  
+    let cleanUp() =
+      if not disposed then
+        disposed &lt;- true
+        socket.Shutdown(SocketShutdown.Both)
+        socket.Disconnect(false)
+        socket.Close()
+        (sendPool :&gt; IDisposable).Dispose()
+        (receivePool :&gt; IDisposable).Dispose()  
+    member this.Start() =
+      socket.ReceiveAsyncSafe(this.receiveCompleted, receivePool.CheckOut())  
+    member this.Stop() =
+      socket.Close(2)  
+    member this.receiveCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Receive -&gt;
+          match args.SocketError with
+          | SocketError.Success -&gt;
+            socket.ReceiveAsyncSafe( this.receiveCompleted, receivePool.CheckOut())
+            let data = Array.create args.BytesTransferred 0uy
+            Buffer.BlockCopy(args.Buffer, args.Offset, data, 0, data.Length)
+            let client = args.RemoteEndPoint
+            args.RemoteEndPoint &lt;- null
+            data |&gt; printfn &quot;received data: %A&quot;
+          | _ -&gt; args.SocketError.ToString() |&gt; printfn &quot;socket error on receive: %s&quot;
+        | _ -&gt; failwith &quot;unknown operation, should be receive&quot;
+      finally
+        receivePool.CheckIn(args)  
+    member this.sendCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Send -&gt;
+          match args.SocketError with
+          | SocketError.Success -&gt; ()
+          | SocketError.NoBufferSpaceAvailable
+          | SocketError.IOPending
+          | SocketError.WouldBlock -&gt;
+            if not(anyErrors) then
+              anyErrors &lt;- true
+              failwith &quot;Buffer overflow or send buffer timeout&quot;
+          | _ -&gt; args.SocketError.ToString() |&gt; printfn &quot;socket error on send: %s&quot;
+        | _ -&gt; failwith &quot;invalid operation, should be receive&quot;
+      finally
+        sendPool.CheckIn(args)  
+    member this.Send (msg:byte[]) =
+      let s = sendPool.CheckOut()
+      Buffer.BlockCopy(msg, 0, s.Buffer, s.Offset, msg.Length)
+      socket.SendAsyncSafe(this.sendCompleted, s)
+</code></pre>
+
+<p>Finally here&rsquo;s the TcpListener type.  It is responsible for creating an
+initial Connection object for each client and starts asynchronous sending
+messages to that client once a second, also notice that there is another
+BlockingCollection involved, this is somewhat simpler than the usage in the
+bocketPool as we have no buffer to manage here.</p>
+
+<ul>
+<li><em>It is possible to fill the initial Buffer property, this causes the buffer to be sent to the client as soon as it has connected to the server, this can be useful to sent initial data to the client, such as protocol definitions etc)</em>
+A finite number of connections can occur before blocking will occur depending
+on the number of AsyncEventArgs in the collection, this stops potential denial
+of service attacks due to too many connection being made.</li>
+</ul>
+
+<h3 id="tcplistener">TcpListener</h3>
+
+<pre><code class="language-fsharp">namespace Fes
+  open System
+  open System.Net
+  open System.Net.Sockets
+  open System.Collections.Generic
+  open System.Collections.Concurrent
+  open System.Threading
+  open SocketExtensions  
+  type TcpListener(maxaccepts, maxsends, maxreceives, size, port, backlog) as this =  
+    let createTcpSocket() =
+      new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)  
+    let createListener (ip:IPAddress, port, backlog) =
+      let s = createTcpSocket()
+      s.Bind(new IPEndPoint(ip, port))
+      s.Listen(backlog); s  
+    let listeningSocket = createListener( IPAddress.Loopback, port, backlog)  
+    let initPool (maxinpool, callback) =
+      let pool = new BlockingCollection&lt;SocketAsyncEventArgs&gt;(maxinpool:int)
+      let rec loop n =
+        match n with
+        | x when x &lt; maxinpool -&gt;
+          let saea = new SocketAsyncEventArgs()
+          saea.Completed |&gt; Observable.add callback
+          pool.Add saea
+          loop (n+1)
+        | _ -&gt; ()
+      loop 0
+      pool  
+    let acceptPool = initPool (maxaccepts, this.acceptcompleted)
+    let newConnection socket = new Connection (maxreceives, maxsends, size, socket)
+    let testMessage = Array.init&lt;byte&gt; 128 (fun _ -&gt; 1uy)
+    let header = Array.init&lt;byte&gt; 1 (fun _ -&gt; 1uy)
+    let mutable disposed = false  
+    //mutable state from original
+    let mutable anyErrors = false
+    let mutable requestCount = 0
+    let mutable numWritten = 0  
+    //async code from original
+    let asyncWriteStockQuote(connection:Connection) = async {
+      do! Async.Sleep 1000
+      connection.Send(testMessage)
+      Interlocked.Increment(&amp;numWritten) |&gt; ignore }  
+    //async code from original
+    let asyncServiceClient (client: Connection) = async {
+      client.Send(header)
+      while true do
+        do! asyncWriteStockQuote(client) }  
+    let startSending connection =
+      Async.Start (async {
+        try
+          use _holder = connection
+          do! asyncServiceClient connection
+        with e -&gt;
+          if not(anyErrors) then
+            anyErrors &lt;- true
+            Console.WriteLine(&quot;server ERROR&quot;)
+          raise e
+        } )  
+    let reportConnections =
+      Interlocked.Increment(&amp;requestCount) |&gt; ignore
+      if requestCount % 1000 = 0 then
+        requestCount |&gt; printfn &quot;%A Clients accepted&quot;  
+    let cleanUp() =
+      if not disposed then
+        disposed &lt;- true
+        listeningSocket.Shutdown(SocketShutdown.Both)
+        listeningSocket.Disconnect(false)
+        listeningSocket.Close()  
+    member this.acceptcompleted (args : SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Accept -&gt;
+          match args.SocketError with
+          | SocketError.Success -&gt;
+            listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+            //create new connection
+            let connection = newConnection args.AcceptSocket
+            connection.Start()  
+            //update stats
+            reportConnections   
+            //async start of messages to client
+            startSending connection  
+            //remove the AcceptSocket because we will be reusing args
+            args.AcceptSocket &lt;- null
+          | _ -&gt; args.SocketError.ToString() |&gt; printfn &quot;socket error on accept: %s&quot;
+        | _ -&gt; args.LastOperation |&gt; failwith &quot;Unknown operation, should be accept but was %a&quot;
+      finally
+        acceptPool.Add(args)  
+    member this.start () =
+      listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+      while true do
+      Thread.Sleep 1000
+      let count = Interlocked.Exchange(&amp;numWritten, 0)
+      count |&gt; printfn &quot;Quotes per sec: %A&quot;  
+    member this.Close() =
+      cleanUp()  
+    interface IDisposable with
+      member this.Dispose() = cleanUp()
+</code></pre>
+
+<p>Its a fair bit of code to take in at once, so Ill leave you with it to ponder
+over.  Ill be explaining all of the interesting bits in more detail in part
+three&hellip;</p>
+
+<p>Please feel free to leave any comments you have, especially on better use of
+functional constructs.</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/async-workflows/">Async Workflows</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/memory-fragmentation/">Memory fragmentation</a>
+            
+                 <a href="/tags/performance/">Performance</a>
+            
+                 <a href="/tags/sockets/">Sockets</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Sockets%20and%20Bockets%202&url=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f14%2f2011-01-14-sockets-and-bockets-part-2%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f14%2f2011-01-14-sockets-and-bockets-part-2%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f14%2f2011-01-14-sockets-and-bockets-part-2%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+
