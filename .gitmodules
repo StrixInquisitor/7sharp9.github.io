@@ -1,0 +1,7 @@
+[submodule "public"]
+	path = public
+	url = git@github.com:7sharp9/7sharp9.github.com.git
+
+[submodule "ghostwriter"]
+	path = themes/ghostwriter
+	url = git@github.com:7sharp9/ghostwriter.git
