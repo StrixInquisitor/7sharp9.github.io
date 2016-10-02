@@ -1,6 +1,7 @@
 [submodule "public"]
 	path = public
 	url = git@github.com:7sharp9/7sharp9.github.com.git
+	branch = master
 
 [submodule "ghostwriter"]
 	path = themes/ghostwriter
