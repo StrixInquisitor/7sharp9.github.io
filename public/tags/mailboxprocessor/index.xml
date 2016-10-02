@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mailboxprocessor on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/mailboxprocessor/</link>
+    <description>Recent content in Mailboxprocessor on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Sun, 15 Jul 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/mailboxprocessor/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>The Lurking Horror</title>
+      <link>http://7sharpnine.com/2012/07/15/2012-07-15-the-lurking-horror/</link>
+      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2012/07/15/2012-07-15-the-lurking-horror/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;Deep in the darkest depths lurks an ancient horror, when the time is right it will rise forth and leave you screaming for mercy and begging for forgiveness&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;OK, I have a penchant for being over dramatic but in this post I am going to reveal some little known caveats in a well known and much revelled area of F#, agents aka the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370357&#34; title=&#34;Control.MailboxProcessor&amp;lt;&#39;Msg&amp;gt;&#34;&gt;&lt;code&gt;MailboxProcessor&lt;/code&gt;&lt;/a&gt;. Gasp!&lt;/p&gt;
+
+&lt;p&gt;First let me give you a demonstration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;open System
+open System.Diagnostics
+type internal BadAgentMessage =
+  | Message of string * int
+  | Lock
+  | Unlock
+   
+type BadAgent() =
+  
+  let agent = MailboxProcessor.Start(fun agent -&amp;gt;
+    let sw = Stopwatch()
+    let rec waiting () =
+      agent.Scan(function
+        | Unlock -&amp;gt; Some(working ())
+        | _ -&amp;gt; None)
+ 
+    and working() = async {
+      let! msg = agent.Receive()
+      match msg with
+      | Lock -&amp;gt;   return! waiting()
+      | Unlock -&amp;gt; return! working()
+      | Message (msg, iter) -&amp;gt;
+          if iter = 0 then sw.Start()
+          if iter % 10000 = 0
+            then sw.Stop()
+                 printfn &amp;quot;%s : %i in: %fms&amp;quot; msg iter sw.Elapsed.TotalMilliseconds
+                 sw.Restart()
+          return! working() }
+    working())      
+ 
+  member x.Msg(msg) = agent.Post(Message msg)
+  member x.Lock() = agent.Post(Lock)
+  member x.Unlock() = agent.Post(Unlock)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;BadAgentMessage&lt;/code&gt; type defines a discriminated union that we are going to use for the agents message interface.  This is comprised of three elements:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Message:&lt;/strong&gt;  This will just be a simple &lt;code&gt;string&lt;/code&gt;-based message and an &lt;code&gt;int&lt;/code&gt; used as a counter.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lock:&lt;/strong&gt;  This is used to stop message processing within the agent by causing it to wait for an &lt;code&gt;Unlock&lt;/code&gt; message to arrive.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Unlock:&lt;/strong&gt;  This message is used to resume the processing within the agent, effectively exiting the locked state.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We have two main sections to the agents body which I will describe below.&lt;/p&gt;
+
+&lt;h3 id=&#34;working&#34;&gt;working&lt;/h3&gt;
+
+&lt;p&gt;The purpose of the &lt;code&gt;working&lt;/code&gt; function is to dequeue the messages from the agent and process them with pattern matching; &lt;code&gt;let! msg = agent.Receive()&lt;/code&gt; is used to get the next message which is then pattern matched to be one of the three messages types of the &lt;code&gt;BadAgentMessage&lt;/code&gt;.  When the &lt;code&gt;Lock&lt;/code&gt; message is encountered &lt;code&gt;return! waiting()&lt;/code&gt; is used to place the agent in a state where it is waiting for an &lt;code&gt;Unlock&lt;/code&gt; message to arrive.  An &lt;code&gt;Unlock&lt;/code&gt; message simply resumes processing by calling &lt;code&gt;return! working()&lt;/code&gt;.  The only real purpose of the &lt;code&gt;Unlock&lt;/code&gt; message is to exit from the locked state that is introduced by the &lt;code&gt;Lock&lt;/code&gt; message.  The &lt;code&gt;Message&lt;/code&gt; message simply starts a &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/system.diagnostics.stopwatch.aspx&#34; title=&#34;StopWatch&#34;&gt;&lt;code&gt;StopWatch&lt;/code&gt;&lt;/a&gt; on the first operation by using the Messages counter, and then stops it again on the 10,000th operation.  At this point the time taken is also printed to the console and the &lt;code&gt;StopWatch&lt;/code&gt; is restarted before resuming the main processing loop by calling &lt;code&gt;return! working()&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;waiting&#34;&gt;waiting&lt;/h3&gt;
+
+&lt;p&gt;This function is using the agents &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370554.aspx&#34; title=&#34;MailboxProcessor.Scan&#34;&gt;&lt;code&gt;Scan&lt;/code&gt;&lt;/a&gt; function to wait for an &lt;code&gt;Unlock&lt;/code&gt; message to arrive, once it does it puts the agent back into normal operation by calling returning &lt;code&gt;Some(working())&lt;/code&gt; from the &lt;code&gt;Scan&lt;/code&gt;function.  If the message does not match an &lt;code&gt;Unlock&lt;/code&gt; message then &lt;code&gt;None&lt;/code&gt; is returned and the agent simply waits for the next message before trying again.&lt;/p&gt;
+
+&lt;p&gt;The rest of the agent is just ancillary member functions to allow easy sending of the three message types.&lt;/p&gt;
+
+&lt;h3 id=&#34;test-harness&#34;&gt;Test Harness&lt;/h3&gt;
+
+&lt;p&gt;And here&amp;rsquo;s a very simple test harness:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let ba = BadAgent()
+ 
+printfn &amp;quot;Press and key to start&amp;quot;
+Console.ReadLine() |&amp;gt; ignore
+let dump number =
+    for i in 0 .. number do
+        ba.Msg(&amp;quot;A message&amp;quot;, i)
+ 
+ta.Lock()
+dump 200000
+ta.Unlock()
+ 
+Console.ReadLine() |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, so this is a very synthetic test but I just wanted to highlight some of the internal behaviour.  If I run this code I get the following console output:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-chMoEOya7CE/T_tRraiW_eI/AAAAAAAABbY/wsQkWbm4DJM/s677/ConsoleTimes.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can see that the time to process the first 10,000 messages is 3083ms then it steadily decreases until the last 10,000 messages are processed in 94ms.  The processing time for 10,000 messages is about 33 times slower at the beginning than as it is at the end.  Why?&lt;/p&gt;
+
+&lt;h2 id=&#34;opening-it-up&#34;&gt;Opening it up&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a look at some of the internals of the &lt;code&gt;MailboxProcessor&lt;/code&gt; to understand what&amp;rsquo;s going on.  First of all the core functionality is actually contained within the &lt;code&gt;Mailbox&lt;/code&gt; type with the &lt;code&gt;MailboxProcessor&lt;/code&gt; acting as an augmenter.  &lt;code&gt;TryPostAndReply&lt;/code&gt;, &lt;code&gt;PostAndReply&lt;/code&gt;, &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt;, and &lt;code&gt;PostAndAsyncReply&lt;/code&gt; all add a single functionality to the &lt;code&gt;Mailbox&lt;/code&gt; type; the ability to synchronously or asynchronously reply to a message once it arrives.  &lt;code&gt;TryPostAndReply&lt;/code&gt; and &lt;code&gt;PostAndReply&lt;/code&gt; both wait synchronously for a message to arrive before replying, whereas &lt;code&gt;PostAndTryAsyncReply&lt;/code&gt; and &lt;code&gt;PostAndAsyncReply&lt;/code&gt; both reply asynchronously.  This functionality is achieved with the use of the &lt;code&gt;ResultCell&lt;/code&gt; and &lt;code&gt;AsyncReplyChannel&lt;/code&gt; types.  For an in-depth discussion on this you might want to refer to my earlier series which describes implementing the &lt;code&gt;MailboxProcessor&lt;/code&gt; with &lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/gg585582.aspx&#34; title=&#34;TPL Dataflow&#34;&gt;TPL Dataflow&lt;/a&gt; (see &lt;a href=&#34;http://7sharpnine.com/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/&#34; title=&#34;FSharp Dataflow agents - Part 1&#34;&gt;Part 1&lt;/a&gt;, &lt;a href=&#34;http://7sharpnine.com/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/&#34; title=&#34;FSharp Dataflow agents - Part 2&#34;&gt;Part 2&lt;/a&gt; and &lt;a href=&#34;http://7sharpnine.com/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/&#34; title=&#34;FSharp Dataflow agents - Part 3&#34;&gt;Part 3&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Below are some snippets of code from the &lt;code&gt;Mailbox&lt;/code&gt; type you might want to take a peek yourself at the &lt;a href=&#34;https://github.com/fsharp/fsharp/blob/master/src/fsharp/FSharp.Core/control.fs#L1854&#34; title=&#34;Mailbox code&#34;&gt;FSharp repository&lt;/a&gt; over at &lt;a href=&#34;https://github.com/&#34;&gt;Github&lt;/a&gt; for a closer inspection, be warned thought there is a lot of code in there!&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the initial type definition for the &lt;code&gt;Mailbox&lt;/code&gt;, you can see that  there are two mutable fields:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type Mailbox&amp;lt;&#39;Msg&amp;gt;() = 
+    let mutable inboxStore  = null
+    let mutable arrivals = new Queue&amp;lt;&#39;Msg&amp;gt;()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;inboxStore&lt;/code&gt; is a generic List type &lt;code&gt;System.Collection.Generic.List&amp;lt;T&amp;gt;&lt;/code&gt; and &lt;code&gt;arrivals&lt;/code&gt; is a &lt;code&gt;System.Collections.Generic.Queue&amp;lt;T&amp;gt;&lt;/code&gt; type.&lt;/p&gt;
+
+&lt;p&gt;For now the &lt;code&gt;inboxStore&lt;/code&gt; is null and is only ever assigned via &lt;code&gt;Scan&lt;/code&gt; or &lt;code&gt;TryScan&lt;/code&gt; and this is done indirectly via the &lt;code&gt;inbox&lt;/code&gt; member shown here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.inbox =
+    match inboxStore with
+    | null -&amp;gt; inboxStore &amp;lt;- new System.Collections.Generic.List&amp;lt;&#39;Msg&amp;gt;(1) // ResizeArray
+    | _ -&amp;gt; ()
+    inboxStore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Understanding the code in the &lt;code&gt;Mailbox&lt;/code&gt; can be difficult given the amount of code, so I&amp;rsquo;ll highlight the key functions in the sections below to make it a little easier.&lt;/p&gt;
+
+&lt;h3 id=&#34;scan-tryscan&#34;&gt;Scan / TryScan&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Scan&lt;/code&gt; is just an async wrapper around &lt;code&gt;TryScan&lt;/code&gt;. If &lt;code&gt;TryScan&lt;/code&gt; returns None an exception is raised, if not then the result from &lt;code&gt;TryScan&lt;/code&gt; is returned.&lt;/p&gt;
+
+&lt;p&gt;So now lets take a look at the source of &lt;code&gt;TryScan&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.TryScan ((f: &#39;Msg -&amp;gt; (Async&amp;lt;&#39;T&amp;gt;) option), timeout) : Async&amp;lt;&#39;T option&amp;gt; =
+    let rec scan() =
+        async { match x.scanArrivals(f) with
+                | None -&amp;gt; // Deschedule and wait for a message. When it comes, rescan the arrivals
+                          let! ok = waitOne(timeout)
+                          if ok then return! scan() else return None
+                | Some resP -&amp;gt; let! res = resP
+                               return Some(res) }
+    // Look in the inbox first
+    async { match x.scanInbox(f,0) with
+            | None  -&amp;gt; return! scan()
+            | Some resP -&amp;gt; let! res = resP
+                           return Some(res) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see here that an &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233250.aspx&#34; title=&#34;async workflows&#34;&gt;async workflow&lt;/a&gt; is declared that first pattern matches on &lt;code&gt;x.scanInbox&lt;/code&gt;, passing in the predicate scan function &lt;code&gt;f&lt;/code&gt; and the literal &lt;code&gt;0&lt;/code&gt;.  If &lt;code&gt;None&lt;/code&gt; is returned then there is no match and the recursive function &lt;code&gt;scan&lt;/code&gt; is returned.  This time the function &lt;code&gt;x.scanArrivals&lt;/code&gt; is be called, again passing in the predicate function &lt;code&gt;f&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;An interesting point to note, is that each message that arrives that doesn&amp;rsquo;t match the predicate &lt;code&gt;f&lt;/code&gt; resets the  timer: &lt;code&gt;let! ok = waitOne(timeout)&lt;/code&gt;, this means that any number of trivial messages that arrive keep the &lt;code&gt;TryScan&lt;/code&gt; function running.  This was also mentioned by Jon Harrop in a Stackoverflow question entitled &lt;a href=&#34;http://stackoverflow.com/a/4891920/607275&#34; title=&#34;How to use TryScan in F# properly&#34;&gt;How to use TryScan in F# properly&lt;/a&gt;.  Jon also mentions locking which I will address in the &lt;code&gt;scanArrivals&lt;/code&gt; section below.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So what&amp;rsquo;s the difference between &lt;code&gt;scanArrivals&lt;/code&gt; and &lt;code&gt;scanInbox&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;scanInbox&lt;/code&gt; operates on the &lt;code&gt;inboxStore&lt;/code&gt; which you might recall is a &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; type, whereas &lt;code&gt;scanArrivals&lt;/code&gt; operates on &lt;code&gt;arrivals&lt;/code&gt; which is a &lt;code&gt;Queue&amp;lt;T&amp;gt;&lt;/code&gt; type.  The big difference between these two is that as messages first arrive in the Mailbox they end up in the arrivals queue first, and when messages are not matched by the predicate function &lt;code&gt;f&lt;/code&gt; they are added to the &lt;code&gt;inboxStore&lt;/code&gt;, hence the need to always check the &lt;code&gt;inboxStore&lt;/code&gt; before the &lt;code&gt;arrivals&lt;/code&gt; queue otherwise previously unmatched scan messages would not be processed correctly.  You might be asking yourself why not use a &lt;code&gt;Queue&amp;lt;T&amp;gt;&lt;/code&gt; for both the &lt;code&gt;inbox&lt;/code&gt; and the &lt;code&gt;arrivals&lt;/code&gt;?  It comes down to the fact that it&amp;rsquo;s not possible to easily use a &lt;code&gt;Queue&amp;lt;T&amp;gt;&lt;/code&gt; for &lt;code&gt;arrivals&lt;/code&gt; because of the way that Scan works.  At any point in the queue there could do a potential match so each item would have to be dequeued and processed separately, an indexed &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; type is the best fit for this situation.&lt;/p&gt;
+
+&lt;h3 id=&#34;scanarrivals-scanarrivalsunsafe&#34;&gt;scanArrivals / scanArrivalsUnsafe&lt;/h3&gt;
+
+&lt;p&gt;Lets look at the &lt;code&gt;scanArrivals&lt;/code&gt; function, it&amp;rsquo;s just a lock construct around the &lt;code&gt;scanArrivals&lt;/code&gt; function.  This leads to an important point, the scan function is operating under a lock, which effectively means that end user code is also executed under the lock and if you hold onto the lock for any length of time then there will be significant blocking of the normal receive mechanism due to it also using the same lock when receiving.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.scanArrivalsUnsafe(f) =
+    if arrivals.Count = 0 then None
+    else let msg = arrivals.Dequeue()
+         match f msg with
+         | None -&amp;gt;
+             x.inbox.Add(msg);
+             x.scanArrivalsUnsafe(f)
+         | res -&amp;gt; res
+ 
+// Lock the arrivals queue while we scan that
+member x.scanArrivals(f) = lock syncRoot (fun () -&amp;gt; x.scanArrivalsUnsafe(f))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we pause for a second and review the &lt;code&gt;MailBoxProcessor&lt;/code&gt; documentation on &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee353583.aspx&#34; title=&#34;MSDN: F# MailbocProcessor&#34;&gt;MSDN&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;For each agent, at most one concurrent reader may be active, so no more than one concurrent call to Receive, TryReceive, Scan or TryScan may be active.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Obeying this rule should ensure that no deadlock situations will arise but lock contentions can still arise as messages will still be being posted to the mailbox, which will in turn attempt to acquire the same &lt;code&gt;syncRoot&lt;/code&gt; lock.&lt;/p&gt;
+
+&lt;p&gt;Lets move onto the next function, I have saved this one for last as its the most interesting.&lt;/p&gt;
+
+&lt;h3 id=&#34;scaninbox&#34;&gt;scanInbox&lt;/h3&gt;
+
+&lt;p&gt;A quick glance at &lt;code&gt;scanInbox&lt;/code&gt; reveals another function which, to my eye, could have heavy-weight performance implications.   The &lt;code&gt;inbox&lt;/code&gt; is a &lt;code&gt;List&amp;lt;T&amp;gt;&lt;/code&gt; type, and the &lt;code&gt;RemoveAt&lt;/code&gt; function does an internal &lt;code&gt;Array.Copy&lt;/code&gt; for each removal.  This is an O(n) operation where n is (Count - index), so as soon as the list gets to a reasonable size then this then is going to really start chewing into your processing time.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.scanInbox(f,n) =
+    match inboxStore with
+    | null -&amp;gt; None
+    | inbox -&amp;gt;
+        if n &amp;gt;= inbox.Count
+        then None
+        else
+            let msg = inbox.[n]
+            match f msg with
+            | None -&amp;gt; x.scanInbox (f,n+1)
+            | res -&amp;gt; inbox.RemoveAt(n); res
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to check this theory lets do some quick profiling of the console test that we showed earlier:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-HRwdmElTHzk/UACUh2a0mmI/AAAAAAAABb0/X-PXjabROOU/s658/profile_run.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;This screen shot was taken using &lt;a href=&#34;http://www.jetbrains.com/profiler/&#34; title=&#34;Jet Brains Performance Profiling&#34;&gt;Jet Brains DotTrace 5.1&lt;/a&gt;.  This is one of my favourite performance profilers because it captures results to line level and maps back to the F# source code relatively easily.&lt;/p&gt;
+
+&lt;p&gt;Yeah there it is, a whopping 44.41% of the time is spent in &lt;code&gt;RemoveAt&lt;/code&gt;.  Also notice that there were 200,000 calls which mirrors the number we placed in the queue before using the Lock/Unlock message types.&lt;/p&gt;
+
+&lt;p&gt;One of the things that really stands out for me is that the &lt;code&gt;inbox&lt;/code&gt; is a simple list and completely unbounded.  In a high throughput situation where the scan function is being used it&amp;rsquo;s perfectly feasible to get into a runaway memory or CPU condition where the unmatched messages are sitting in the &lt;code&gt;inbox&lt;/code&gt; taking longer and longer to processes due to the O(n) operation that takes place in the &lt;code&gt;RemoveAt&lt;/code&gt; function.  Given a consistent throughput then eventually you are going to either run out memory, or the processing time will make throughput drop to dire levels which in turn will back up the &lt;code&gt;inbox&lt;/code&gt; even further, effectively this is a death spiral.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;So what conclusion can we draw from all of this?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Firstly be careful with usage of &lt;code&gt;Scan&lt;/code&gt; and &lt;code&gt;TryScan&lt;/code&gt;, in certain situations the internal queue could back up to a certain size where you will be constantly struggling against the O(n) operation cost.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Agents are not a silver bullet solution. They cannot solve every problem.  Although it&amp;rsquo;s possible to use agent based techniques to solve various problems like blocking collections and such like, you have to use care and diligence in the solution to avoid introducing another problems into the mix.  I have seen several implementations that I have been able to break relatively easily.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Do I still use agents?  &lt;strong&gt;Absolutely!&lt;/strong&gt;  Agents are a fabulous tool to have in our toolbox and some extremely elegant solution exist to solve very complex problems.&lt;/li&gt;
+&lt;li&gt;Do I use &lt;code&gt;Scan&lt;/code&gt; or &lt;code&gt;TryScan&lt;/code&gt;?  Not in its current form in the &lt;code&gt;MailboxProcessor&lt;/code&gt;.  I chose to implement a destructive scan in my &lt;a href=&#34;http://7sharpnine.com/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/&#34; title=&#34;FSharp Dataflow agents - Part 3&#34;&gt;TDF agent&lt;/a&gt; for the reasons discussed here.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Before we finish, I&amp;rsquo;d like to briefly cover &lt;code&gt;TryScan&lt;/code&gt; from my &lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/gg585582.aspx&#34; title=&#34;TPL Dataflow&#34;&gt;TDF&lt;/a&gt; based agent to complete the picture.&lt;/p&gt;
+
+&lt;h3 id=&#34;destructive-tryscan&#34;&gt;Destructive TryScan&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member x.TryScan((scanner: &#39;Msg -&amp;gt; Async&amp;lt;_&amp;gt; option), timeout): Async&amp;lt;_ option&amp;gt; =
+    let ts = TimeSpan.FromMilliseconds(float timeout)
+    let rec loopForMsg = async {
+        let! msg = Async.AwaitTask &amp;lt;| incomingMessages.ReceiveAsync(ts)
+                                      .ContinueWith(fun (tt:Task&amp;lt;_&amp;gt;) -&amp;gt;
+                                          if tt.IsCanceled || tt.IsFaulted then None
+                                          else Some tt.Result)
+        match msg with
+        | Some m -&amp;gt;  let res = scanner m
+                     match res with
+                     | None -&amp;gt; return! loopForMsg
+                     | Some res -&amp;gt; return! res
+        | None -&amp;gt; return None}
+    loopForMsg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A message is dequeued on the line 4 with &lt;code&gt;let! msg = Async.AwaitTask ...&lt;/code&gt;.  This is then processed by the pattern matching expression on line 9 &lt;code&gt;| Some m -&amp;gt;  let res = scanner m&lt;/code&gt;.  If the result of the scanner function results in &lt;code&gt;None&lt;/code&gt; being returned then the message is discarded and the next operation continues with another call to &lt;code&gt;loopForMsg&lt;/code&gt;, otherwise the message is returned with &lt;code&gt;| Some res -&amp;gt; return! res&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;One of the areas where I have a lot of experience is using pipelined operations based on input from network I/O.  One of the things that always causes a problem is unbounded situations such as having a queue with no absolute limit.  There comes a time when you have to protect yourself from what is effective a denial of service, you have to either destructively terminate messages or connections or route the overflowed data for processing later.&lt;/p&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

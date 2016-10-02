@@ -1,0 +1,1801 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Performance on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/performance/</link>
+    <description>Recent content in Performance on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Sun, 11 Mar 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/performance/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Black-Scholes Taste Test</title>
+      <link>http://7sharpnine.com/2012/03/11/2012-03-10-black-scholes-taste-test/</link>
+      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2012/03/11/2012-03-10-black-scholes-taste-test/</guid>
+      <description>
+
+&lt;p&gt;In this edition we are going to be doing a taste test, C# vs F#.  Oh yeah, if you quickly glanced at the title you may
+have thought this was a recipe for black scones, as interesting and tasty as that may be, unfortunately its going
+to be finance related.&lt;/p&gt;
+
+&lt;p&gt;I recently presented a paper on the benefits of F#, part of this was a comparison of the famous
+&lt;a href=&#34;http://en.wikipedia.org/wiki/Black-Scholes&#34;&gt;Black-Scholes&lt;/a&gt; equation in both C# and F#.  I was mainly going to be
+looking at code succinctness and the inherent suitability of the language for calculation based work, but there ended
+up being more to it than that.&lt;/p&gt;
+
+&lt;p&gt;First of all I quickly set up a test rig to run 50 million iterations of the algorithm to see if there were any difference
+in the processing speed.  I want expecting any major differences at this point but here&amp;rsquo;s what I got:&lt;/p&gt;
+
+&lt;p&gt;C# results for 50 million iterations
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-cEzGoE_P2cE/T1vf_SxtGfI/AAAAAAAABRE/RE4ReRLAhu8/s531/csbs.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;F# results for 50 million iterations
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-PLdltL0YiIs/T1vf_Wo2ZrI/AAAAAAAABRI/WijGdNaOnK4/s531/fsbs.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;p&gt;I think you will agree that&amp;rsquo;s quite a difference, lets have a look at the code to see what&amp;rsquo;s going on.&lt;/p&gt;
+
+&lt;h2 id=&#34;c-implementation&#34;&gt;C# Implementation&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Options
+{
+    public enum Style
+    {
+        Call,
+        Put
+    }
+
+    public static double BlackScholes(Style callPut, double s, double x, double t, double r, double v)
+    {
+        double result = 0.0;
+        var d1 = (Math.Log(s / x) + (r + v * v / 2.0) * t) / (v * Math.Sqrt(t));
+        var d2 = d1 - v * Math.Sqrt(t);
+        switch (callPut)
+        {
+            case Style.Call:
+                result = s * Cnd(d1) -x * Math.Exp(-r * t) * Cnd(d2);
+                break;
+            case Style.Put:
+                result = x * Math.Exp(-r * t) * Cnd(-d2) -s * Cnd(-d1);
+                break;
+        }
+        return result;
+    }
+
+    private static double Cnd(double x)
+    {
+        const double a1 = 0.31938153;
+        const double a2 = -0.356563782;
+        const double a3 = 1.781477937;
+        const double a4 = -1.821255978;
+        const double a5 = 1.330274429;
+        var l = Math.Abs(x);
+        var k = 1.0 / (1.0 + 0.2316419 * l);
+        var w = 1.0 - 1.0 / Math.Sqrt(2 * Math.PI) * 
+            Math.Exp(-l * l / 2.0) * (a1 * k + a2 * k * k + a3 * 
+                Math.Pow(k, 3) + a4 * Math.Pow(k, 4) + a5 * Math.Pow(k, 5));
+        if (x &amp;lt; 0)
+        {
+            return 1.0 - w;
+        }
+        return w;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;f-implementation&#34;&gt;F# Implementation&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module options
+open System
+
+type Style = Call | Put
+  
+let cnd x =
+   let a1 = 0.31938153
+   let a2 = -0.356563782
+   let a3 = 1.781477937
+   let a4 = -1.821255978
+   let a5 = 1.330274429
+   let l  = abs x
+   let k  = 1.0 / (1.0 + 0.2316419 * l)
+   let w  = (1.0 - 1.0 / sqrt(2.0 * Math.PI) * 
+                exp(-l * l / 2.0) * (a1 * k + a2 * k * k + a3 * 
+                    (pown k 3) + a4 * (pown k 4) + a5 * (pown k 5)))
+   if x &amp;lt; 0.0 then 1.0 - w
+   else w
+
+let blackscholes style s x t r v =
+    let d1 = (log(s / x) + (r + v * v / 2.0) * t) / (v * sqrt(t))
+    let d2 = d1 - v * sqrt(t)
+    match style with
+    | Call -&amp;gt; s * cnd(d1) -x * exp(-r * t) * cnd(d2)
+    | Put -&amp;gt; x * exp(-r * t) * cnd(-d2) -s * cnd(-d1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;differences&#34;&gt;Differences&lt;/h2&gt;
+
+&lt;p&gt;The most significant differences when the code is compiled comes down to a few areas.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-blackscholes-function&#34;&gt;The BlackScholes function&lt;/h3&gt;
+
+&lt;p&gt;The first thing to note is the code size and number of local variables:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Code size       122 (0x7a)
+.maxstack  6
+.locals init ([0] float64 d1,
+         [1] float64 d2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;// Code size       164 (0xa4)
+.maxstack  4
+.locals init ([0] float64 d1,
+         [1] float64 d2,
+         [2] float64 result,
+         [3] valuetype CsBs.Options/Style CS$0$0000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The initial arguments that are loaded in the F# implementation is done in fewer IL op codes then C#.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0001:  ldarg.1
+IL_0002:  ldarg.2
+IL_0003:  div
+IL_0004:  call       float64 [mscorlib]System.Math::Log(float64)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0000:  ldc.r8     0.0
+IL_0009:  stloc.0
+IL_000a:  ldc.r8     0.0
+IL_0013:  stloc.1
+IL_0014:  ldc.r8     0.0
+IL_001d:  stloc.2
+IL_001e:  ldarg.1
+IL_001f:  ldarg.2
+IL_0020:  div
+IL_0021:  call       float64 [mscorlib]System.Math::Log(float64)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see in the C# code is intialising the local variable to 0.0 by pushing them to the stack
+&lt;code&gt;ldc.r8&lt;/code&gt; then storing them &lt;code&gt;stloc.0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The pattern matching in the F# code results in a call to get the style &lt;code&gt;options/Style::get_Tag()&lt;/code&gt;
+and then a branch if not equal opcode &lt;code&gt;bne.un.s&lt;/code&gt; which causes a jump to &lt;code&gt;IL_005d&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0036:  call       instance int32 options/Style::get_Tag()```
+IL_003b:  ldc.i4.1
+IL_003c:  bne.un.s   IL_005d
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The C# version loads the local variable for the &lt;code&gt;Style&lt;/code&gt; &lt;code&gt;IL_0053:  stloc.3&lt;/code&gt; and then uses the switch
+opcode to jump table to jump to either position &lt;code&gt;IL_0064&lt;/code&gt; or &lt;code&gt;IL_0083&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0053:  stloc.3
+IL_0054:  ldloc.3
+IL_0055:  switch     ( 
+                      IL_0064,
+                      IL_0083)
+IL_0062:  br.s       IL_00a2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These are negligible, I&amp;rsquo;m mealy pointing out the differences in compilation between the two languages.&lt;br /&gt;
+The F# compiler is more stringent when compiling the code.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-cnd-function&#34;&gt;The Cnd function&lt;/h3&gt;
+
+&lt;p&gt;The Cnd function or &lt;a href=&#34;http://en.wikipedia.org/wiki/Normal_distribution&#34;&gt;cumulative normal distribution&lt;/a&gt;
+is where the performance differences occur.&lt;/p&gt;
+
+&lt;p&gt;Again at initialization you can see the C# version is larger by 41.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Code size       213 (0xd5)
+.maxstack  8
+.locals init ([0] float64 l,
+         [1] float64 k,
+         [2] float64 w)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;// Code size       254 (0xfe)
+.maxstack  6
+.locals init ([0] float64 l,
+         [1] float64 k,
+         [2] float64 w)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The C# version initialises all the local variables to 0.0.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0000:  ldc.r8     0.0
+IL_0009:  stloc.0
+IL_000a:  ldc.r8     0.0
+IL_0013:  stloc.1
+IL_0014:  ldc.r8     0.0
+IL_001d:  stloc.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Interestingly the C# compiler optimises out the call to &lt;code&gt;Math.PI * 2&lt;/code&gt; but the F# compiler doesn&amp;rsquo;t.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_003a:  ldc.r8     2.
+IL_0043:  ldc.r8     3.1415926535897931
+IL_004c:  mul
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0057:  ldc.r8     6.2831853071795862
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here everything is identical until we get to the power operator section (&lt;code&gt;Math.Pow&lt;/code&gt; in the C# version and &lt;code&gt;pown&lt;/code&gt; in F#).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_0089:  ldloc.1
+IL_008a:  ldc.i4.3
+IL_008b:  call       float64 [FSharp.Core]Microsoft.FSharp.Core.Operators/OperatorIntrinsics::PowDouble(float64, 
+                                                                                                        int32)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the F# code we are using the &lt;code&gt;pown&lt;/code&gt; function which calculates the power to an integer.  This is shown in the
+call to &lt;code&gt;OperatorIntrinsics::PowDouble&lt;/code&gt; which uses the value in &lt;code&gt;IL_0089:  ldloc.1&lt;/code&gt; and also loads the
+integer 3 with &lt;code&gt;IL_008a:  ldc.i4.3&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_009c:  ldloc.1
+IL_009d:  ldc.r8     3.
+IL_00a6:  call       float64 [mscorlib]System.Math::Pow(float64,
+                                                        float64)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The C# code is using the standard Math.Pow operator which operates on two float64 numbers.  The value of 3 is
+implicitly converted into a &lt;code&gt;float64&lt;/code&gt; during compilation &lt;code&gt;IL_009d:  ldc.r8     3.&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The final difference is at the end of the function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_00b8:  stloc.2
+IL_00b9:  ldarg.0
+IL_00ba:  ldc.r8     0.0
+IL_00c3:  clt
+IL_00c5:  brfalse.s  IL_00d3
+IL_00c7:  ldc.r8     1.
+IL_00d0:  ldloc.2
+IL_00d1:  sub
+IL_00d2:  ret
+IL_00d3:  ldloc.2
+IL_00d4:  ret
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The F# version uses the &lt;code&gt;clt&lt;/code&gt; opcode.  This pushes 1 if value one on the stack is less than value two otherwise
+it pushes 0.  There is then a &lt;code&gt;brfalse.s&lt;/code&gt; which jumps to location &lt;code&gt;IL_00d3&lt;/code&gt; if the first value on the stack is
+less than or equal to the second value.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IL_00b8:  stloc.2
+IL_00b9:  ldarg.0
+IL_00e5:  ldc.r8     0.0
+IL_00ee:  bge.un.s   IL_00fc
+IL_00f0:  ldc.r8     1.
+IL_00f9:  ldloc.2
+IL_00fa:  sub
+IL_00fb:  ret
+IL_00fc:  ldloc.2
+IL_00fd:  ret
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The C# version uses the &lt;code&gt;bge.un.s&lt;/code&gt; to jump to location &lt;code&gt;IL_00fc&lt;/code&gt; if the first value on the stack is greater than
+the second.  This is negligible in normal runtime but it is interesting to note the difference between the two.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Wow, there was a lot of IL to get through, I hope you stayed with me!&lt;/p&gt;
+
+&lt;p&gt;Although the difference in some areas are negligible, every little counts.  The implicit conversion of an integer
+field to a &lt;code&gt;float64&lt;/code&gt; hides the fact that we were using an optimized integer power function in F#, that&amp;rsquo;s performance
+increase of 168%!  Some other side effects of implicit conversion can also lead to subtle bugs due to truncation
+and overflow.  The other benefits are the compiled code uses less instructions and the source code only uses 25
+lines compared to 44 in C#.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fixing a hole...</title>
+      <link>http://7sharpnine.com/2011/12/11/2011-12-11-fixing-a-hole/</link>
+      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/12/11/2011-12-11-fixing-a-hole/</guid>
+      <description>&lt;p&gt;Due to popular demand&amp;hellip; well, I had a couple of requests anyway :-) Heres
+a post inspired by my recent encounters profiling some of the code in
+&lt;a href=&#34;https://github.com/fractureio/fracture&#34;&gt;Fracture-IO&lt;/a&gt;.  &lt;!-- more --&gt;I have recently been
+profiling the code in fracture to remove any so called low hanging fruits.
+During this time I also noticed an increase in memory allocation.  I
+remembered I had recently been experimenting in a branch using pipelets as a
+buffer between the send and receive stages in the Http Server, so I set up a
+simple test to see if pipelets were contributing to the memory allocation
+issues I was seeing.  Here&amp;rsquo;s the simple iteration test code I used for the
+memory profiling:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;open System
+open System.Diagnostics
+open System.Threading
+open Fracture.Pipelets  
+let reverse (s:string) =
+  String(s |&amp;gt; Seq.toArray |&amp;gt; Array.rev)  
+let oneToSingleton a b f=
+  let result = b |&amp;gt; f
+  result |&amp;gt; Seq.singleton  
+/// Total number to run through test cycle
+let number = 100  
+/// To Record when we are done
+let counter = ref 0
+let sw = new Stopwatch()
+let countThis (a:String) =
+  do Interlocked.Increment(counter) |&amp;gt; ignore
+  if !counter % number = 0 then
+    sw.Stop()
+    printfn &amp;quot;Execution time: %A&amp;quot; sw.Elapsed.TotalMilliseconds
+    printfn &amp;quot;Items input: %d&amp;quot; number
+    printfn &amp;quot;Time per item: %A ms (Elapsed Time / Number of items)&amp;quot;
+      (TimeSpan.FromTicks(sw.Elapsed.Ticks / int64 number).TotalMilliseconds)
+    printfn &amp;quot;Press any key to repeat, press &#39;q&#39; to exit.&amp;quot;
+    sw.Reset()
+  counter |&amp;gt; Seq.singleton  
+let OneToSeqRev a b =
+  oneToSingleton a b reverse   
+let generateCircularSeq (s) =
+  let rec next () =
+    seq {
+      for element in s do
+        yield element
+      yield! next()
+    }
+  next()  
+    let stage1 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage1&amp;quot;, OneToSeqRev &amp;quot;1&amp;quot;, Routers.roundRobin, number, -1)
+    let stage2 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage2&amp;quot;, OneToSeqRev &amp;quot;2&amp;quot;, Routers.basicRouter, number, -1)
+    let stage3 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage3&amp;quot;, OneToSeqRev &amp;quot;3&amp;quot;, Routers.basicRouter, number, -1)
+    let stage4 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage4&amp;quot;, OneToSeqRev &amp;quot;4&amp;quot;, Routers.basicRouter, number, -1)
+    let stage5 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage5&amp;quot;, OneToSeqRev &amp;quot;5&amp;quot;, Routers.basicRouter, number, -1)
+    let stage6 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage6&amp;quot;, OneToSeqRev &amp;quot;6&amp;quot;, Routers.basicRouter, number, -1)
+    let stage7 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage7&amp;quot;, OneToSeqRev &amp;quot;7&amp;quot;, Routers.basicRouter, number, -1)
+    let stage8 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage8&amp;quot;, OneToSeqRev &amp;quot;8&amp;quot;, Routers.basicRouter, number, -1)
+    let stage9 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage9&amp;quot;, OneToSeqRev &amp;quot;9&amp;quot;, Routers.basicRouter, number, -1)
+    let stage10 = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Stage10&amp;quot;, OneToSeqRev &amp;quot;10&amp;quot;, Routers.basicRouter, number, -1)
+    let final = new Pipelet&amp;lt;_,_&amp;gt;(&amp;quot;Final&amp;quot;, countThis, Routers.basicRouter, number, -1)  
+    let manyStages = [stage2;stage3;stage4;stage5;stage6;stage7;stage8;stage9;stage10]  
+    oneToMany stage1 manyStages
+    manyToOne manyStages final  
+    System.AppDomain.CurrentDomain.UnhandledException |&amp;gt; Observable.add (fun x -&amp;gt;
+      printfn &amp;quot;%A&amp;quot; (x.ExceptionObject :?&amp;gt; Exception); Console.ReadKey() |&amp;gt; ignore)  
+    let circ = [&amp;quot;John&amp;quot;; &amp;quot;Paul&amp;quot;; &amp;quot;George&amp;quot;; &amp;quot;Ringo&amp;quot;; &amp;quot;Nord&amp;quot;; &amp;quot;Bert&amp;quot;] |&amp;gt; generateCircularSeq   
+    let startoperations() =
+      sw.Start()
+      for str in circ |&amp;gt; Seq.take number
+        do  str --&amp;gt; stage1
+      printfn &amp;quot;Insert complete waiting for operation to complete.&amp;quot;  
+    printfn &amp;quot;Press any key to process %i items&amp;quot; number
+    while not (Console.ReadKey().Key = ConsoleKey.Q) do
+      startoperations()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using process explorer from Mark Russinovich I watched the allocated memory
+grow as the iterations progressed:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-VP1-Vo2VINU/TuS7yZFTTlI/AAAAAAAABNw/3ksn5vNXTtw/s400/leak.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Theres definitely something leaking in there! So what can we do to find this?
+Simple, we use a memory profiler.  There are several really good memory
+profilers out there.  I have listed some of the best ones below:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://memprofiler.com/&#34;&gt;SciTech memory profiler&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.red-gate.com/products/dotnet-development/ants-memory-profiler/&#34;&gt;RedGates ANTS Memory Profiler&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.jetbrains.com/profiler/&#34;&gt;JetBrains dotTrace&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.yourkit.com/dotnet/features/index.jsp&#34;&gt;YourKit Profiler for .NET&lt;/a&gt;
+To demonstrate finding the leak I will be using &lt;a href=&#34;http://www.red-gate.com/products/dotnet-development/ants-memory-
+profiler/&#34;&gt;RedGates ANTS MemoryProfiler&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;First of all we launch the profiler and set it up to profile the application,
+this is just a simple case of browsing to the release folder and picking the
+application so I won&amp;rsquo;t bore with those trivial details here. Now that the
+application is running we hit any key which caused the test application to
+post 100 operations into the pipeline.  We want to create a baseline snapshot
+of the memory allocation so we can see where our leak is.  To do this click
+Take Memory Snapshot at the top right of the screen.  Next we hit any key
+again in the test application, again causing it to post another 100 operations
+into the pipeline.  Now we click Take Memory Snapshot again. Now we have a
+snapshot of the difference between the two operations.  The summery screen is
+shown below:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-N72POVbq0ZA/TuS7v0xBt1I/AAAAAAAABNQ/ExKfkJDCb50/s912/3%2Bsummary.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;From this screen you can see that there is 51.56KB of new memory allocated
+since the last snapshot, and you can see some nice piecharts showing the
+various allocations in G1, G2 etc.  On the right hand side of the pie chart
+you can see that the largest classes are: object[], AsyncParamsAux,
+Pipelets+loop@37-7&lt;Unit, string,string&gt;, and AsyncParams&lt;Unit&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now if we click on Class List button we can investigate these further, heres
+the Class List:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-UDU20rPk7ck/TuS7xvK_67I/AAAAAAAABNg/tnxTlpBYBJg/s912/4%2Bclass%2Blist.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Here things start to get interesting.  If you click on the instance Diff (+/-)
+column you can sort the list of classed by the differences to the last
+snapshot.&lt;/p&gt;
+
+&lt;p&gt;Now looking at the results we have:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;300 more instances of AsyncBuilderImpl, AsyncParamsArgs, and AsyncParams&lt;/li&gt;
+&lt;li&gt;200 more instances of Pipelets+loop@37-7&lt;Unit, string, string&gt;&lt;/li&gt;
+&lt;li&gt;100 more instances of Pipelets+loop@37-7&lt;Unit, string, FSharpRef&lt;int&gt;&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Is it a coincidence that we just pushed 100 operations through the pipeline?
+I think not!&lt;/p&gt;
+
+&lt;p&gt;Now that we have a target for further inspection we can highlight the row for
+the function &lt;strong&gt;Pipelets+loop@37-7&lt;Unit, string, FSharpRef&lt;int&gt;&amp;gt;&amp;gt;&lt;/strong&gt; and then
+click on the icon that has three little blue boxes on it.  This will take us
+to the instance List as shown below:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-csF589rWobQ/TuS7wzT6NWI/AAAAAAAABNY/TM95SUmaCEQ/s912/5%2Binstance%2Blist.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;I have sorted the instance list by the distance from the GC Root, you can see
+there is a strange pattern emerging, the GC root distant increase by three
+each time.  Now lets look at the Instance Retention graph for the first one
+with a GC Root distance of 9, this is the icon on the right hand side of the
+function name, it looks like a few rectangles joined up with a line:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-9orgQ4etsdI/TuS7yE-Dh7I/AAAAAAAABNs/0-dc3x8u-Mo/s525/first.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;The Pipelets+loop function is linked from the mailbox processor shown at the
+top of the graph and flows into the Async infrastructure, and finally to the
+loop function at the bottom.&lt;/p&gt;
+
+&lt;p&gt;Lets look at the next one, this has a GC Root distance of 12:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-j1eALRVz0kA/TuS7z0ycXDI/AAAAAAAABN8/SGPVpPQbSz0/s531/second.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;If you look carefully there is another pattern here, the field references
+args, aux@, econt@ are repeated in the red boxes.  The functions look to be
+quite similar too.  Lets look at the next one GC Root Distance  of 15:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-d3V1WkCktTM/TuS7zxVnizI/AAAAAAAABOA/wA5xlP-UTxA/s646/third.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Looking at this we have a definite repeat of the functions and arguments,  if
+we look down to GC Root at a depth of 60 we get this:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-X3v-_UfEkI4/TuS7xzETTHI/AAAAAAAABNk/js7xg3GTHIo/s640/60.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;So whats happening here is that there is a continuation that has been built
+around the asynchronous calls that gets bigger and bigger on each iteration.&lt;/p&gt;
+
+&lt;p&gt;Now that we have identified the leak, lets look at the code and see whats
+going on.  That would be the loop function in Pipelets:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let mailbox = MailboxProcessor.Start(fun inbox -&amp;gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&amp;gt;
+      ss.Release() |&amp;gt; ignore
+      try
+        data |&amp;gt; transform |&amp;gt; router &amp;lt;| routes
+        return! loop routes
+      with //force loop resume on error
+      | ex -&amp;gt; errors ex
+          return! loop routes
+    | Attach(stage) -&amp;gt; return! loop (stage::routes)
+    | Detach(stage) -&amp;gt; return! loop (List.filter (fun x -&amp;gt; x &amp;lt;&amp;gt; stage) routes)
+  }
+  loop [])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Have a look at lines 9 and 12.  Can you guess whats wrong?&lt;/p&gt;
+
+&lt;p&gt;Well, to quote the &lt;a href=&#34;http://blogs.msdn.com/b/fsharpteam/archive/2011/07/08/tail-calls-in-fsharp.aspx&#34;&gt;F# Teams blog&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;On the .NET platform, there are limitations on where tail calls may occur.
+One restriction is that tail calls cannot be performed in try-catch or try-
+finally blocks (neither in the body of the try nor in the catch or finally
+handlers).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It goes on further to discuss another subtle issue with use bindings:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;use bindings implicitly generate a try-finally around the code that follows
+them to ensure that the Dispose method is called on the bound value.  This
+means that no calls following a use binding will be tail calls.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So all we have to do change the way the try catch block is formulated in that
+section.  The most idiomatic way of dealing with this is to use the
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee353899.aspx&#34;&gt;Async.Catch function&lt;/a&gt;
+which would result in code something like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let mailbox = MailboxProcessor.Start(fun inbox -&amp;gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&amp;gt;
+      ss.Release() |&amp;gt; ignore
+      let result = async{data |&amp;gt; transform |&amp;gt; router &amp;lt;| routes} 
+      |&amp;gt; Async.Catch 
+      |&amp;gt; Async.RunSynchronously
+      match result with
+      | Choice1Of2() -&amp;gt; ()
+      | Choice2Of2 exn -&amp;gt; errors exn
+      return! loop routes
+    | Attach(stage) -&amp;gt; return! loop (stage::routes)
+    | Detach(stage) -&amp;gt; return! loop (List.filter (fun x -&amp;gt; x &amp;lt;&amp;gt; stage) routes)
+  }
+  loop [])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively you could move the entire try with section out to a more local
+section thats not in the recursive async loop construct:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let computeAndRoute data routes =
+  try
+    data |&amp;gt; transform |&amp;gt; router &amp;lt;| routes
+    Choice1Of2()
+  with
+  | ex -&amp;gt; Choice2Of2 ex  
+
+let mailbox = MailboxProcessor.Start(fun inbox -&amp;gt;
+  let rec loop routes = async {
+    let! msg = inbox.Receive()
+    match msg with
+    | Payload(data) -&amp;gt;
+      ss.Release() |&amp;gt; ignore
+      match computeAndRoute data routes with
+      | Choice2Of2 exn -&amp;gt; errors exn
+      | _ -&amp;gt; ()
+      return! loop routes
+    | Attach(stage) -&amp;gt; return! loop (stage::routes)
+    | Detach(stage) -&amp;gt; return! loop (List.filter (fun x -&amp;gt; x &amp;lt;&amp;gt; stage) routes)}
+  loop [])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Anyway I hope that sheds a bit of light on how to spot where memory leaks are
+stemming from, and also some of the little known and often forgotten caveats
+with tail recursion.&lt;/p&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;EDIT&lt;/strong&gt;: Just to make things a little bit clearer.  The memory leak here is caused by the async block being transformed into chains of continuation passing-style functions, and due to tail call elimination not being possible inside of the try catch blocks, the continuation grows and grows during each recursion.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title> Agents and ObjectPools</title>
+      <link>http://7sharpnine.com/2011/06/05/2011-06-05-agents-and-objectpools/</link>
+      <pubDate>Sun, 05 Jun 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
+      <description>&lt;p&gt;Everyone knows F# agents are cool right?  Well here&amp;rsquo;s yet another example of how versatile they can be&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;There was a series of posts last April by Stephen Toub from the &lt;a href=&#34;http://blogs.msdn.com/b/pfxteam/&#34;&gt;pfxteam&lt;/a&gt; at Microsoft.  I was reading
+through some of the posts again the other day and thought some of the ideas presented there would make interesting projects in F# to demonstrate the
+flexibility and succinctness of the language.  I thought the &lt;a href=&#34;http://blogs.msdn.com/b/pfxteam/archive/2010/04/13/9990427.aspx&#34;&gt;ObjectPool&lt;/a&gt;
+example would make an interesting project in F# using agents aka MailboxProcessors.  An ObjectPool is basically a pool of objects that have been
+pre-created so that you can grab one and use it, and then place it back in the pool when you&amp;rsquo;re finished.  They are useful in situations where the cost of
+creating object from scratch is very high or you want to cut down on allocations in the garbage collector.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;First of all heres the C# code as it was presented in the Parallel Extensions download:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using System.Collections.Generic;
+using System.Diagnostics;  
+namespace System.Collections.Concurrent
+{
+  /// &amp;lt;summary&amp;gt;Provides a thread-safe object pool.&amp;lt;/summary&amp;gt;
+  /// &amp;lt;typeparam name=&amp;quot;T&amp;quot;&amp;gt;Specifies the type of the elements stored in the pool.&amp;lt;/typeparam&amp;gt;
+  [DebuggerDisplay(&amp;quot;Count={Count}&amp;quot;)]
+  [DebuggerTypeProxy(typeof(IProducerConsumerCollection_DebugView&amp;lt;&amp;gt;))]
+  public sealed class ObjectPool&amp;lt;T&amp;gt; : ProducerConsumerCollectionBase&amp;lt;T&amp;gt;
+  {
+    private readonly Func&amp;lt;T&amp;gt; _generator;  
+    /// &amp;lt;summary&amp;gt;Initializes an instance of the ObjectPool class.&amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;generator&amp;quot;&amp;gt;The function used to create items when no items exist in the pool.&amp;lt;/param&amp;gt;
+    public ObjectPool(Func&amp;lt;T&amp;gt; generator) : this(generator, new ConcurrentQueue&amp;lt;T&amp;gt;()) { }  
+    /// &amp;lt;summary&amp;gt;Initializes an instance of the ObjectPool class.&amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;generator&amp;quot;&amp;gt;The function used to create items when no items exist in the pool.&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name=&amp;quot;collection&amp;quot;&amp;gt;The collection used to store the elements of the pool.&amp;lt;/param&amp;gt;
+    public ObjectPool(Func&amp;lt;T&amp;gt; generator, IProducerConsumerCollection&amp;lt;T&amp;gt; collection)
+      : base(collection)
+    {
+      if (generator == null) throw new ArgumentNullException(&amp;quot;generator&amp;quot;);
+      _generator = generator;
+    }  
+    /// &amp;lt;summary&amp;gt;Adds the provided item into the pool.&amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;item&amp;quot;&amp;gt;The item to be added.&amp;lt;/param&amp;gt;
+    public void PutObject(T item) { base.TryAdd(item); }  
+    /// &amp;lt;summary&amp;gt;Gets an item from the pool.&amp;lt;/summary&amp;gt;
+    /// &amp;lt;returns&amp;gt;The removed or created item.&amp;lt;/returns&amp;gt;
+    /// &amp;lt;remarks&amp;gt;If the pool is empty, a new item will be created and returned.&amp;lt;/remarks&amp;gt;
+    public T GetObject()
+    {
+      T value;
+      return base.TryTake(out value) ? value : _generator();
+    }  
+    /// &amp;lt;summary&amp;gt;Clears the object pool, returning all of the data that was in the pool.&amp;lt;/summary&amp;gt;
+    /// &amp;lt;returns&amp;gt;An array containing all of the elements in the pool.&amp;lt;/returns&amp;gt;
+    public T[] ToArrayAndClear()
+    {
+      var items = new List&amp;lt;T&amp;gt;();
+      T value;
+      while (base.TryTake(out value)) items.Add(value);
+      return items.ToArray();
+    }  
+    protected override bool TryAdd(T item)
+    {
+      PutObject(item);
+      return true;
+    }  
+    protected override bool TryTake(out T item)
+    {
+      item = GetObject();
+      return true;
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There&amp;rsquo;s also a base class which looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;summary&amp;gt;
+/// Provides a base implementation for producer-consumer collections that wrap other
+/// producer-consumer collections.
+/// &amp;lt;/summary&amp;gt;
+/// &amp;lt;typeparam name=&amp;quot;T&amp;quot;&amp;gt;Specifies the type of elements in the collection.&amp;lt;/typeparam&amp;gt;
+[Serializable]
+public abstract class ProducerConsumerCollectionBase&amp;lt;T&amp;gt; : IProducerConsumerCollection&amp;lt;T&amp;gt;
+{
+private readonly IProducerConsumerCollection&amp;lt;T&amp;gt; _contained;  
+/// &amp;lt;summary&amp;gt;Initializes the ProducerConsumerCollectionBase instance.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;contained&amp;quot;&amp;gt;The collection to be wrapped by this instance.&amp;lt;/param&amp;gt;
+protected ProducerConsumerCollectionBase(IProducerConsumerCollection&amp;lt;T&amp;gt; contained)
+{
+  if (contained == null) throw new ArgumentNullException(&amp;quot;contained&amp;quot;);
+  _contained = contained;
+}  
+/// &amp;lt;summary&amp;gt;Gets the contained collection.&amp;lt;/summary&amp;gt;
+protected IProducerConsumerCollection&amp;lt;T&amp;gt; ContainedCollection { get { return _contained; } }  
+/// &amp;lt;summary&amp;gt;Attempts to add the specified value to the end of the deque.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;item&amp;quot;&amp;gt;The item to add.&amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;true if the item could be added; otherwise, false.&amp;lt;/returns&amp;gt;
+protected virtual bool TryAdd(T item) { return _contained.TryAdd(item); }  
+/// &amp;lt;summary&amp;gt;Attempts to remove and return an item from the collection.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;item&amp;quot;&amp;gt;
+/// When this method returns, if the operation was successful, item contains the item removed. If
+/// no item was available to be removed, the value is unspecified.
+/// &amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;
+/// true if an element was removed and returned from the collection; otherwise, false.
+/// &amp;lt;/returns&amp;gt;
+protected virtual bool TryTake(out T item) { return _contained.TryTake(out item); }  
+/// &amp;lt;summary&amp;gt;Attempts to add the specified value to the end of the deque.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;item&amp;quot;&amp;gt;The item to add.&amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;true if the item could be added; otherwise, false.&amp;lt;/returns&amp;gt;
+bool IProducerConsumerCollection&amp;lt;T&amp;gt;.TryAdd(T item) { return TryAdd(item); }  
+/// &amp;lt;summary&amp;gt;Attempts to remove and return an item from the collection.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;item&amp;quot;&amp;gt;
+/// When this method returns, if the operation was successful, item contains the item removed. If
+/// no item was available to be removed, the value is unspecified.
+/// &amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;
+/// true if an element was removed and returned from the collection; otherwise, false.
+/// &amp;lt;/returns&amp;gt;
+bool IProducerConsumerCollection&amp;lt;T&amp;gt;.TryTake(out T item) { return TryTake(out item); }  
+/// &amp;lt;summary&amp;gt;Gets the number of elements contained in the collection.&amp;lt;/summary&amp;gt;
+public int Count { get { return _contained.Count; } }  
+/// &amp;lt;summary&amp;gt;Creates an array containing the contents of the collection.&amp;lt;/summary&amp;gt;
+/// &amp;lt;returns&amp;gt;The array.&amp;lt;/returns&amp;gt;
+public T[] ToArray() { return _contained.ToArray(); }  
+/// &amp;lt;summary&amp;gt;Copies the contents of the collection to an array.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;array&amp;quot;&amp;gt;The array to which the data should be copied.&amp;lt;/param&amp;gt;
+/// &amp;lt;param name=&amp;quot;index&amp;quot;&amp;gt;The starting index at which data should be copied.&amp;lt;/param&amp;gt;
+public void CopyTo(T[] array, int index) { _contained.CopyTo(array, index); }  
+/// &amp;lt;summary&amp;gt;Copies the contents of the collection to an array.&amp;lt;/summary&amp;gt;
+/// &amp;lt;param name=&amp;quot;array&amp;quot;&amp;gt;The array to which the data should be copied.&amp;lt;/param&amp;gt;
+/// &amp;lt;param name=&amp;quot;index&amp;quot;&amp;gt;The starting index at which data should be copied.&amp;lt;/param&amp;gt;
+void ICollection.CopyTo(Array array, int index) { _contained.CopyTo(array, index); }  
+/// &amp;lt;summary&amp;gt;Gets an enumerator for the collection.&amp;lt;/summary&amp;gt;
+/// &amp;lt;returns&amp;gt;An enumerator.&amp;lt;/returns&amp;gt;
+public IEnumerator&amp;lt;T&amp;gt; GetEnumerator() { return _contained.GetEnumerator(); }  
+/// &amp;lt;summary&amp;gt;Gets an enumerator for the collection.&amp;lt;/summary&amp;gt;
+/// &amp;lt;returns&amp;gt;An enumerator.&amp;lt;/returns&amp;gt;
+IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }  
+/// &amp;lt;summary&amp;gt;Gets whether the collection is synchronized.&amp;lt;/summary&amp;gt;
+bool ICollection.IsSynchronized { get { return _contained.IsSynchronized; } }  
+/// &amp;lt;summary&amp;gt;Gets the synchronization root object for the collection.&amp;lt;/summary&amp;gt;
+object ICollection.SyncRoot { get { return _contained.SyncRoot; } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Wow!&lt;/strong&gt;  Thats a fair bit of code in C#, fair enough there is a lot of noise in the xml doc comments, but theres also a lot of boiler plate code in there too.&lt;/p&gt;
+
+&lt;p&gt;Ok now we have gotten that out of the way heres the good bit.  &lt;/p&gt;
+
+&lt;p&gt;Below is an agent based design which implements the same functionality but uses a lot less code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module Poc
+
+//Agent alias for MailboxProcessor
+type Agent&amp;lt;&#39;T&amp;gt; = MailboxProcessor&amp;lt;&#39;T&amp;gt;
+ 
+///One of three messages for our Object Pool agent
+type PoolMessage&amp;lt;&#39;a&amp;gt; =
+  | Get of AsyncReplyChannel&amp;lt;&#39;a&amp;gt;
+  | Put of &#39;a * AsyncReplyChannel&amp;lt;unit&amp;gt;
+  | Clear of AsyncReplyChannel&amp;lt;List&amp;lt;&#39;a&amp;gt;&amp;gt;
+ 
+/// Object pool representing a reusable pool of objects
+type ObjectPool&amp;lt;&#39;a&amp;gt;(generate: unit -&amp;gt; &#39;a, initialPoolCount) =
+  let initial = List.init initialPoolCount (fun (x) -&amp;gt; generate())
+  let agent = Agent.Start(fun inbox -&amp;gt;
+    let rec loop(x) = async {
+      let! msg = inbox.Receive()
+      match msg with
+      | Get(reply) -&amp;gt;
+        let res = match x with
+              | a :: b -&amp;gt;
+                reply.Reply(a);b
+              | [] as empty-&amp;gt;
+                reply.Reply(generate());empty
+        return! loop(res)
+      | Put(value, reply)-&amp;gt;
+        reply.Reply()
+        return! loop(value :: x)
+      | Clear(reply) -&amp;gt;
+        reply.Reply(x)
+        return! loop(List.empty&amp;lt;&#39;a&amp;gt; )
+    }
+    loop(initial))  
+  /// Clears the object pool, returning all of the data that was in the pool.
+  member this.ToListAndClear() =
+    agent.PostAndAsyncReply(Clear)
+  /// Puts an item into the pool
+  member this.Put(item) =
+    agent.PostAndAsyncReply((fun ch -&amp;gt; Put(item, ch)))
+  /// Gets an item from the pool or if there are none present use the generator
+  member this.Get(item) =
+    agent.PostAndAsyncReply(Get)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have a discriminated union (PoolMessage) which describes the messages that we are going to use with this agent, they are pretty straight forward to follow.  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Get&lt;/strong&gt; simply returns either a stored item or generates a brand new one using the generator function which is passed into the ObjectPools constructor &lt;strong&gt;(generate: unit -&amp;gt; &amp;lsquo;a)&lt;/strong&gt;.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Put&lt;/strong&gt; simply adds the item onto the internal list.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Clear&lt;/strong&gt; simply returns the current pool and then clears it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The core processing all happens in the &lt;strong&gt;async{}&lt;/strong&gt; block, we simply wait for a message to arrive, then we pattern match on one of the messages either Get,Put, or Clear.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Get&lt;/strong&gt; takes an item from the internal list if there are items present, otherwise it invokes the generator function and returns a newly generated object.&lt;/p&gt;
+
+&lt;p&gt;For a &lt;strong&gt;Put&lt;/strong&gt; operation we use the cons &lt;strong&gt;(::)&lt;/strong&gt; operator to add the item onto the internal list via the recursive loop.&lt;/p&gt;
+
+&lt;p&gt;For the &lt;strong&gt;Clear&lt;/strong&gt; operation we return the entire list then return an empty list to the recursive loop.&lt;/p&gt;
+
+&lt;p&gt;I think you will agree this is a nice succinct example of the flexibility and elegance of agents and yet another reason to use F# for more server side
+activities.  It&amp;rsquo;s not simply a language for the mathematical and finance orientated developers.&lt;/p&gt;
+
+&lt;p&gt;For anyone interested all of the code should be in my &lt;a href=&#34;http://bit.ly/mDQyfH&#34;&gt;GitHub repository &lt;/a&gt;to download.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&#34;http://tomasp.net/&#34;&gt;Tomas Petricek&lt;/a&gt; for suggesting using the recursive loop to pass the list rather than using a ref cell and the (&lt;strong&gt;:=&lt;/strong&gt;) operator.&lt;/p&gt;
+
+&lt;p&gt;Until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Pipeline processing 2</title>
+      <link>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <description>
+
+&lt;h3 id=&#34;welcome-to-pipeline-processing-part-2&#34;&gt;Welcome to pipeline processing part 2.&lt;/h3&gt;
+
+&lt;p&gt;I feel I need to backtrack slightly from the previous post, having worked with
+pipelines for quite some time I have the advantage of knowing all of the
+details that may be alluded to in these articles without being effected by any
+omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going
+to try and rectify that a bit now.  If you have any queries then please leave
+a comment and I will try to address them in further articles. Pipelines are a
+simple concept but in practice there can be some caveats and things to bear in
+mind, sometime the whole mindset of development team can be against them
+unless they can see the bigger picture&amp;hellip;&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;First of all one of the most important things to bear in mind with a pipeline
+is that you are only going to be as fast as your slowest stage, if one stage
+is ten times slower than another then it will be waiting for input most of the
+time, we need to make this more efficient.&lt;/p&gt;
+
+&lt;h4 id=&#34;premature-optimisation&#34;&gt;Premature Optimisation&lt;/h4&gt;
+
+&lt;p&gt;Lots of developers out there have the &lt;a href=&#34;http://www.c2.com/cgi/wiki?PrematureOptimization&#34;&gt;premature optimisation is the root of
+all evil&lt;/a&gt; mindset and will
+quote this out loud to you when you mention performance early on.  I&amp;rsquo;m not
+advocating premature optimisation, in this instance performance is key, if one
+stage is out of kilter with the rest then we are going to be running at that
+pace of the slowest stage, if that&amp;rsquo;s too slow for the requirements then you
+are screwed.&lt;/p&gt;
+
+&lt;p&gt;The more I think about performance the more I believe its an essential part of
+creating code. There are too many developers these days that will produce
+sloppy unrefined plain bad code.  I&amp;rsquo;m a keen believer in producing quality
+code that you can be proud of, and part of that is having clean code that&amp;rsquo;s
+both efficient and works.  I think some of this boils down to a feature driven
+approach that measures developers solely in terms of features added, take the
+typical &lt;a href=&#34;http://en.wikipedia.org/wiki/Burn_down_chart&#34;&gt;burn down chart&lt;/a&gt; that
+you would use in &lt;a href=&#34;http://en.wikipedia.org/wiki/Agile_software_development&#34;&gt;agile software development&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://alistair.cockburn.us/get/1880&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There is nowhere on this chart that measures whether the code is good or bad or runs to performance requirements.  In the future I may do an article on
+integrating code quality into your build process, its something I have been thinking about doing for a while now.&lt;/p&gt;
+
+&lt;p&gt;While I&amp;rsquo;m talking about performance you also might want to check out Joe Duffy&amp;rsquo;s post on &lt;a href=&#34;http://www.bluebyt
+esoftware.com/blog/2010/09/06/ThePrematureOptimizationIsEvilMyth.aspx&#34;&gt;The &amp;lsquo;premature optimization is evil&amp;rsquo; myth&lt;/a&gt;, and also check out Joe&amp;rsquo;s book on &lt;a href=&#34;http://www.bluebytesoftw
+are.com/books/winconc/winconc_book_resources.html&#34;&gt;concurrent programming&lt;/a&gt;, put it on your wish list if you haven&amp;rsquo;t already read it, its a great book.&lt;/p&gt;
+
+&lt;h4 id=&#34;unbalanced-pipelines&#34;&gt;Unbalanced pipelines&lt;/h4&gt;
+
+&lt;p&gt;Data is received from the network via packets, each packet may contain one or more messages from a business systems or indeed a partial message.  We need to
+collect the packets either separate or combine them to form individual messages, deserialize them and finally log them.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a sample pipeline demonstrating an unbalanced pipeline:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-HDFpPk4zBzY/TwTnGvEn9kI/AAAAAAAABPE/CcRYtQ4fsEQ/pipeline.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;Stage 1 of the pipeline receives these packets and processes them into individual messages passing them onto Stage 2.&lt;/li&gt;
+&lt;li&gt;We now have a complete message (in this instance the message will be XML) we want to turn it into a .Net type we now deserialize the message and pass it onto Stage 3.&lt;/li&gt;
+&lt;li&gt;To keep this pipeline simple all we are going to do here is log type of message to disk or a database, the pipeline is now complete.&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Stage 1 would take 5 seconds to fully utilise stage 2, stage 2 would take 2
+seconds to fully utilise stage 3.  You can see this pipeline will only process
+100 transactions per second even though stages 2 has 5x the throughput of
+stage 1 and stage 3 has 2x the throughput of stage 2.  Our efficiency is only
+about 10% of what it could be, we must be able to do something about that.&lt;/p&gt;
+
+&lt;p&gt;Lets look at the following diagram which demonstrate a balanced pipeline:&lt;/p&gt;
+
+&lt;h4 id=&#34;balanced-pipelines&#34;&gt;Balanced pipelines&lt;/h4&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-8Pgq9ISPe4Q/TwTp1nwBzfI/AAAAAAAABPU/AUwLor1WI7o/balanced-pipeline.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can see from this diagram that each stage processes the same number of
+transactions per second by introducing parallel stages.  This is called a
+balanced pipeline.  Sometimes you cant get a perfectly balanced pipeline but
+you should strive to get as close as possible.  Sometimes a certain stage
+cannot be parallelised because it may have mutable state, or you are using
+some sort of &lt;a href=&#34;http://en.wikipedia.org/wiki/Inversion_of_control&#34;&gt;IOC&lt;/a&gt;
+container for processing services, this might make constructing the various
+stages in parallel difficult, this can become an art form in itself and can
+lead to very large initialisation sections in the code.  I hope to address all
+of these issues in due course.&lt;/p&gt;
+
+&lt;p&gt;This poses some interesting thoughts and questions to add to some you may
+already have:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How can we easily manage the complexity of parallelism?&lt;/li&gt;
+&lt;li&gt;How will the distribution of work be handled?&lt;/li&gt;
+&lt;li&gt;How do you baseline the throughput of each stage?&lt;/li&gt;
+&lt;li&gt;Can you automate the parallelism of a particular stage?&lt;/li&gt;
+&lt;li&gt;How do you manage the complexity of multiple stages?&lt;/li&gt;
+&lt;li&gt;What about parallelism and mutable state?&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The final point to note is the Distributor/Router must operate at a much
+higher rate than the processing stages otherwise you will introduce another
+bottle neck into the system, although you could have a multiple distributors
+but this would yet another degree of complexity that has to be managed.  You
+can see that things can quickly become more complicated than they first
+seemed.&lt;/p&gt;
+
+&lt;p&gt;I know I promised lots of funky code but I figured there was a bit more
+explaining to do before we can get to that.  I want to take a more of an
+iterative approach to show you the potential pitfalls that can occur during
+developing such a pipeline and how to avoid them.  I thought this would be a
+lot more constructive than dropping a load of code and some pretty pictures
+and hoping for the best.&lt;/p&gt;
+
+&lt;p&gt;Next time we will be exploring a simple pipeline stage with a single degree of
+parallelism and a simple router.  After that we will then start exploring and
+answering the questions above, adding more features like parallelism,
+instrumentation, and visualisation.&lt;/p&gt;
+
+&lt;p&gt;Hope you enjoyed this even though there was no code!&lt;/p&gt;
+
+&lt;p&gt;See you next time.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sockets and Bockets 4</title>
+      <link>http://7sharpnine.com/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
+      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
+      <description>
+
+&lt;h2 id=&#34;welcome-to-part-4&#34;&gt;Welcome to part 4&lt;/h2&gt;
+
+&lt;p&gt;If you were looking forward to some exciting new F# code this time your going
+to be disappointed, however if you are like me and like looking at graphs and
+stats and digging in deeper into the code then your going to enjoy this, lets
+get started&amp;hellip;&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;I set up a 5 minute test with 50 clients connecting to the server with a 15ms
+interval between each one.  Once connected each client receives a 128 byte
+message from the server every 100ms so this will be a 500 messages per second
+test.  I am going to be using an excellent product called &lt;a href=&#34;http://bit.ly/e4ToaO&#34;&gt;YourKit Profilerfor .NET&lt;/a&gt; it can do both memory and CPU profiling as
+well as displaying telemetry for things like thread count, stack contents,
+memory allocations etc.  It can be configured to be a lot less intrusive than
+a lot of other profilers and I have had a lot of success using it.  You can
+download a demo from their site using the link above.  I will be doing some
+other articles on using profiling and analysis tools later on so stay tuned
+for those too.  All of the graphs and information gathered in this post come
+from YourKits output during CPU and memory profiling.&lt;/p&gt;
+
+&lt;p&gt;Before we start here&amp;rsquo;s a reminder of what the client code looks like, this is
+a simple test client using Brian&amp;rsquo;s code as mentioned in
+&lt;a href=&#34;http://7sharpnine.com/posts/sockets-and-bockets-1/&#34;&gt;Part1&lt;/a&gt; I have highlighted the lines that
+have changed below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;    open System.Net
+    open System.Net.Sockets  
+    let quoteSize = 128  
+    type System.Net.Sockets.TcpClient with
+      member client.AsyncConnect(server, port, clientIndex) =
+        Async.FromBeginEnd(server, port,(client.BeginConnect : IPAddress * int * _ * _ -&amp;gt; _), client.EndConnect)  
+    let clientRequestQuoteStream (clientIndex, server, port:int) =
+      async {
+        let client = new System.Net.Sockets.TcpClient()
+        do!  client.AsyncConnect(server,port, clientIndex)
+        let stream = client.GetStream()
+        let! header = stream.AsyncRead 1 // read header
+        while true do
+          let! bytes = stream.AsyncRead quoteSize
+          if Array.length bytes &amp;lt;&amp;gt; quoteSize then
+            printfn &amp;quot;client incorrect checksum&amp;quot;
+      }  
+    let myLock = new obj()  
+    let clientAsync clientIndex =
+      async {
+        do! Async.Sleep(clientIndex*15)
+        if clientIndex % 10 = 0 then
+          lock myLock (fun() -&amp;gt; printfn &amp;quot;%d clients...&amp;quot; clientIndex)
+        try
+          do! clientRequestQuoteStream (clientIndex, IPAddress.Loopback, 10003)
+        with e -&amp;gt;
+          printfn &amp;quot;CLIENT %d ERROR: %A&amp;quot; clientIndex e
+          //raise e
+      }  
+    Async.Parallel [ for i in 1 .. 50 -&amp;gt; clientAsync i ]
+      |&amp;gt; Async.Ignore
+      |&amp;gt; Async.Start
+    System.Console.ReadKey() |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;cpu-and-threading-performance&#34;&gt;CPU and threading performance&lt;/h2&gt;
+
+&lt;p&gt;First of all lets look at the CPU results from the &lt;em&gt;IAsync&lt;/em&gt; pattern:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-3H8-TiiB-VI/TwYhL2mvYsI/AAAAAAAABQI/z8dmiHBvTJE/mcnamara-cpu1.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Heres the same run from the SAEA pattern:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-yGB2zdE3kGM/TwYhLPrUmLI/AAAAAAAABP8/Y6CIMWOi4Gk/Bocket-cpu2.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can see that both the number of threads and the amount of CPU is a quite a
+lot less in the SAEA pattern.  The spike at the beginning is the allocation of
+buffers for the BocketPool.&lt;/p&gt;
+
+&lt;p&gt;Now lets move on to memory and garbage collection.&lt;/p&gt;
+
+&lt;h2 id=&#34;memory-allocation&#34;&gt;Memory Allocation&lt;/h2&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a graph of the heap and process memory allocation in the &lt;strong&gt;IAsync&lt;/strong&gt;
+pattern, green is generation 0, blue is generation 1 and orange is the large
+object heap.  There&amp;rsquo;s also red for generation 2 but the results are behind the
+others and they are only small 0,2 MB peaks at 5 to 15 second intervals.&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-PalohQxAkOg/TwYhL6hR5JI/AAAAAAAABQQ/NtCLYc43OZc/mcnamara-mem1.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Heres the same but for the SAEA pattern, there are red peaks every 10- 20
+second intervals of 0.2MB hidden under the others.&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-Nadz1nXQ7lg/TwYhLBXMvcI/AAAAAAAABQM/xCfuXkzkekM/Bocket-mem1.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;As you can see the heap memory is around half the size and the process memory is 15MB less.&lt;/p&gt;
+
+&lt;h2 id=&#34;memory-hotspots&#34;&gt;Memory Hotspots&lt;/h2&gt;
+
+&lt;p&gt;Finally here&amp;rsquo;s a couple of screen shot of the hot spots for memory allocations
+in both implementations&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-n3QWLgvNjq8/TwYhLX8cIZI/AAAAAAAABQA/LkeRno775Ew/s800/IAsync-hot.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;IAsync&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-PSX_YUfxkgU/TwYhMr40DTI/AAAAAAAABQY/D8bgLS6kNwc/s800/SAEA-hot.png&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;SAEA&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can clearly the &lt;strong&gt;IAsync&lt;/strong&gt; allocations are not present in the SAEA
+implementation and there are 310,188 of them, that&amp;rsquo;s 27% of the total garbage!&lt;/p&gt;
+
+&lt;h2 id=&#34;final-thoughts&#34;&gt;Final thoughts&lt;/h2&gt;
+
+&lt;p&gt;The SAEA pattern definitely cuts down on memory and CPU usage, yes it adds a
+lot of complexity but if your application is dealing with a very high volume
+of traffic or clients and you need optimal performance then I think its the
+way to go.&lt;/p&gt;
+
+&lt;p&gt;The optimisations don&amp;rsquo;t stop there either, if you think about it the receive
+Bocketpool is not even used here, if we collapsed all of the BocketPools into
+a single contiguous store then we would use even less resources, this means we
+could support even more clients or throughput.  In a typical high volume
+scenario you are looking at doubling your throughput or number of client
+connections.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s definitely a lot more or interesting things to explore in this area.&lt;/p&gt;
+
+&lt;p&gt;As usual any comments are welcome.&lt;/p&gt;
+
+&lt;p&gt;See you next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sockets and Bockets 3</title>
+      <link>http://7sharpnine.com/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</link>
+      <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</guid>
+      <description>
+
+&lt;h2 id=&#34;welcome-to-part-three&#34;&gt;Welcome to part three!&lt;/h2&gt;
+
+&lt;p&gt;As promised heres a description of the inner workings.  I&amp;rsquo;m sick to death of
+typing SocketAsyncEventArgs so from now on I will refer to it as SAEA.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;BocketPool&lt;/strong&gt;&lt;br /&gt;
+The BocketPool has an interesting name and with it an interesting constructor!
+It takes the following parameters:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;number&lt;/strong&gt;: The number of items to create in the BocketPool. &lt;strong&gt;size&lt;/strong&gt;: The size of each buffer in bytes. &lt;strong&gt;callback&lt;/strong&gt;: A callback function which is invoked whenever the SAEA object completes its operation.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type BocketPool( number, size, callback) as this =
+    let number = number
+    let size = size
+    let totalsize = (number * size)
+    let buffer = Array.create totalsize 0uy
+    let pool = new BlockingCollection&amp;lt;SocketAsyncEventArgs&amp;gt;(number:int)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A &lt;strong&gt;buffer&lt;/strong&gt; is created with a size equal to the (&lt;strong&gt;number&lt;/strong&gt; * &lt;strong&gt;size&lt;/strong&gt;)
+in bytes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;do
+      let rec loop n =
+        match n with
+        | x when x &amp;lt; totalsize -&amp;gt;
+          let saea = new SocketAsyncEventArgs()
+          saea.Completed |&amp;gt; Observable.add callback
+          saea.SetBuffer(buffer, n, size)
+          this.CheckIn(saea)
+          loop (n + size)
+        | _ -&amp;gt; ()
+      loop 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The tail recursive loop function creates a SAEA object and adds it to the
+BlockingCollection(pool).&lt;/p&gt;
+
+&lt;p&gt;The buffer is assigned to each SAEA but each is given a unique offset to use,
+this is done by the SetBuffer method.  Using this method of allocation, memory
+fragmentation is reduced to a minimum by allowing the same buffer to be
+reused.&lt;/p&gt;
+
+&lt;p&gt;We use the pipeline operator to attach the &lt;strong&gt;Completed&lt;/strong&gt; event to the callback
+method that is passed in the constructor.&lt;/p&gt;
+
+&lt;p&gt;The CheckIn, CheckOut, and Count methods are simply wrappers around the
+BlockingCollection.&lt;/p&gt;
+
+&lt;p&gt;We also implement &lt;strong&gt;IDisposable&lt;/strong&gt; to take care of the disposal of the SAEA in the
+BlockingCollection.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Connection&lt;/strong&gt;&lt;br /&gt;
+The main purpose for this type is to encapsulate the sending and receiving of
+messages for a particular client. A BocketPool is created for both the send
+and receive operations, the receiveCompleted and SentCompleted are invoked
+when the respective operations complete.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Send&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.Send (msg:byte[]) =
+  let s = sendPool.CheckOut()
+  Buffer.BlockCopy(msg, 0, s.Buffer, s.Offset, msg.Length)
+  socket.SendAsyncSafe(this.sendCompleted, s)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Initially a Bocket is checked out of the sendPool using sendPool.Checkout(),
+the &lt;strong&gt;msg&lt;/strong&gt; byte array is copied to the corresponding &lt;strong&gt;Offset&lt;/strong&gt; property of
+the SAEA.&lt;/p&gt;
+
+&lt;p&gt;Finally the SendAsyncSafe extension method is called passing in the SAEA and
+the callback.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;sendCompleted&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.sendCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Send -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt;
+            ()
+          | SocketError.NoBufferSpaceAvailable
+          | SocketError.IOPending
+          | SocketError.WouldBlock -&amp;gt;
+            if not(anyErrors) then
+              anyErrors &amp;lt;- true
+              failwith &amp;quot;Buffer overflow or send buffer timeout&amp;quot;
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on send: %s&amp;quot;
+        | _ -&amp;gt; failwith &amp;quot;invalid operation, should be receive&amp;quot;
+      finally
+        sendPool.CheckIn(args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function matches the LastOperation property of the SAEA using pattern
+matching, this ensures that the LastOperation is always SocketError.Success.&lt;/p&gt;
+
+&lt;p&gt;We raise exceptions on NoBufferSpaceAvailable, IOPending, and WouldBlock as
+buffer overflows and match any other conditions the wildcard.&lt;/p&gt;
+
+&lt;p&gt;Finally we Check the Bocket back in so that it can be reused.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;receiveCompleted&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.receiveCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Receive -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt;
+            socket.ReceiveAsyncSafe( this.receiveCompleted, receivePool.CheckOut())
+            let data = Array.create args.BytesTransferred 0uy
+            Buffer.BlockCopy(args.Buffer, args.Offset, data, 0, data.Length)
+            let client = args.RemoteEndPoint
+            args.RemoteEndPoint &amp;lt;- null
+            data |&amp;gt; printfn &amp;quot;received data: %A&amp;quot;
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on receive: %s&amp;quot;
+        | _ -&amp;gt; failwith &amp;quot;unknown operation, should be receive&amp;quot;
+      finally
+        receivePool.CheckIn(args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function is very similar to the sendCompleted and could probably be
+refactored a bit using the &lt;a href=&#34;http://enfranchisedmind.com/blog/posts/the-hole-in-the-middle-
+pattern/&#34;&gt;Hole in the middle
+pattern&lt;/a&gt;.  Again we check to ensure the last operation was a success, we
+checkout another Bocket and start another ReceiveAsyncSafe. This ensures that
+the socket can begin another receive operation as soon as possible while we
+take the data from the SAEA Buffer, we do this with Buffer.Block copy.&lt;/p&gt;
+
+&lt;p&gt;If this were a fully-fledged API then we would raise an event here so that
+users of the component could consume the data.&lt;/p&gt;
+
+&lt;p&gt;In my own component the data is inserted into a series of processing stages
+using the &lt;a href=&#34;http://www.cise.ufl.edu/research/ParallelPatterns
+/PatternLanguage/AlgorithmStructure/Pipeline.htm&#34;&gt;Pipeline Pattern&lt;/a&gt;, which I will be may
+describe in a future post if anyone&amp;rsquo;s interested.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TcpListener&lt;/strong&gt;&lt;br /&gt;
+The TcpListener is very similar to the Connection object in that it has a pool
+of SAEA objects that are used to accept connection from clients, again a round
+of refactoring could be done here to avoid duplication with the Connection
+type.  The main difference is that we don&amp;rsquo;t need to use the Buffer on the SAEA
+to send anything to the client when it initially connects.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;acceptCompleted&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.acceptcompleted (args : SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Accept -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt;
+            listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+            //create new connection
+            let connection = newConnection args.AcceptSocket
+            connection.Start()  
+            //update stats
+            reportConnections   
+            //async start of messages to client
+            startSending connection  
+            //remove the AcceptSocket because we will be reusing args
+            args.AcceptSocket &amp;lt;- null
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on accept: %s&amp;quot;
+        | _ -&amp;gt; args.LastOperation |&amp;gt; failwith &amp;quot;Unknown operation, should be accept but was %a&amp;quot;
+      finally
+        acceptPool.Add(args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function is similar to the send and receive completed methods in the
+Connection type, although this time we create a Connection object and call the
+Start function, this puts the Connection into receive mode.&lt;/p&gt;
+
+&lt;p&gt;The reportConnections is called next which simply prints how many clients are
+connected, we now start an Asyncronous workflow using the startSending
+function.&lt;/p&gt;
+
+&lt;p&gt;Finally we set the AcceptSocket property to null on the SAEA object and add it
+back to the BlockingCollection so that it can be reused.&lt;/p&gt;
+
+&lt;p&gt;The purpose of the BlockingCollection here is to have a fixed pool of SAEA
+that block when there isn&amp;rsquo;t an SAEA to service the new connection, this could
+be a potential issue for the client as it could timeout while waiting for a
+connection but this is a far preferable situation than causing your server to
+be effectively denied service due to overload.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;startSending&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let startSending connection =
+      Async.Start (async {
+        try
+          use _holder = connection
+          do! asyncServiceClient connection
+        with e -&amp;gt;
+          if not(anyErrors) then
+            anyErrors &amp;lt;- true
+            Console.WriteLine(&amp;quot;server ERROR&amp;quot;)
+          raise e
+        } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function uses the syntactic sugar of the asynchronous workflows to start
+an operation on the Thread pool, once queued on the thread pool it is wrapped
+in a using block with the &lt;strong&gt;_use &lt;em&gt;holder = connection&lt;/em&gt;&lt;/strong&gt; statement and
+asynchronously calls the asyncServiceClient function, this has the effect of
+disposing of the Connection type when it exits scope or encounters an
+exception.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;asyncServiceClient&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let asyncServiceClient (client: Connection) = async {
+      client.Send(header)
+      while true do
+        do! asyncWriteStockQuote(client) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function sends a one byte header message to the client using the
+Connection.Send, followed by calling asyncWriteStockQuote in a continuous
+loop.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;asyncWriteStockQuote&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let asyncWriteStockQuote(connection:Connection) = async {
+      do! Async.Sleep 1000
+      connection.Send(testMessage)
+      Interlocked.Increment(&amp;amp;numWritten) |&amp;gt; ignore }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function sleeps for 1000ms and uses the Connection.Send function to sent
+a message to the client, the number of results is updated using the
+Interlocked class.&lt;/p&gt;
+
+&lt;p&gt;I would like to refer you to &lt;a href=&#34;http://lorgonblog.wordpress.com/2010/03/28/f-async-on-the-server-side/&#34;&gt;Brian McNamara&amp;rsquo;s
+post&lt;/a&gt;
+that describes this part in more detail.  The only difference in our workflow
+is that we don&amp;rsquo;t use a stream operation as we have the SendAsyncSafe function
+to do all the work for us.  IDispose is also implemented on this type too as
+we have to dispose of the SAEA objects that are used for the asynchronous
+accepts.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;createTcpSocket&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let createTcpSocket() =
+      new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function simply wraps the Sockets class constructor mapping it to: Tcp
+protocol, Streaming, and InterNetwork Address type.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;createListener&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let createListener (ip:IPAddress, port, backlog) =
+      let s = createTcpSocket()
+      s.Bind(new IPEndPoint(ip, port))
+      s.Listen(backlog); s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function calls the createTcpSocket function, binds to the IPAddress and
+port that are passed in and starts listening for connections.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Start&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;member this.start () =
+      listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+      while true do
+      Thread.Sleep 1000
+      let count = Interlocked.Exchange(&amp;amp;numWritten, 0)
+      count |&amp;gt; printfn &amp;quot;Quotes per sec: %A&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function starts the whole process of listening for a connection from
+clients.  A SAEA is taken from the BlockingCollection and AcceptAsyncSafe is
+called.&lt;/p&gt;
+
+&lt;p&gt;I have tried to describe all of the functions that I think merit a description
+but I have been involved in this sort of code for years now so if you have any
+queries feel free to just drop a comment and I will try to help.&lt;/p&gt;
+
+&lt;p&gt;When looking through the code remember that this is just a demo, I am
+currently still working on a few things but may offer the full API available
+for download at a later date or put it on GitHub.&lt;/p&gt;
+
+&lt;p&gt;In part four we are going to compare some of the differences in operation
+between the xxxAsync and the IAsync pattern, obviously there is a lot more
+code and inherent complexity in this implementation but in high volume
+situations it makes a lot of difference.&lt;/p&gt;
+
+&lt;p&gt;See you next time.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sockets and Bockets 2</title>
+      <link>http://7sharpnine.com/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</link>
+      <pubDate>Fri, 14 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</guid>
+      <description>
+
+&lt;h3 id=&#34;welcome-to-part-two&#34;&gt;Welcome to part two&lt;/h3&gt;
+
+&lt;p&gt;Lets jump in at the deep end and take a look at some code&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;When you look at the method syntax for the xxxAsync methods you will notice
+they return a boolean value that indicates if the method completed
+synchronously, this means that you have to check the return value every time
+you use one of the methods and invoke the callback yourself if it completes
+synchronously.  In practice this hardly ever happens, and normally only on a
+send operation.  But as it is a possibility we will add module with a some
+extension methods in to help us out, this will make the code more readable and
+avoid unnecessary duplication.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;socketextensions&#34;&gt;SocketExtensions&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module SocketExtensions
+  open System
+  open System.Net
+  open System.Net.Sockets  
+  type Socket with
+    /// extension method to make async based call easier, this ensures the callback always gets
+    /// called even if there is an error or the async method completed syncronously
+    member s.InvokeAsyncMethod( asyncmethod, callback, args:SocketAsyncEventArgs) =
+      let result = asyncmethod args
+      if result &amp;lt;&amp;gt; true then callback args
+    member s.AcceptAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.AcceptAsync, callback, args)
+    member s.ReceiveAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.ReceiveAsync, callback, args)
+    member s.SendAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.SendAsync, callback, args)
+    member s.DisconnectAsyncSafe(callback, args) = s.InvokeAsyncMethod(s.DisconnectAsync, callback, args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now lets get down to business, the next few types have a fair bit of code in
+them so I will briefly explain each type in turn:&lt;/p&gt;
+
+&lt;h3 id=&#34;bocketpool&#34;&gt;BocketPool&lt;/h3&gt;
+
+&lt;p&gt;A BocketPool is a combination of a
+&lt;a href=&#34;http://msdn.microsoft.com/en-
+us/library/system.net.sockets.socketasynceventargs.aspx&#34;&gt;SocketAsyncEventArgs&lt;/a&gt; object and a chunk of
+memory allocated in an array.  The array is sliced up into sections and
+allocated for each send or receive operation by setting a start and end index
+using &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/bb549836.aspx&#34;&gt;SetBuffer()&lt;/a&gt;.
+If you remember last time I mentioned that a lot of memory fragmentation can
+occur during sending and receiving due to continuously allocating memory
+buffers on the Socket object, this is primarily done through the BeginSend and
+BeginReceive methods passing in a byte array.  Using the BocketPool it a great
+way of reducing the amount of garbage collection during heavy traffic.&lt;/p&gt;
+
+&lt;p&gt;The other major difference with SocketAsyncEventArgs is the way in which you
+make the send and receive calls, heres the general flow that occurs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create a SocketAsyncEventArgs object or get one from a pool.&lt;/li&gt;
+&lt;li&gt;Allocate an array to the buffer.&lt;/li&gt;
+&lt;li&gt;Allocate an offset and length to the buffer.&lt;/li&gt;
+&lt;li&gt;Allocate a callback method.&lt;/li&gt;
+&lt;li&gt;Call Socket.xxxAsync passing in the SocketAsyncEventArgs, the operation will complete and invoke the callback.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What we are going to do is wrap the whole creation, array allocation, and
+offsetting to the BocketPool:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Fes
+  open System
+  open System.Net.Sockets
+  open System.Collections.Concurrent  
+  type BocketPool( number, size, callback) as this =
+    let number = number
+    let size = size
+    let totalsize = (number * size)
+    let buffer = Array.create totalsize 0uy
+    let pool = new BlockingCollection&amp;lt;SocketAsyncEventArgs&amp;gt;(number:int)
+    let mutable disposed = false
+    let cleanUp() =
+      if not disposed then
+        disposed &amp;lt;- true
+        pool.CompleteAdding()
+        while pool.Count &amp;gt; 1 do
+          (pool.Take() :&amp;gt; IDisposable).Dispose()
+        pool.Dispose()
+    do
+      let rec loop n =
+        match n with
+        | x when x &amp;lt; totalsize -&amp;gt;
+          let saea = new SocketAsyncEventArgs()
+          saea.Completed |&amp;gt; Observable.add( fun saea -&amp;gt; (callback saea))
+          saea.SetBuffer(buffer, n, size)
+          this.CheckIn(saea)
+          loop (n + size)
+        | _ -&amp;gt; ()
+      loop 0
+    member this.CheckOut()=
+      pool.Take()
+    member this.CheckIn(saea)=
+      pool.Add(saea)
+    member this.Count =
+      pool.Count
+    interface IDisposable with
+      member this.Dispose() = cleanUp()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next up we have to look at the Connection and the Tcplistener types as two
+interconnected entities:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The TcpListener listens for a connection on a socket and port number.&lt;/li&gt;
+&lt;li&gt;The client connects to the server.&lt;/li&gt;
+&lt;li&gt;An accept socket is allocated to the client, at this point we have one socket for the server and once for each client.&lt;/li&gt;
+&lt;li&gt;We also need to allocate a BocketPool for send and receive operation for each client
+To simplify things we are going to encapsulate the accept socket management
+into a type, it will also need a corresponding BocketPool to service any send
+and receive operations to and from the client&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;connection&#34;&gt;Connection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Fes
+  open System
+  open System.Net
+  open System.Net.Sockets
+  open System.Collections.Generic
+  open System.Collections.Concurrent
+  open System.Threading
+  open SocketExtensions  
+  type Connection(maxreceives, maxsends, size, socket:Socket) as this =
+    let socket = socket
+    let maxreceives = maxreceives
+    let maxsends = maxsends
+    let sendPool = new BocketPool(maxsends, size, this.sendCompleted )
+    let receivePool = new BocketPool(maxreceives, size, this.receiveCompleted)
+    let mutable disposed = false
+    let mutable anyErrors = false  
+    let cleanUp() =
+      if not disposed then
+        disposed &amp;lt;- true
+        socket.Shutdown(SocketShutdown.Both)
+        socket.Disconnect(false)
+        socket.Close()
+        (sendPool :&amp;gt; IDisposable).Dispose()
+        (receivePool :&amp;gt; IDisposable).Dispose()  
+    member this.Start() =
+      socket.ReceiveAsyncSafe(this.receiveCompleted, receivePool.CheckOut())  
+    member this.Stop() =
+      socket.Close(2)  
+    member this.receiveCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Receive -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt;
+            socket.ReceiveAsyncSafe( this.receiveCompleted, receivePool.CheckOut())
+            let data = Array.create args.BytesTransferred 0uy
+            Buffer.BlockCopy(args.Buffer, args.Offset, data, 0, data.Length)
+            let client = args.RemoteEndPoint
+            args.RemoteEndPoint &amp;lt;- null
+            data |&amp;gt; printfn &amp;quot;received data: %A&amp;quot;
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on receive: %s&amp;quot;
+        | _ -&amp;gt; failwith &amp;quot;unknown operation, should be receive&amp;quot;
+      finally
+        receivePool.CheckIn(args)  
+    member this.sendCompleted (args: SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Send -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt; ()
+          | SocketError.NoBufferSpaceAvailable
+          | SocketError.IOPending
+          | SocketError.WouldBlock -&amp;gt;
+            if not(anyErrors) then
+              anyErrors &amp;lt;- true
+              failwith &amp;quot;Buffer overflow or send buffer timeout&amp;quot;
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on send: %s&amp;quot;
+        | _ -&amp;gt; failwith &amp;quot;invalid operation, should be receive&amp;quot;
+      finally
+        sendPool.CheckIn(args)  
+    member this.Send (msg:byte[]) =
+      let s = sendPool.CheckOut()
+      Buffer.BlockCopy(msg, 0, s.Buffer, s.Offset, msg.Length)
+      socket.SendAsyncSafe(this.sendCompleted, s)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally here&amp;rsquo;s the TcpListener type.  It is responsible for creating an
+initial Connection object for each client and starts asynchronous sending
+messages to that client once a second, also notice that there is another
+BlockingCollection involved, this is somewhat simpler than the usage in the
+bocketPool as we have no buffer to manage here.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;It is possible to fill the initial Buffer property, this causes the buffer to be sent to the client as soon as it has connected to the server, this can be useful to sent initial data to the client, such as protocol definitions etc)&lt;/em&gt;
+A finite number of connections can occur before blocking will occur depending
+on the number of AsyncEventArgs in the collection, this stops potential denial
+of service attacks due to too many connection being made.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;tcplistener&#34;&gt;TcpListener&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Fes
+  open System
+  open System.Net
+  open System.Net.Sockets
+  open System.Collections.Generic
+  open System.Collections.Concurrent
+  open System.Threading
+  open SocketExtensions  
+  type TcpListener(maxaccepts, maxsends, maxreceives, size, port, backlog) as this =  
+    let createTcpSocket() =
+      new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)  
+    let createListener (ip:IPAddress, port, backlog) =
+      let s = createTcpSocket()
+      s.Bind(new IPEndPoint(ip, port))
+      s.Listen(backlog); s  
+    let listeningSocket = createListener( IPAddress.Loopback, port, backlog)  
+    let initPool (maxinpool, callback) =
+      let pool = new BlockingCollection&amp;lt;SocketAsyncEventArgs&amp;gt;(maxinpool:int)
+      let rec loop n =
+        match n with
+        | x when x &amp;lt; maxinpool -&amp;gt;
+          let saea = new SocketAsyncEventArgs()
+          saea.Completed |&amp;gt; Observable.add callback
+          pool.Add saea
+          loop (n+1)
+        | _ -&amp;gt; ()
+      loop 0
+      pool  
+    let acceptPool = initPool (maxaccepts, this.acceptcompleted)
+    let newConnection socket = new Connection (maxreceives, maxsends, size, socket)
+    let testMessage = Array.init&amp;lt;byte&amp;gt; 128 (fun _ -&amp;gt; 1uy)
+    let header = Array.init&amp;lt;byte&amp;gt; 1 (fun _ -&amp;gt; 1uy)
+    let mutable disposed = false  
+    //mutable state from original
+    let mutable anyErrors = false
+    let mutable requestCount = 0
+    let mutable numWritten = 0  
+    //async code from original
+    let asyncWriteStockQuote(connection:Connection) = async {
+      do! Async.Sleep 1000
+      connection.Send(testMessage)
+      Interlocked.Increment(&amp;amp;numWritten) |&amp;gt; ignore }  
+    //async code from original
+    let asyncServiceClient (client: Connection) = async {
+      client.Send(header)
+      while true do
+        do! asyncWriteStockQuote(client) }  
+    let startSending connection =
+      Async.Start (async {
+        try
+          use _holder = connection
+          do! asyncServiceClient connection
+        with e -&amp;gt;
+          if not(anyErrors) then
+            anyErrors &amp;lt;- true
+            Console.WriteLine(&amp;quot;server ERROR&amp;quot;)
+          raise e
+        } )  
+    let reportConnections =
+      Interlocked.Increment(&amp;amp;requestCount) |&amp;gt; ignore
+      if requestCount % 1000 = 0 then
+        requestCount |&amp;gt; printfn &amp;quot;%A Clients accepted&amp;quot;  
+    let cleanUp() =
+      if not disposed then
+        disposed &amp;lt;- true
+        listeningSocket.Shutdown(SocketShutdown.Both)
+        listeningSocket.Disconnect(false)
+        listeningSocket.Close()  
+    member this.acceptcompleted (args : SocketAsyncEventArgs) =
+      try
+        match args.LastOperation with
+        | SocketAsyncOperation.Accept -&amp;gt;
+          match args.SocketError with
+          | SocketError.Success -&amp;gt;
+            listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+            //create new connection
+            let connection = newConnection args.AcceptSocket
+            connection.Start()  
+            //update stats
+            reportConnections   
+            //async start of messages to client
+            startSending connection  
+            //remove the AcceptSocket because we will be reusing args
+            args.AcceptSocket &amp;lt;- null
+          | _ -&amp;gt; args.SocketError.ToString() |&amp;gt; printfn &amp;quot;socket error on accept: %s&amp;quot;
+        | _ -&amp;gt; args.LastOperation |&amp;gt; failwith &amp;quot;Unknown operation, should be accept but was %a&amp;quot;
+      finally
+        acceptPool.Add(args)  
+    member this.start () =
+      listeningSocket.AcceptAsyncSafe( this.acceptcompleted, acceptPool.Take())
+      while true do
+      Thread.Sleep 1000
+      let count = Interlocked.Exchange(&amp;amp;numWritten, 0)
+      count |&amp;gt; printfn &amp;quot;Quotes per sec: %A&amp;quot;  
+    member this.Close() =
+      cleanUp()  
+    interface IDisposable with
+      member this.Dispose() = cleanUp()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Its a fair bit of code to take in at once, so Ill leave you with it to ponder
+over.  Ill be explaining all of the interesting bits in more detail in part
+three&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Please feel free to leave any comments you have, especially on better use of
+functional constructs.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
