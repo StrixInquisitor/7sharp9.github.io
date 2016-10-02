@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Spritekit particle fun &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Spritekit particle fun</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<p>I have been meaning to write this post for quite a while now.  Since the first announcement of the iOS7 beta I immediately saw the list of new API&rsquo;s and <strong>SpriteKit</strong> caught my eye straight away.  I only managed to get time to briefly look over the API and saw that is wasn&rsquo;t the usual trashy API with a million method overloads, internal mutation sucker punch type thing.  It seems to be very declarative and intuitive, which makes for a nice change.  <!-- more --></p>
+
+<p>First of all lots of kudos to <a href="http://xamarin.com">Xamarin</a> for getting Xamarin iOS 7 out so swiftly, you can read about some of the new features <a href="http://blog.xamarin.com/ios-7-and-xamarin-ready-when-you-are/">here</a>.</p>
+
+<h2 id="spritekit">SpriteKit</h2>
+
+<p>So what is SpriteKit?</p>
+
+<p>SpriteKit, as you might have guessed, is a games oriented API aimed at getting you quickly up and running with 2D sprites so that you can spend more time building your games rather than mucking about with the low level stuff.  Lets have a really quick tour of what&rsquo;s in there, I don&rsquo;t want to spend long on this as you can read the <a href="https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html">programming guide</a> on the Apple site for further details.</p>
+
+<h3 id="scenes">Scenes</h3>
+
+<p>SpriteKit represents the different parts of your games with a scenes.  A scene could be the title screen or the levels in the game.  A scene is really just a just a collection of nodes which represents all of the objects currently visible.  There are several different types of node that can be used in the scene.</p>
+
+<h3 id="nodes">Nodes</h3>
+
+<p>Several different type of node are available to use, here they are:</p>
+
+<ul>
+<li>SKVideoNode - Allows videos to be embedded into the scene.</li>
+<li>SKCropNode - A crop node allows you to mask of different areas of the viewing area.</li>
+<li>SKEffectNode - The effects node allows its children to be rendered into a private frame buffer where <a href="https://developer.apple.com/library/mac/documentation/graphicsimaging/Conceptual/CoreImaging/ci_intro/ci_intro.html">Core Image</a> effects can be applied before being blended back into the main scene.</li>
+<li>SKEmitterNode - Allows particles to be placed into a scene.</li>
+<li>SKLabelNode - Allows for arbitrary text to be places into the scene.</li>
+<li>SKShapeNode - Allows path based shapes to be draw in the scene.</li>
+<li>SKSpriteNode - This is your standard textured image which can be colour blended, scaled, rotated etc.</li>
+<li>SKNode - This is the base node type from which all the others are derived.</li>
+</ul>
+
+<h3 id="transitions">Transitions</h3>
+
+<p>Transitions allow you to move from one scene to another, allowing for a animated effect to be applied during the transition.</p>
+
+<h3 id="actions">Actions</h3>
+
+<p>Actions allow you to declarative apply an action to a node.  For example you could write something like this:</p>
+
+<pre><code>SKAction *moveUp =     [SKAction moveByX:0 y:100.0 duration:1.0];
+SKAction *zoom =       [SKAction scaleTo:2.0 duration:0.25];
+SKAction *wait =       [SKAction waitForDuration: 0.5];
+SKAction *fadeAway =   [SKAction fadeOutWithDuration:0.25];
+SKAction *removeNode = [SKAction removeFromParent];
+ 
+SKAction *sequence = [SKAction sequence:@[moveUp, zoom, wait, fadeAway, removeNode]];
+[node runAction: sequence];
+</code></pre>
+
+<p>This creates a sequence of actions: moveUp, zoom, wait, fadeAway, removeNode.  The actions are reusable and stateless so they can be applied to any nodes in the scene.  If we didn&rsquo;t want the actions to be applied in a sequence we could use a group, which applies the actions in parallel.</p>
+
+<p>Don&rsquo;t worry if I&rsquo;ve scared you with Objective-C there will be none of that when we get into writing a little demo in a moment.</p>
+
+<h3 id="physics">Physics</h3>
+
+<p>The physics part of SpriteKit can be really fun to play with, its fairly easy to fill a screen full of cubes and bash them about watching the gravity and collision effects.  The physics engine looks like its based on <a href="http://box2d.org">Box2D</a> and involves adding approximate shapes for your game objects and then adding a bunch of physical properties like mass, friction, linear damping, restitution etc.</p>
+
+<hr />
+
+<h3 id="first-steps">First Steps</h3>
+
+<p>That was a really quick whistle stop tour just to give you a flavour of what&rsquo;s in there.  For this post we are going to look at the <code>SKEmitterNode</code> and see what we can do.</p>
+
+<p>The first thing to do is set up the skeleton, not an actual skeleton mind, just the skeleton of the demo.</p>
+
+<p>Create a new F# iOS Single View Application.  SpriteKit uses a subclass of <code>UIView</code> for its rendering surface and is controlled as usual by the <code>UIViewController</code> but we need to add a few things and make a few chnages to start using SpriteKit:</p>
+
+<ul>
+<li>We need to open references for <code>MonoTouch.SpriteKit</code> and <code>MonoTouch.CoreGraphics</code>.</li>
+<li>Add a couple of virtual overloads for <code>ViewDidAppear</code> and <code>ViewDidDisappear</code>.</li>
+<li>Add an instance of <code>SKScene</code> and <code>SKView</code>.<br /></li>
+<li>We will also add a function called <code>setupScene</code> which will initialise the scene, this will be called from <code>DidViewLoad</code>.</li>
+</ul>
+
+<p>That means something like this will do the trick for an empty scene:</p>
+
+<pre><code class="language-fsharp">namespace SpriteKitSingleView
+
+open System
+open System.Drawing
+open MonoTouch.Foundation
+open MonoTouch.UIKit
+open MonoTouch.SpriteKit
+open MonoTouch.CoreGraphics
+
+[&lt;Register (&quot;SpriteKitViewController&quot;)&gt;]
+type SpriteKitViewController () as x=
+    inherit UIViewController ()
+    
+    let mutable scene = Unchecked.defaultof&lt;SKScene&gt;
+    let mutable spriteView = new SKView()
+    
+    let setupScene() =
+        spriteView.Bounds &lt;- RectangleF(0.f, 0.f, x.View.Bounds.Width * UIScreen.MainScreen.Scale, 
+                                                  x.View.Bounds.Height * UIScreen.MainScreen.Scale)
+        spriteView.ShowsDrawCount &lt;- true
+        spriteView.ShowsNodeCount &lt;- true
+        spriteView.ShowsFPS &lt;- true
+            
+        x.View &lt;- spriteView
+        scene &lt;- new SKScene (spriteView.Bounds.Size, 
+                              BackgroundColor = UIColor.Blue,
+                              ScaleMode = SKSceneScaleMode.AspectFit)
+
+    override x.DidReceiveMemoryWarning () =
+        base.DidReceiveMemoryWarning ()
+
+    override x.ShouldAutorotateToInterfaceOrientation (orientation) =
+        orientation &lt;&gt; UIInterfaceOrientation.PortraitUpsideDown
+        
+    override x.ViewDidLoad () =
+        base.ViewDidLoad()
+        setupScene()        
+
+    override x.ViewDidAppear(animated) =
+        base.ViewDidDisappear (animated)
+        spriteView.PresentScene(scene)
+        
+    override x.ViewDidDisappear(animated) =
+        base.ViewDidDisappear (animated)
+        scene.RemoveAllChildren()
+        scene.RemoveAllActions() 
+</code></pre>
+
+<p>The main interesting bit here is <code>setupScene</code>.  The <code>spriteView</code> instance is created at the beginning of the <code>SpriteKitViewController's</code> <a href="http://msdn.microsoft.com/en-us/library/dd233192.aspx">implicit constructor</a>.  We need to defer creating the <code>scene</code> until later because in the constructor the <code>UIView</code> has not yet been initialised by the the framework and we would get a null reference exception.</p>
+
+<p>The first thing we do is get the dimensions of the current view, multiply it by the current scale, then apply it to the <code>spriteView</code> <code>Bounds</code> property.  The scale property is used for the various DPI modes in iOS devices.  Next we add a few debug outputs to the <code>spriteView</code> to show the current draw and node counts as well at the current frame rate.  We assign the <code>spriteView</code> to the <code>View</code> property of the <code>ViewController</code>.  And finally we create a new <code>SKScene</code>, assigning the view boundary, background colour and the scaling mode.</p>
+
+<p>As a side note we could create a storyboard and use an <code>SKView</code> as the custom class instead of the default <code>UIView</code>, doing this way means that when the <code>ViewDidLoad</code> overload is called the <code>View</code> property of the <code>SpriteKitViewControl</code> would already be initialized with a <code>SKView</code>.  This is a little more tricky in F# as we don&rsquo;t currently have the fancy UI designer integration in Xamarin Studio.  You would have to do this in Xcode and copy it to your project manually.</p>
+
+<h3 id="adding-the-sprite">Adding the Sprite</h3>
+
+<p>Next we will add a spaceship sprite:</p>
+
+<ul>
+<li>We need to add a <code>.png</code> file to the project.</li>
+<li>Create an instance of an <code>SKSprite</code>.</li>
+<li>We also need to add the sprite to the scene.</li>
+</ul>
+
+<p>Add a spaceship texture to the project and make sure that the build action is set to <code>BundleResource</code></p>
+
+<p>Next add the following to code to the <code>setupScene</code> function:</p>
+
+<pre><code class="language-fsharp">use sprite = new SKSpriteNode (&quot;Art/viper_mark_vii.png&quot;)
+sprite.Position &lt;- PointF (scene.Frame.GetMidX(), scene.Frame.GetMidY())
+sprite.Name &lt;- &quot;Ship&quot;
+scene.AddChild(sprite)
+</code></pre>
+
+<p>I added my sprite to a sub folder in the project called Art, once you start adding lots of graphics assets you probably want to make sure they are properly organised.  Next I set the spaceship&rsquo;s initial position to the center of the current scene using the <code>scene.Frame.GetMidX()</code> and <code>scene.Frame.GetMidY()</code> methods.  We give the sprite node a name using the <code>Name</code> property.  This is useful if we want to refer to the spaceship via its name in the node graph rather than using its object reference  Finally we add the sprite to the scene using <code>scene.AddChild(sprite)</code>.</p>
+
+<p>So this now gives us a single spaceship sitting in the middle of the screen:</p>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-P_PyM1pMkNE/Uj22UP6XaOI/AAAAAAAABs4/QhrH1JVRbSA/w592-h1236-no/scene&#43;with&#43;spaceship.png" />
+    
+    
+</figure>
+
+
+<h3 id="creating-particles-with-xcode-s-particle-designer">Creating Particles with xCode&rsquo;s Particle Designer</h3>
+
+<p>The great thing about SpriteKit is it also comes with a nice particle designer.  To use the particle designer you have to fire up Xcode and add a new file of type <code>SpriteKit Particle Designer</code>.  You get a choice of a eight different preset&rsquo;s particle types:  Bokeh, Fire, Fireflies, Magic, Rain, Smoke, Snow, and Spark.</p>
+
+<p>It certainly saves a lot of time developing the particle effects with the particle designer, there are loads of parameters to play around with.  If I quickly choose the rain preset and fiddle with the parameters a bit you get a star-field type effect like this:</p>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-8vyHp_i429s/Uj3B9SeUU9I/AAAAAAAABtk/GVOuegVGVlw/w1370-h1114-no/starfield.png" />
+    
+    
+</figure>
+
+
+<p>While we&rsquo;re here lets also create an exhaust plume for our spaceship, create another particle, this time using the spark preset and tweak it so it look a bit like this:</p>
+
+
+<figure >
+    
+        <img src="https://lh3.googleusercontent.com/-3F9wo4u_uUI/Uj3B9XopZeI/AAAAAAAABtg/eIDF-kRuynQ/w1370-h1114-no/exhaust.png" />
+    
+    
+</figure>
+
+
+<h3 id="adding-the-particles">Adding The Particles</h3>
+
+<p>We now have all we need to plug the particles into our demo.  Find the particles you created in Xcode and copy or move them into your project, don&rsquo;t forget to make sure that the build action to <code>BundleResource</code>.</p>
+
+<p>While I remember lets change the background colour to black, the blue looks a bit lurid and the exhaust trail wont look its best against a blue background.  Find where <code>scene</code> is initialised in <code>setupScene</code> and change it so it looks like this:</p>
+
+<pre><code class="language-fsharp">scene &lt;- new SKScene (spriteView.Bounds.Size, 
+                      BackgroundColor = UIColor.Black,
+                      ScaleMode = SKSceneScaleMode.AspectFit)
+</code></pre>
+
+<p>If you look at the <code>SKEmitterNode</code> constructor you might be slightly befuddled by the fact that it only takes either an <code>NSCoder</code>, <code>NSObjectFlag</code> or a <code>nativeint</code>.   To help us out we create a nice little function to do the dirty work for us:</p>
+
+<pre><code class="language-fsharp">module spritekit =
+    type SKEmitterNode with
+        static member fromResource res =
+            let emitterpath = NSBundle.MainBundle.PathForResource (res, &quot;sks&quot;)
+            NSKeyedUnarchiver.UnarchiveFile(emitterpath) :?&gt; SKEmitterNode
+</code></pre>
+
+<p>The <code>.sks</code> files produced by Xcode are archive files so we need to get them into a format that works in our project.  First we find the full path for the resource as its embedded in our app bundle - <code>NSBundle.MainBundle.PathForResource (res, &quot;sks&quot;)</code>, next we use the  <code>UnarchiveFile</code> method from the <code>NSKeyedUnarchiver</code> type to get an <code>NSObject</code>.  We finally cast the <code>NSObject</code> as an <code>SKEmitterNode</code> before it is returned.</p>
+
+<p>The function shown above is added as a static extension method to the <code>SKEmitterNode</code>.  We could of also added this using a module or even just a simple function but at the moment we don&rsquo;t have a clear view of any other extensions that we might need so we&rsquo;ll just keep it tucked up in the <code>SKEmitterNode</code> type for now.</p>
+
+<p>We can now use this function to load and add our star-field to our scene.  Add this piece of code before the spaceship code we added previously:</p>
+
+<pre><code class="language-fsharp">use stars = SKEmitterNode.fromResource &quot;Stars&quot;
+stars.Position &lt;- PointF(scene.Frame.GetMidX(), scene.Frame.GetMaxY())
+scene.AddChild(stars)
+</code></pre>
+
+<p>Its pretty simple now we have the helper function to load the star-field as a resource.  Notice we add the star-field as a child of the scene and position it at the middle X coordinate of the screen (<code>scene.Frame.GetMidX()</code>) and the maximum Y coordinate (<code>scene.Frame.GetMaxY()</code>).  This places the star-field centrally at the top of the screen.</p>
+
+<p>We can now go ahead and add our exhaust plume in the same way:</p>
+
+<pre><code class="language-fsharp">use flame = SKEmitterNode.fromResource &quot;Fire&quot;
+flame.Position &lt;- PointF(0.f, -60.f)
+sprite.AddChild(flame)
+</code></pre>
+
+<p>The only difference here is we position the exhaust at location X = 0.0, Y = -60.0 and add the exhaust as a child of the spaceship.  This means that the exhaust is offset -60.0 in the Y axis from the spaceships location, this is because child nodes inherit their parents coordinate system.  This makes groups of sprites easy to animate and manipulate as you don&rsquo;t have to work out all the offsets.</p>
+
+<p>If we run our demo now it starts to look more interesting:</p>
+
+
+<figure >
+    
+        <img src="https://lh6.googleusercontent.com/-cyiCu4dZOW4/Uj3QKqZINOI/AAAAAAAABuE/FAoU_bizdUk/w698-h1238-no/exhaust&#43;and&#43;starfield.png" />
+    
+    
+</figure>
+
+
+<p>That&rsquo;s all for now, I hope you have enjoyed this little look at particles in SpriteKit.  If you want to download the demo project you can find it in my <a href="https://github.com/7sharp9/SpriteKit-Fsharp-Samples">GitHub repo</a>.</p>
+
+<p>Until next time!</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/0/05/Foo_Fighters_Wasting_Light_Album_Cover.jpg" style="margin: 0"
+                 alt="Foo Fighters - Wasting Light" />
+            <figcaption>
+                <h6>Foo Fighters - Wasting Light</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/4/43/AIC_Unplugged.jpg" style="margin: 0"
+                 alt="Alice In Chains - Unplugged" />
+            <figcaption>
+                <h6>Alice In Chains - Unplugged</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/2/2d/PearlJam-Ten2.jpg" style="margin: 0"
+                 alt="Pearl Jam - Ten" />
+            <figcaption>
+                <h6>Pearl Jam - Ten</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/games/">Games</a>
+            
+                 <a href="/tags/spritekit/">SpriteKit</a>
+            
+                 <a href="/tags/ios/">iOS</a>
+            
+                 <a href="/tags/xamarin/">Xamarin</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Spritekit%20particle%20fun&url=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f20%2f2013-09-20-sprite-kit-particle-fun%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f20%2f2013-09-20-sprite-kit-particle-fun%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2013%2f09%2f20%2f2013-09-20-sprite-kit-particle-fun%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

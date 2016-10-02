@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Sockets and Bockets 1 &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Sockets and Bockets 1</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2011-01-13" itemprop="datePublished">Thu, Jan 13, 2011</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h3 id="welcome-to-part-1">Welcome to part 1</h3>
+
+<p>A while back I read an interesting article by <em>Brian McNamara</em> <a href="http://lorgonblog.wordpress.com/2010/03/28/f-async-on-the-server-side/">f-async-on-the-server-side</a>
+which describes C# and F# versions of a simple asynchronous
+socket server, one of the driving forces behind the article was how F# can
+wrap the traditional asynchronous model with <a href="http://msdn.microsoft.com/en-us/library/dd233250.aspx">Asynchronous Workflows</a>, this
+produces nice clean simple code compared to the C# version which uses lambda
+expressions, the code looks quite ugly in this style!  However thats not the
+end of the story, a lot of memory fragmentation can occur using the APM model
+when there is a high throughput, so I thought I would see if I could take this
+a step further&hellip;<!-- more --></p>
+
+<p>There are some lesser known methods that were added to the <a href="http://msdn.microsoft.com/en-us/library/system.net.sockets.socket.aspx">Socket</a>
+class in .Net 2.0 SP1: ReceiveAsync, SendAsync, ConnectAsync and DisconnectAsync.
+These methods use an event driven model and <strong>do not</strong> result in the creation
+of AsyncResult objects, these are created on every asynchronous call in the
+traditional Socket Begin/End methods.  Once you have thousands of clients
+sending and receiving thousands of messages all of the object creation can
+really have an adverse effect on performance on the garbage collected, you
+will regularly see the AsyncResult objects hitting Generation 1 and 2.</p>
+
+<p>To use the xxxAsync methods you have pass a <a href="http://msdn.microsoft.com/en-us/library/system.net.sockets.socketasynceventargs.aspx">SocketAsyncEventArgs</a>object which is
+assigned callback method and a buffer, the callback method called
+asynchronously when the operation completes and is passed the corresponding
+SocketAsyncEventArgs object, this allows you query the buffer in a receive
+operation.</p>
+
+<p>The scope of this series of articles is to initially replicate Brian&rsquo;s demo
+using F# and a pool of SocketAsyncEventArgs and a contiguous block of memory
+to hold the data being sent and received on the Socket, this again further
+reduces memory fragmentation on the send and receive buffers.</p>
+
+<p>I have successfully developed an enterprise server for a client using this
+method, it processed thousands of simultaneous connected clients and messages,
+key components in the system were the High performance sockets, a pipeline
+processor and a highly efficiency means of data compaction, I will only be
+including the High performance sockets in this series but the other components
+will be at a later date in separate articles.  Interestingly all of the code
+was originally developed in c# but had a distinctly functional style, even the
+Pipeline Processing is reminiscent of functional composition using the F#
+pipeline operator <strong>|&gt;</strong> although an analogue of attach and detach was used
+which in itself is declarative.</p>
+
+<p>Although there is no code in this article there is plenty in the next!</p>
+
+<p>Please feel free to leave comments or add any suggestions, hope to see you
+next time&hellip;</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/async-workflows/">Async Workflows</a>
+            
+                 <a href="/tags/csharp/">CSharp</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/gc/">GC</a>
+            
+                 <a href="/tags/memory-fragmentation/">Memory fragmentation</a>
+            
+                 <a href="/tags/sockets/">Sockets</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Sockets%20and%20Bockets%201&url=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f13%2f2011-01-13-sockets-and-bockets-1%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f13%2f2011-01-13-sockets-and-bockets-1%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2011%2f01%2f13%2f2011-01-13-sockets-and-bockets-1%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = '7sharp9';
+    var disqus_identifier = 'http:\/\/7sharpnine.com\/2011\/01\/13\/2011-01-13-sockets-and-bockets-1\/';
+    var disqus_title = 'Sockets and Bockets 1';
+    var disqus_url = 'http:\/\/7sharpnine.com\/2011\/01\/13\/2011-01-13-sockets-and-bockets-1\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

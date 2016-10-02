@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flamegraph on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/flamegraph/</link>
+    <description>Recent content in Flamegraph on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Sun, 29 May 2016 20:35:29 +0100</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/flamegraph/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>flame on</title>
+      <link>http://7sharpnine.com/2016/05/29/flame-on/</link>
+      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/05/29/flame-on/</guid>
+      <description>
+
+&lt;p&gt;A few weeks back I posted on Twitter that I was experimenting with flame graphs, In this post I will share how this was accomplished.&lt;/p&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Lately I have been flame graphing &lt;a href=&#34;https://twitter.com/hashtag/fsharp?src=hash&#34;&gt;#fsharp&lt;/a&gt; performance just for fun.  You cant have too many pretty graphs! :-) &lt;a href=&#34;https://t.co/3gu9pOJp28&#34;&gt;pic.twitter.com/3gu9pOJp28&lt;/a&gt;&lt;/p&gt;&amp;mdash; Dave Thomas (@7sharp9_exhumed) &lt;a href=&#34;https://twitter.com/7sharp9_exhumed/status/721829320646389762&#34;&gt;April 17, 2016&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+&lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
+
+&lt;p&gt;First of all the requirements, I&amp;rsquo;m assuming your using a Mac just as I am.  If you are not then you might be able to use x-perf for windows check out &lt;a href=&#34;https://randomascii.wordpress.com/2013/03/26/summarizing-xperf-cpu-usage-with-flame-graphs/&#34;&gt;summarizing-xperf-cpu-usage-with-flame-graphs&lt;/a&gt; for information in that area.  I don&amp;rsquo;t really use Windows that often but if I do happen to try this out on Windows then I&amp;rsquo;ll pop back here and update this post.&lt;/p&gt;
+
+&lt;p&gt;OK, so back to requirements, a Mac, Mono Installation, &lt;a href=&#34;https://developer.apple.com/xcode/&#34;&gt;Xcode&lt;/a&gt; installed so that you can use &lt;a href=&#34;https://developer.apple.com/library/tvos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/#//apple_ref/doc/uid/TP40004652-CH3-SW1&#34;&gt;Instruments&lt;/a&gt; to collect trace information, clone the FlameGraph repo itself:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/brendangregg/FlameGraph
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The FlameGraph repo is a bunch of scripts to help process the trace data and produce an svg.  You can read more about FlameGraphs here: &lt;a href=&#34;http://www.brendangregg.com/flamegraphs.html&#34;&gt;http://www.brendangregg.com/flamegraphs.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;aot-the-framework&#34;&gt;AOT the framework&lt;/h3&gt;
+
+&lt;p&gt;Next step is to AOT compile all the mono runtime assemblies, you can do this by running the following commands from your mono installation.  For me this would be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /Library/Frameworks/Mono.framework/Versions/4.4.0/lib/mono/
+for i in `find gac -name &#39;*dll&#39;` */mscorlib.dll; do
+   mono --aot $i
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;aot-your-app&#34;&gt;AOT Your app&lt;/h3&gt;
+
+&lt;p&gt;Now you need to AOT you applications files with the same command&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mono --aot myApp.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;attaching-instruments&#34;&gt;Attaching Instruments&lt;/h3&gt;
+
+&lt;p&gt;Now you are ready to run your app and attach Instruments or have Instruments launch your app.&lt;/p&gt;
+
+&lt;p&gt;For simplicity I opted to add this to the beginning of my app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;printfn &amp;quot;Press any key to start&amp;quot;
+Console.ReadKey() |&amp;gt; ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way I could just launch my app (noting the process id) and use the process browser within Instruments to attach.&lt;br /&gt;
+Now launch Instruments and select the Time Profiler template:&lt;/p&gt;
+
+
+&lt;figure class=&#34;6u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/timeprofiler-template.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can tweak the sampling interval with the settings on the right, in my example below I was using 40us because it was a really fast executing demo.&lt;/p&gt;
+
+&lt;p&gt;Use the process browser in Instruments to choose the mono process running my app e.g. mono (16314).&lt;/p&gt;
+
+&lt;p&gt;Now that instruments is attached hit the big red record button and hit any key on you app to start collecting data.  When you are finished just hit the top button in Instruments.&lt;/p&gt;
+
+&lt;p&gt;You should end up with something similar to this, I used a few cycles of my 68000 emulator to get this data:&lt;/p&gt;
+
+
+&lt;figure class=&#34;8u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/trace.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;h3 id=&#34;exporting-the-data&#34;&gt;Exporting The Data&lt;/h3&gt;
+
+&lt;p&gt;Exporting the data is pretty easy, use expand all on a node in the collected data using &lt;code&gt;Cmd cLick&lt;/code&gt;, you can also add filters to the data, I used &lt;code&gt;Atari&lt;/code&gt; in the screen-shot above to constrain the output to nodes that contained &lt;code&gt;Atari&lt;/code&gt;.  Now select export from the instrument menu:
+
+&lt;figure class=&#34;6u&#34;&gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/export.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;producing-the-flamegraph&#34;&gt;Producing the FlameGraph&lt;/h3&gt;
+
+&lt;p&gt;Now you can open a move to the flamegraph repo that you cloned earlier and execute the following command replacing myoutput.csv|svg with your input/outputs.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./stackcollapse-instruments.pl myoutput.csv | ./flamegraph.pl &amp;gt;myoutput.svg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should now have a funky FlameGraph!&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;http://7sharpnine.com/img/flame-on/68kcpusteps.svg&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You could quite easily post process the csv output to clean up the mangled names that are a result of the AOT process.&lt;/p&gt;
+
+&lt;p&gt;Until next time &amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

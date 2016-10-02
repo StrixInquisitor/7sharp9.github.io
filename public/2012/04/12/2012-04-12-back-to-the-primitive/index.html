@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Back to the Primitive &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Back to the Primitive</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    <p>In this post we are going <strong>back to the primitive</strong>.  No it&rsquo;s not about the same named song by Soulfly, <em>(which incidentally does contains F# notes)</em> but a return to thread synchronisation primitives and their asynchronous counterparts.</p>
+
+<p>We are going to be looking at an asynchronous version of the <a href="http://msdn.microsoft.com/en-us/library/system.threading.manualresetevent.aspx">ManualResetEvent</a>.  This was
+recently covered by Stephen Toub on the <a href="http://blogs.msdn.com/b/pfxteam/archive/2012/02/11/10266920.aspx">pfx team blog</a>.  We will be taking a slightly different view on
+this as we will be using asynchronous workflows which will give us nice idiomatic usage within F#.</p>
+
+<p>First lets look of the shape of the type that Stephen defined:</p>
+
+<pre><code>public class AsyncManualResetEvent 
+{ 
+    public Task WaitAsync(); 
+    public void Set(); 
+    public void Reset(); 
+}
+</code></pre>
+
+<p>Now this can be used from within F# by using the <code>Async.AwaitTask</code> function from the Async module but this is like wrapping one asynchronous paradigm with another, and
+although this does work, what if you want to avoid the overhead of wrappers and stay strictly within async workflows.</p>
+
+<pre><code class="language-fsharp">type asyncManualResetEvent() =
+    member x.WaitAsync() : unit -&gt; Async&lt;bool&gt;
+    member x.Set() : unit -&gt; unit
+    member x.Reset() : unit -&gt; unit
+</code></pre>
+
+<p>That&rsquo;s what we want to see!  I don&rsquo;t want to get into the details of the description of how the C# version works as Stephen does a very good job of that already.  What I will explain though is how we essentially do the same thing while staying with the realm of functional programming.  As we are getting into the lower lever details no doubt we will have to start relying on some low level locking primitives like Monitors, Semaphores, and Interlocked operations, even the F# core libraries have a
+cornucopia of those.</p>
+
+<p>Lets look at the first member <code>WaitAsync()</code>.  The first step is to create a something to store the result of the operation, all we will just be storing and returning
+asynchronously is a boolean to indicate that the wait handle has been set.  To do this we use one of the types from the
+<a href="http://fsharppowerpack.codeplex.com/">F# power pack</a> <code>AsyncResultCell&lt;'T&gt;</code>.  I think that such a type should of been exposed from the F# core libraries but it was
+omitted for some reason.  There is a type called <code>ResultCell&lt;'T&gt;</code> with much the same functionality in the FSharp.Core.Control namespace but it is marked internal so
+it&rsquo;s not available for our use.</p>
+
+<p>We declare a <a href="http://msdn.microsoft.com/en-us/library/dd233186.aspx">reference cell</a> of type <code>AsyncResultCell&lt;'T&gt;</code> and then create the <code>WaitAsync()</code> member, all we have
+to do is dereference the value of the reference cell with <code>!</code> and call its <code>AsyncResult</code> member, this gives us an <code>Async&lt;bool&gt;</code> which we can easily use in an asynchronous workflow.</p>
+
+<pre><code class="language-fsharp">type asyncManualResetEvent() =
+    let aResCell = ref &lt;| AsyncResultCell&lt;_&gt;()
+
+    member x.WaitAsync() = (!aResCell).AsyncResult
+</code></pre>
+
+<p>The next bit is fairly simple too.  All we need to do is dereference the value of the reference cell, and invoke the <code>RegisterResult</code> member by passing in a value of
+ <code>AsyncOk(true)</code>.  The boolean value of true will be used by the type inference system to constrain the value of the <code>Async&lt;_&gt;</code> returned from <code>WaitAsync</code>.</p>
+
+<pre><code class="language-fsharp">    member x.Set() = (!aResCell).RegisterResult(AsyncOk(true))
+</code></pre>
+
+<p>The last part is the most complex <em>(as usual)</em>.  Here we create a recursive function called <code>swap</code> that will try to exchange the <code>AsyncResultCell&lt;'T&gt;</code> for a new
+one.  We dereference the reference cell to <code>currentValue</code>, then we use a CAS (Compare And Swap) operation to compare the <code>aResCell</code> with <code>currentValue</code> and if they
+are equal <code>newVal</code> will replace <code>aResCell</code>.  On the next line if the result of the CAS operation means that <code>result</code> and <code>currentValue</code> are equal then we are finished,
+otherwise we spin the current thread for 20 cycles using <code>Thread.SpinWait 20</code> before retrying the operation via recursion <code>swap newVal</code>.  This will be a lot less
+expensive than switching to user or kernel mode locking, and the period of contention between threads should be very small.  Finally the swap operation is started
+by passing in a new <code>AsyncResultCell&lt;'T&gt;</code>.</p>
+
+<p>There are various other methods we could of used, for instance we could of wrapped a <code>ManualResetEvent</code> with a call to <code>Async.AwaitWaitHandle</code>, although this
+would of meant using the kernel mode locking of the <code>ManualResetEvent</code> which is a bit more expensive.</p>
+
+<p>In Stephen Toub&rsquo;s post he mentions Task&rsquo;s being orphaned due to the <code>Reset()</code> method being called before the <code>Task&lt;'T&gt;</code> has been completed, that shouldn&rsquo;t happen in our
+implementation due the the closures being stored internally for completion by the async infrastructure.  Heres a quick test harness to make sure everything works as expected anyway.</p>
+
+<pre><code class="language-fsharp">    member x.Reset() =
+        let rec swap newVal = 
+            let currentValue = !aResCell
+            let result = Interlocked.CompareExchange&lt;_&gt;(aResCell, newVal, currentValue)
+            if obj.ReferenceEquals(result, currentValue) then ()
+            else Thread.SpinWait 20
+                 swap newVal
+        swap &lt;| AsyncResultCell&lt;_&gt;()
+</code></pre>
+
+<pre><code class="language-fsharp">let amre = asyncManualResetEvent()
+let x = async{let! x = amre.WaitAsync()
+              Console.WriteLine(&quot;First signalled&quot;)}
+
+let y = async{let! x = amre.WaitAsync()
+             Console.WriteLine(&quot;Second signalled&quot;)}
+
+let z = async{let! x = amre.WaitAsync()
+              Console.WriteLine(&quot;Third signalled&quot;)}
+//start async workflows x and y
+Async.Start x
+Async.Start y
+
+//reset the asyncManualResetEvent, this will test whether the async workflows x and y 
+// are orphaned due to the AsyncResultCell being recycled.
+amre.Reset()
+
+//now start the async z
+Async.Start z
+
+//we set a single time, this should result in the three async workflows completing
+amre.Set()
+
+Console.ReadLine() |&gt; ignore
+</code></pre>
+
+<p>Here we can see everything works out as we expected:</p>
+
+
+<figure >
+    
+        <img src="https://lh6.googleusercontent.com/-NYIKC5Gaahs/T4YAQGtP9RI/AAAAAAAABR8/_cTOriC1_Fw/amre.png" />
+    
+    
+</figure>
+
+
+<p>Thats all there is too it, next time I will be exploring an asyncAutoResetEvent in much the same vein.</p>
+
+<p>Until next time&hellip;</p>
+
+<hr style="margin: 1em 0">
+<h1 id="essential-listening">Essential listening:</h1>
+
+
+<div class="pure-g">
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/f/fb/Zeitgeist_cover.png" style="margin: 0"
+                 alt="Smashing Pumpkins Zeitgeist" />
+            <figcaption>
+                <h6>Smashing Pumpkins Zeitgeist</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/3/34/Primitive.png" style="margin: 0"
+                 alt="Soulfly Primitive" />
+            <figcaption>
+                <h6>Soulfly Primitive</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  <div class="">
+    <div style="width: 20%; float: left;padding: 0 .2em .2em 0">
+        <figure style="margin: 0">
+            <img src="http://upload.wikimedia.org/wikipedia/en/0/0d/FooFighters-FooFighters.jpg" style="margin: 0"
+                 alt="FooFighters" />
+            <figcaption>
+                <h6>FooFighters</h4>
+            </figcaption>
+        </figure>
+    </div>
+  </div>
+  
+
+</div>
+
+
+
+
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/async/">Async</a>
+            
+                 <a href="/tags/tpl/">TPL</a>
+            
+                 <a href="/tags/threading/">Threading</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Back%20to%20the%20Primitive&url=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f12%2f2012-04-12-back-to-the-primitive%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f12%2f2012-04-12-back-to-the-primitive%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2012%2f04%2f12%2f2012-04-12-back-to-the-primitive%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

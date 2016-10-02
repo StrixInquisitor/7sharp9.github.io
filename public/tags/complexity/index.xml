@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Complexity on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/complexity/</link>
+    <description>Recent content in Complexity on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Mon, 04 Apr 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/complexity/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Pipeline processing 3</title>
+      <link>http://7sharpnine.com/2011/04/04/2011-04-04-pipeline-processing-3/</link>
+      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/04/04/2011-04-04-pipeline-processing-3/</guid>
+      <description>
+
+&lt;p&gt;Ok so I have been offline for a while now, what with starting a new financial contract in London and not having any broadband access for a while.  I have
+been working on something, honest!&lt;/p&gt;
+
+&lt;p&gt;Since the last post I have been reflecting on the pipeline design and it had a distinct object orientated feel to it that I wasnt happy with, so I have
+amended the structure of the code and come up with the following which simplifies in some areas and expands in others&amp;hellip;&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module Pipeline
+  open System.Collections.Concurrent
+
+  [&amp;lt;Interface&amp;gt;]
+  type IPipelineInput&amp;lt;&#39;a&amp;gt; =
+    abstract Insert: &#39;a -&amp;gt; unit
+ 
+  [&amp;lt;Interface&amp;gt;]
+  type IPipelineConnection&amp;lt;&#39;a&amp;gt; =
+    abstract Attach: IPipelineInput&amp;lt;&#39;a&amp;gt; -&amp;gt; unit
+    abstract Detach: IPipelineInput&amp;lt;&#39;a&amp;gt; -&amp;gt; unit
+ 
+  [&amp;lt;Interface&amp;gt;]
+  type IPipeline&amp;lt;&#39;a,&#39;b&amp;gt; =
+    inherit IPipelineConnection&amp;lt;&#39;b&amp;gt;
+    inherit IPipelineInput&amp;lt;&#39;a&amp;gt;
+
+  type PipelineStage&amp;lt;&#39;a,&#39;b&amp;gt;(processor, router: seq&amp;lt;IPipelineInput&amp;lt;&#39;b&amp;gt;&amp;gt; * &#39;b -&amp;gt; seq&amp;lt;IPipelineInput&amp;lt;&#39;b&amp;gt;&amp;gt;, ?overflow, ?capacity, ?blockingTime) =
+    let processor = processor
+    let router = router  
+    let createBlockingCollection x =
+        match x with
+        | Some c -&amp;gt; new BlockingCollection&amp;lt;&#39;a&amp;gt;(c:int)
+        | None -&amp;gt; new BlockingCollection&amp;lt;&#39;a&amp;gt;()  
+    let buffer = createBlockingCollection capacity
+    let routes = ref List.empty&amp;lt;IPipelineInput&amp;lt;&#39;b&amp;gt;&amp;gt;
+    let queuedOrRunning = ref false  
+    let blocktime =
+      match blockingTime with
+      | Some b -&amp;gt; b
+      | None -&amp;gt; 250  
+    let consumerLoop = async {
+      try
+        let rec loop()=
+          let item = ref Unchecked.defaultof&amp;lt;_&amp;gt;
+          let taken = buffer.TryTake(item, blocktime)
+          if taken then
+              do !item
+              |&amp;gt; processor
+              |&amp;gt; Seq.iter (fun z -&amp;gt;
+              (match !routes with
+               | [] -&amp;gt; ()(*we cant route with no routes*)
+               | _ -&amp;gt; do router (!routes, z) |&amp;gt; Seq.iter (fun r -&amp;gt; (r.Insert z ))) )
+              loop()
+          else ()(*exit nothing to consume in time limit*)
+        loop()
+      with e -&amp;gt; raise e
+      }  
+    member this.ClearRoutes = routes := []  
+    interface IPipelineInput&amp;lt;&#39;a&amp;gt; with
+      member this.Insert payload =
+        let added = buffer.TryAdd(payload, blocktime)
+        if added then
+          //begin consumer loop
+          if not !queuedOrRunning then
+            lock consumerLoop (fun() -&amp;gt;
+            Async.Start(async {do! consumerLoop })
+            queuedOrRunning := true)
+          else()
+        else
+          //overflow here if function passed
+          match overflow with
+          | Some t -&amp;gt;  payload |&amp;gt; overflow.Value
+          | None -&amp;gt; ()  
+    interface IPipelineConnection&amp;lt;&#39;b&amp;gt; with
+      member this.Attach (stage) =
+        let current = !routes
+        routes := stage :: current  
+      member this.Detach (stage) =
+        let current = !routes
+        routes := List.filter (fun el -&amp;gt; el &amp;lt;&amp;gt; stage) current  
+    static member Attach (a:IPipelineConnection&amp;lt;_&amp;gt;) (b) =
+      a.Attach b ;b  
+    static member Detach (a: IPipelineConnection&amp;lt;_&amp;gt;) (b) =
+      a.Detach b ;a  
+    static member (++&amp;gt;) (a:IPipelineConnection&amp;lt;_&amp;gt;, b) =
+      a.Attach (b) ;b  
+    static member (--&amp;gt;) (a:IPipelineConnection&amp;lt;_&amp;gt;, b) =
+      a.Detach b ;a  
+    static member (&amp;lt;&amp;lt;--) (a:IPipelineInput&amp;lt;_&amp;gt;, b:&#39;b) =
+      a.Insert b  
+    static member (--&amp;gt;&amp;gt;) (b,a:IPipelineInput&amp;lt;_&amp;gt;) =
+      a.Insert b
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;summary&#34;&gt;Summary.&lt;/h3&gt;
+
+&lt;p&gt;I only want to summarise the code as I think its fairly straight forward to
+see whats going on.&lt;/p&gt;
+
+&lt;h3 id=&#34;interfaces&#34;&gt;Interfaces&lt;/h3&gt;
+
+&lt;p&gt;We have two main interfaces defined &lt;strong&gt;IPipelineInput&amp;lt;&amp;lsquo;a&amp;gt;&lt;/strong&gt; and
+**IPipelineConnection&amp;lt;&amp;lsquo;a&amp;gt;, **as you can tell by the names they are involved
+with connecting the pipeline together and getting information into the
+pipeline.  Those two interfaces are merged together in the IPipeline&amp;lt;&amp;lsquo;a, &amp;lsquo;b&amp;gt;
+interface, this keeps a nice separation between connecting and inserting into
+the pipeline, it also makes implementation easier and allows the interfaces to
+be implemented in other areas of code that need to talk to or connect to a
+pipeline.&lt;/p&gt;
+
+&lt;h3 id=&#34;internals&#34;&gt;Internals&lt;/h3&gt;
+
+&lt;p&gt;Inside the pipeline we have the bounded blocking queue which is implemented by
+the BlockingCollection from TPL. This is used to store the pipeline payloads
+that are waiting to be processed.&lt;/p&gt;
+
+&lt;p&gt;The consumerLoop function is recursive and continually tries to take items
+from the blocking collection processing and routing each one to the next
+pipeline stage.&lt;/p&gt;
+
+&lt;p&gt;The processor is a function that transforms from type &amp;lsquo;a to type &amp;lsquo;b.&lt;/p&gt;
+
+&lt;p&gt;The router is a function that takes a sequence of IPipelineInput&amp;lt;&amp;lsquo;b&amp;gt; and also
+the payload &amp;lsquo;b it returns a sequence of IPipelineInput&amp;lt;&amp;lsquo;b&amp;gt;.  What this
+effectively means is that we can route by the connected stages (i.e. round
+robin routing, multi-cast routing.)   Or we could route by payload contents
+(i.e. if the payload contains a certain bytes sequence we could choose a
+certain IPipelineInput&amp;lt;&amp;lsquo;b&amp;gt;.)&lt;/p&gt;
+
+&lt;p&gt;Each item taken is passed to the processor and router via pipeline (&lt;strong&gt;|&amp;gt;&lt;/strong&gt;) and
+Seq operations, recursively calling itself until an item can no longer be
+retrieved from the buffer.&lt;/p&gt;
+
+&lt;p&gt;The implementation of IPipelineInput&amp;lt;&amp;lsquo;a&amp;gt;.Insert is the counterpart to the
+previous function. It first tries to inset the item into the bounded blocking
+queue, if this cannot be done then the overflow function is called if one is
+present. Next the async consumer loop is started if it is not already running.
+The idea behind this is that by keeping the payload processing running on the
+thread pool while there is work to do it will cut down on the number of
+context switches between threads.  Once an item cannot be taken from the
+bounding blocking queue the loop will exit.&lt;/p&gt;
+
+&lt;p&gt;The rest of the code is pretty standard stuff and should be pretty easy to
+follow.&lt;/p&gt;
+
+&lt;p&gt;I also define some symbolic operations to simply constructing and using the
+pipeline:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;++&amp;gt;&lt;/strong&gt; Attaches the pipeline stage on the right hand side to the one on the left. &lt;strong&gt;&amp;ndash;&amp;gt;&lt;/strong&gt; Detaches the pipelinestage on the right from the one on the left. &lt;strong&gt;&amp;lt;&amp;lt;&amp;ndash;&lt;/strong&gt; Inserts a payload on the right into the pipeline stage on the left. &lt;strong&gt;&amp;ndash;&amp;gt;&amp;gt;&lt;/strong&gt; Inserts a payload on the left hand side into the pipeline stage on the right.&lt;br /&gt;
+These help to keep a nice terse description of the pipeline, once things get a little more complex other operators may be required, the now discontinued
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/devlabs/dd795202.aspx&#34;&gt;Axiom&lt;/a&gt; had a whole host of these, its a pity Microsoft dropped the language.&lt;/p&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;Heres a quick sample pipeline showing the pipeline in use:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Stage 1 takes a string and splits it based on the &amp;lsquo;,&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Stage 2 reverses each string.&lt;/li&gt;
+&lt;li&gt;Stage 3 reverses the string back to the original.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module program
+  open System
+  open Pipeline  
+  let consoleLock = new obj()  
+  let split del n (s:string) =
+    lock consoleLock (fun() -&amp;gt;
+    do printfn &amp;quot;%A:before split %A&amp;quot; n s
+    let split = s.Split([|del|])
+    do printfn &amp;quot;%A:after: split into: %A&amp;quot; n split
+    split |&amp;gt; Array.toSeq)  
+  let reverse (s:string) =
+    new string(s |&amp;gt; Seq.toArray |&amp;gt; Array.rev)  
+  let oneToSingleton a b f=
+    lock consoleLock (fun() -&amp;gt;
+      printfn &amp;quot;%A:before reverse %A&amp;quot; a b
+      let result = b |&amp;gt; f
+      printfn &amp;quot;%A:after reverse %A&amp;quot; a result
+      result|&amp;gt; Seq.singleton)  
+  let OneToSeqRev a b = oneToSingleton a b reverse   
+  ///Simply picks the first route
+  let basicRouter( r, i) =
+    let head = Seq.head r
+    Seq.singleton head  
+  let p1 = PipelineStage( split &#39;,&#39; &amp;quot;1&amp;quot;, basicRouter)
+  let p2 = PipelineStage( OneToSeqRev &amp;quot;2&amp;quot;, basicRouter)
+  let p3 = PipelineStage( OneToSeqRev &amp;quot;3&amp;quot;, basicRouter)  
+  p1 ++&amp;gt; p2 ++&amp;gt; p3 |&amp;gt; ignore  
+  let generateCircularSeq (lst:&#39;a list) =
+    let rec next () =
+      seq {
+        for element in lst do
+          yield element
+        yield! next()
+      }
+    next()  
+  for str in [&amp;quot;John,Paul,George,Ringo&amp;quot;]
+  |&amp;gt; generateCircularSeq
+  |&amp;gt; Seq.take 10
+    do  str --&amp;gt;&amp;gt; p1  
+  let x = Console.ReadKey()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see the assignment of the pipeline stages is pretty simple as is the composition of multiple stages.  This was often one of the most difficult
+areas while developing a similar pipelines in C# you could often find yourself with a few hundred lines of setup code which was a often a nightmare to debug
+a few weeks later.&lt;/p&gt;
+
+&lt;p&gt;Hopefully I have whet your appetite with pipelines, in a future article I will be combining socket operations with pipeline stages to produce a flexible
+framework to deal with high throughput network applications.&lt;/p&gt;
+
+&lt;p&gt;As always I appreciate any comments, until next time&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Pipeline processing 2</title>
+      <link>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <description>
+
+&lt;h3 id=&#34;welcome-to-pipeline-processing-part-2&#34;&gt;Welcome to pipeline processing part 2.&lt;/h3&gt;
+
+&lt;p&gt;I feel I need to backtrack slightly from the previous post, having worked with
+pipelines for quite some time I have the advantage of knowing all of the
+details that may be alluded to in these articles without being effected by any
+omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going
+to try and rectify that a bit now.  If you have any queries then please leave
+a comment and I will try to address them in further articles. Pipelines are a
+simple concept but in practice there can be some caveats and things to bear in
+mind, sometime the whole mindset of development team can be against them
+unless they can see the bigger picture&amp;hellip;&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;First of all one of the most important things to bear in mind with a pipeline
+is that you are only going to be as fast as your slowest stage, if one stage
+is ten times slower than another then it will be waiting for input most of the
+time, we need to make this more efficient.&lt;/p&gt;
+
+&lt;h4 id=&#34;premature-optimisation&#34;&gt;Premature Optimisation&lt;/h4&gt;
+
+&lt;p&gt;Lots of developers out there have the &lt;a href=&#34;http://www.c2.com/cgi/wiki?PrematureOptimization&#34;&gt;premature optimisation is the root of
+all evil&lt;/a&gt; mindset and will
+quote this out loud to you when you mention performance early on.  I&amp;rsquo;m not
+advocating premature optimisation, in this instance performance is key, if one
+stage is out of kilter with the rest then we are going to be running at that
+pace of the slowest stage, if that&amp;rsquo;s too slow for the requirements then you
+are screwed.&lt;/p&gt;
+
+&lt;p&gt;The more I think about performance the more I believe its an essential part of
+creating code. There are too many developers these days that will produce
+sloppy unrefined plain bad code.  I&amp;rsquo;m a keen believer in producing quality
+code that you can be proud of, and part of that is having clean code that&amp;rsquo;s
+both efficient and works.  I think some of this boils down to a feature driven
+approach that measures developers solely in terms of features added, take the
+typical &lt;a href=&#34;http://en.wikipedia.org/wiki/Burn_down_chart&#34;&gt;burn down chart&lt;/a&gt; that
+you would use in &lt;a href=&#34;http://en.wikipedia.org/wiki/Agile_software_development&#34;&gt;agile software development&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://alistair.cockburn.us/get/1880&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There is nowhere on this chart that measures whether the code is good or bad or runs to performance requirements.  In the future I may do an article on
+integrating code quality into your build process, its something I have been thinking about doing for a while now.&lt;/p&gt;
+
+&lt;p&gt;While I&amp;rsquo;m talking about performance you also might want to check out Joe Duffy&amp;rsquo;s post on &lt;a href=&#34;http://www.bluebyt
+esoftware.com/blog/2010/09/06/ThePrematureOptimizationIsEvilMyth.aspx&#34;&gt;The &amp;lsquo;premature optimization is evil&amp;rsquo; myth&lt;/a&gt;, and also check out Joe&amp;rsquo;s book on &lt;a href=&#34;http://www.bluebytesoftw
+are.com/books/winconc/winconc_book_resources.html&#34;&gt;concurrent programming&lt;/a&gt;, put it on your wish list if you haven&amp;rsquo;t already read it, its a great book.&lt;/p&gt;
+
+&lt;h4 id=&#34;unbalanced-pipelines&#34;&gt;Unbalanced pipelines&lt;/h4&gt;
+
+&lt;p&gt;Data is received from the network via packets, each packet may contain one or more messages from a business systems or indeed a partial message.  We need to
+collect the packets either separate or combine them to form individual messages, deserialize them and finally log them.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a sample pipeline demonstrating an unbalanced pipeline:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh6.googleusercontent.com/-HDFpPk4zBzY/TwTnGvEn9kI/AAAAAAAABPE/CcRYtQ4fsEQ/pipeline.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;Stage 1 of the pipeline receives these packets and processes them into individual messages passing them onto Stage 2.&lt;/li&gt;
+&lt;li&gt;We now have a complete message (in this instance the message will be XML) we want to turn it into a .Net type we now deserialize the message and pass it onto Stage 3.&lt;/li&gt;
+&lt;li&gt;To keep this pipeline simple all we are going to do here is log type of message to disk or a database, the pipeline is now complete.&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Stage 1 would take 5 seconds to fully utilise stage 2, stage 2 would take 2
+seconds to fully utilise stage 3.  You can see this pipeline will only process
+100 transactions per second even though stages 2 has 5x the throughput of
+stage 1 and stage 3 has 2x the throughput of stage 2.  Our efficiency is only
+about 10% of what it could be, we must be able to do something about that.&lt;/p&gt;
+
+&lt;p&gt;Lets look at the following diagram which demonstrate a balanced pipeline:&lt;/p&gt;
+
+&lt;h4 id=&#34;balanced-pipelines&#34;&gt;Balanced pipelines&lt;/h4&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh4.googleusercontent.com/-8Pgq9ISPe4Q/TwTp1nwBzfI/AAAAAAAABPU/AUwLor1WI7o/balanced-pipeline.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;You can see from this diagram that each stage processes the same number of
+transactions per second by introducing parallel stages.  This is called a
+balanced pipeline.  Sometimes you cant get a perfectly balanced pipeline but
+you should strive to get as close as possible.  Sometimes a certain stage
+cannot be parallelised because it may have mutable state, or you are using
+some sort of &lt;a href=&#34;http://en.wikipedia.org/wiki/Inversion_of_control&#34;&gt;IOC&lt;/a&gt;
+container for processing services, this might make constructing the various
+stages in parallel difficult, this can become an art form in itself and can
+lead to very large initialisation sections in the code.  I hope to address all
+of these issues in due course.&lt;/p&gt;
+
+&lt;p&gt;This poses some interesting thoughts and questions to add to some you may
+already have:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How can we easily manage the complexity of parallelism?&lt;/li&gt;
+&lt;li&gt;How will the distribution of work be handled?&lt;/li&gt;
+&lt;li&gt;How do you baseline the throughput of each stage?&lt;/li&gt;
+&lt;li&gt;Can you automate the parallelism of a particular stage?&lt;/li&gt;
+&lt;li&gt;How do you manage the complexity of multiple stages?&lt;/li&gt;
+&lt;li&gt;What about parallelism and mutable state?&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The final point to note is the Distributor/Router must operate at a much
+higher rate than the processing stages otherwise you will introduce another
+bottle neck into the system, although you could have a multiple distributors
+but this would yet another degree of complexity that has to be managed.  You
+can see that things can quickly become more complicated than they first
+seemed.&lt;/p&gt;
+
+&lt;p&gt;I know I promised lots of funky code but I figured there was a bit more
+explaining to do before we can get to that.  I want to take a more of an
+iterative approach to show you the potential pitfalls that can occur during
+developing such a pipeline and how to avoid them.  I thought this would be a
+lot more constructive than dropping a load of code and some pretty pictures
+and hoping for the best.&lt;/p&gt;
+
+&lt;p&gt;Next time we will be exploring a simple pipeline stage with a single degree of
+parallelism and a simple router.  After that we will then start exploring and
+answering the questions above, adding more features like parallelism,
+instrumentation, and visualisation.&lt;/p&gt;
+
+&lt;p&gt;Hope you enjoyed this even though there was no code!&lt;/p&gt;
+
+&lt;p&gt;See you next time.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Pipeline processing 1</title>
+      <link>http://7sharpnine.com/2011/02/01/2011-02-01-pipeline-processing-1/</link>
+      <pubDate>Tue, 01 Feb 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2011/02/01/2011-02-01-pipeline-processing-1/</guid>
+      <description>
+
+&lt;h3 id=&#34;welcome-to-new-series-of-articles-on-pipeline-processing&#34;&gt;Welcome to new series of articles on pipeline processing.&lt;/h3&gt;
+
+&lt;p&gt;First up, what&amp;rsquo;s a pipeline?  Well according to &lt;a href=&#34;http://en.wikipedia.org/wiki/Pipeline_(computing)&#34;&gt;Wikipedia&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A pipeline is a set of data processing elements connected in series, so that
+the output of one element is the input of the next one. The elements of a
+pipeline are often executed in parallel or in time-sliced fashion; in that
+case, some amount of buffer storage is often inserted between elements.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In essence its a way of dealing with complexity and its also a way of breaking
+down a process into separate tasks of a similar size.  If they are used
+correctly then pipelines can be used to increase the overall throughput of a
+system.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;In enterprise systems or in fact in most large systems, a simple idea or
+program can rapidly become overwhelmingly complex.  The management all of the
+disparate parts of the system can become a nightmare and the code can quickly
+becomes a labyrinth, navigating it becomes a skill of only the most
+accomplished code _ninja, _and even then your playing Russian roulette with
+any bug fixes.In an effort to keep things manageable and simple one approach
+that we can use is a pipeline. The idea is that each stage is connected to one
+or more other stages and each that each stage deals with a single task before
+passing the work onto the next stage.  There are many primitive types in the
+&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd460717.aspx&#34;&gt;Task Parallel Library&lt;/a&gt;
+(TPL) that you could use to compose a working pipeline, we will be using a
+lightweight subset taking only a few core ideas and making sure we get a nice
+slick design that is both powerful and flexible.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick flow diagram of the sort of thing that we will be looking at:&lt;/p&gt;
+
+
+&lt;figure &gt;
+    
+        &lt;img src=&#34;https://lh5.googleusercontent.com/-55hM6Bez26w/TwTtHHXc-ZI/AAAAAAAABPo/LOgX1UywK0I/pipeline-tuv.png&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;This is a generic asynchronous payload based pipeline.  Each stage is
+asynchronous and self contained and is connected to one or more other stages.
+As a payload enters the pipeline it is initially added to a bounding blocking
+queue.  If the queue is full then the payload is said to have overflowed and
+is passed to the failure processor where the payload can be processed or
+transformed in some way before being passed to a failure router which would in
+turn pass the payload to one or more of the next failure stages.  The same is
+also true for a successfully queued payload except that the payload is first
+dequeued, processed, then passed to a router which then passes the payload to
+one or more stages.  If an exception occurs during processing then the payload
+is passed to the failure processor and processed like an overflow.  I am
+purposely missing out any details of asynchronous operation as they will be
+described in more detail next time.&lt;/p&gt;
+
+&lt;p&gt;We will be using a little bit of &lt;a href=&#34;http://tomasp.net/blog/fsharp-iv-lang.aspx&#34;&gt;Language Oriented Programming&lt;/a&gt;
+to construct the pipeline stages, maybe using a little bit of operator overloading too.  
+I will describe all of this in more detail next time as we dig into the code.  
+I want this to be just a brief introduction to what we are going to be doing.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a more detailed description of the components that are involved in each
+stage:&lt;/p&gt;
+
+&lt;h2 id=&#34;bounded-blocking-queue&#34;&gt;Bounded Blocking Queue&lt;/h2&gt;
+
+&lt;p&gt;This is a standard bounded blocking queue from the TPL, its purpose here is to
+limit the amount of payloads that are waiting to be processed, each queue will
+have an associated time-out period, if the time-out period passes the payload
+is passed to the failure processor for processing and then finally to the the
+failure router to be passed to one or more failure stages.&lt;/p&gt;
+
+&lt;h2 id=&#34;processors&#34;&gt;Processors&lt;/h2&gt;
+
+&lt;p&gt;Each pipeline processor has a primary Processor&lt;T,U&gt; and a failure processor&lt;T,V&gt;.&lt;/p&gt;
+
+&lt;p&gt;The primary processors job is to convert type T to type U, both types can be
+the same if you wish, you may well be thinking why would I want a processing
+stage that essentially leaves the type unchanged?  In this case the processor
+acts as a simple a pass through but using this you to do some custom routing.
+This can be very be useful in some scenarios and I will describing this in
+more detail in a further post.&lt;/p&gt;
+
+&lt;p&gt;Each pipeline stage also has a failure processor&lt;T,V&gt;.  The failure processor
+acts on the payload to produce the desired type and passes it onto the failure
+router.  The reasoning behind this scheme rather than a simplistic exception
+logger is simply flexibility.  Having spent a lot of time with this kind of
+API in a more locked down format I have found that you can end up wanting a
+bit more flexibility especially when some developers try to get a bit creative
+with the API or start state to the payload.  A good example of having some
+flexibility is during overflow:  If the bounded blocking queue fills up and
+blocks for the time-out period then the payload could be passed to a failure
+failure processor in which types T and V are the same.  This would allow us to
+pass the payload to another stage and retry later on by attaching some sort of
+delayed forwarding pipeline stage.&lt;/p&gt;
+
+&lt;h2 id=&#34;routers&#34;&gt;Routers&lt;/h2&gt;
+
+&lt;p&gt;The router is responsible for getting the payload to the next pipeline stage,
+it can be implemented as a simple predicate function operating on the type
+directly or even some outside influence if you wish.   An example of this
+might be a simple duplicating stage where the payload is passed to multiple
+output stages rather than just one, or a time based router where one stage is
+passed the payload during the day and another at night.   When you start to
+think about the possibilities the Processor / Router combination can be really
+really flexible.&lt;/p&gt;
+
+&lt;p&gt;Each pipeline stage also has a corresponding has a failure router, this can be
+used for all sorts of purposes like routing the failed payload to a logging
+component, routing to a delayed retry mechanism, or saved to a database etc.&lt;/p&gt;
+
+&lt;p&gt;Thats all for now, we will be digging into some code and more detail next
+time, and I will be describing a few different types of pipelines so you can
+get a feel of how to use them and the overall structure.&lt;/p&gt;
+
+&lt;p&gt;Another interesting aspect of these pipelines is that once constructed they
+can be composed into single reusable blocks that as a whole, represent a
+single pipeline stage.  These composite stages can then be connected together
+to form a super pipeline stage, complexity is only visible when you start to
+drill down and becomes almost fractal like&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;As always please leave any comments or suggestions.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

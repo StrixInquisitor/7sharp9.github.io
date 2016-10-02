@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Pipeline processing 2 &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">Pipeline processing 2</h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<h3 id="welcome-to-pipeline-processing-part-2">Welcome to pipeline processing part 2.</h3>
+
+<p>I feel I need to backtrack slightly from the previous post, having worked with
+pipelines for quite some time I have the advantage of knowing all of the
+details that may be alluded to in these articles without being effected by any
+omissions I may make, obviously you guys aren&rsquo;t in that position, so I&rsquo;m going
+to try and rectify that a bit now.  If you have any queries then please leave
+a comment and I will try to address them in further articles. Pipelines are a
+simple concept but in practice there can be some caveats and things to bear in
+mind, sometime the whole mindset of development team can be against them
+unless they can see the bigger picture&hellip;<!-- more --></p>
+
+<p>First of all one of the most important things to bear in mind with a pipeline
+is that you are only going to be as fast as your slowest stage, if one stage
+is ten times slower than another then it will be waiting for input most of the
+time, we need to make this more efficient.</p>
+
+<h4 id="premature-optimisation">Premature Optimisation</h4>
+
+<p>Lots of developers out there have the <a href="http://www.c2.com/cgi/wiki?PrematureOptimization">premature optimisation is the root of
+all evil</a> mindset and will
+quote this out loud to you when you mention performance early on.  I&rsquo;m not
+advocating premature optimisation, in this instance performance is key, if one
+stage is out of kilter with the rest then we are going to be running at that
+pace of the slowest stage, if that&rsquo;s too slow for the requirements then you
+are screwed.</p>
+
+<p>The more I think about performance the more I believe its an essential part of
+creating code. There are too many developers these days that will produce
+sloppy unrefined plain bad code.  I&rsquo;m a keen believer in producing quality
+code that you can be proud of, and part of that is having clean code that&rsquo;s
+both efficient and works.  I think some of this boils down to a feature driven
+approach that measures developers solely in terms of features added, take the
+typical <a href="http://en.wikipedia.org/wiki/Burn_down_chart">burn down chart</a> that
+you would use in <a href="http://en.wikipedia.org/wiki/Agile_software_development">agile software development</a>:</p>
+
+<p><img src="http://alistair.cockburn.us/get/1880" alt="" /></p>
+
+<p>There is nowhere on this chart that measures whether the code is good or bad or runs to performance requirements.  In the future I may do an article on
+integrating code quality into your build process, its something I have been thinking about doing for a while now.</p>
+
+<p>While I&rsquo;m talking about performance you also might want to check out Joe Duffy&rsquo;s post on <a href="http://www.bluebyt
+esoftware.com/blog/2010/09/06/ThePrematureOptimizationIsEvilMyth.aspx">The &lsquo;premature optimization is evil&rsquo; myth</a>, and also check out Joe&rsquo;s book on <a href="http://www.bluebytesoftw
+are.com/books/winconc/winconc_book_resources.html">concurrent programming</a>, put it on your wish list if you haven&rsquo;t already read it, its a great book.</p>
+
+<h4 id="unbalanced-pipelines">Unbalanced pipelines</h4>
+
+<p>Data is received from the network via packets, each packet may contain one or more messages from a business systems or indeed a partial message.  We need to
+collect the packets either separate or combine them to form individual messages, deserialize them and finally log them.</p>
+
+<p>Here&rsquo;s a sample pipeline demonstrating an unbalanced pipeline:</p>
+
+
+<figure >
+    
+        <img src="https://lh6.googleusercontent.com/-HDFpPk4zBzY/TwTnGvEn9kI/AAAAAAAABPE/CcRYtQ4fsEQ/pipeline.png" />
+    
+    
+</figure>
+
+
+<ol>
+<li>Stage 1 of the pipeline receives these packets and processes them into individual messages passing them onto Stage 2.</li>
+<li>We now have a complete message (in this instance the message will be XML) we want to turn it into a .Net type we now deserialize the message and pass it onto Stage 3.</li>
+<li>To keep this pipeline simple all we are going to do here is log type of message to disk or a database, the pipeline is now complete.<br /></li>
+</ol>
+
+<p>Stage 1 would take 5 seconds to fully utilise stage 2, stage 2 would take 2
+seconds to fully utilise stage 3.  You can see this pipeline will only process
+100 transactions per second even though stages 2 has 5x the throughput of
+stage 1 and stage 3 has 2x the throughput of stage 2.  Our efficiency is only
+about 10% of what it could be, we must be able to do something about that.</p>
+
+<p>Lets look at the following diagram which demonstrate a balanced pipeline:</p>
+
+<h4 id="balanced-pipelines">Balanced pipelines</h4>
+
+
+<figure >
+    
+        <img src="https://lh4.googleusercontent.com/-8Pgq9ISPe4Q/TwTp1nwBzfI/AAAAAAAABPU/AUwLor1WI7o/balanced-pipeline.png" />
+    
+    
+</figure>
+
+
+<p>You can see from this diagram that each stage processes the same number of
+transactions per second by introducing parallel stages.  This is called a
+balanced pipeline.  Sometimes you cant get a perfectly balanced pipeline but
+you should strive to get as close as possible.  Sometimes a certain stage
+cannot be parallelised because it may have mutable state, or you are using
+some sort of <a href="http://en.wikipedia.org/wiki/Inversion_of_control">IOC</a>
+container for processing services, this might make constructing the various
+stages in parallel difficult, this can become an art form in itself and can
+lead to very large initialisation sections in the code.  I hope to address all
+of these issues in due course.</p>
+
+<p>This poses some interesting thoughts and questions to add to some you may
+already have:</p>
+
+<ul>
+<li>How can we easily manage the complexity of parallelism?</li>
+<li>How will the distribution of work be handled?</li>
+<li>How do you baseline the throughput of each stage?</li>
+<li>Can you automate the parallelism of a particular stage?</li>
+<li>How do you manage the complexity of multiple stages?</li>
+<li>What about parallelism and mutable state?<br /></li>
+</ul>
+
+<p>The final point to note is the Distributor/Router must operate at a much
+higher rate than the processing stages otherwise you will introduce another
+bottle neck into the system, although you could have a multiple distributors
+but this would yet another degree of complexity that has to be managed.  You
+can see that things can quickly become more complicated than they first
+seemed.</p>
+
+<p>I know I promised lots of funky code but I figured there was a bit more
+explaining to do before we can get to that.  I want to take a more of an
+iterative approach to show you the potential pitfalls that can occur during
+developing such a pipeline and how to avoid them.  I thought this would be a
+lot more constructive than dropping a load of code and some pretty pictures
+and hoping for the best.</p>
+
+<p>Next time we will be exploring a simple pipeline stage with a single degree of
+parallelism and a simple router.  After that we will then start exploring and
+answering the questions above, adding more features like parallelism,
+instrumentation, and visualisation.</p>
+
+<p>Hope you enjoyed this even though there was no code!</p>
+
+<p>See you next time.</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/asynchronous/">asynchronous</a>
+            
+                 <a href="/tags/complexity/">Complexity</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/parallelism/">parallelism</a>
+            
+                 <a href="/tags/performance/">Performance</a>
+            
+                 <a href="/tags/pipeline/">Pipeline</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Pipeline%20processing%202&url=http%3a%2f%2f7sharpnine.com%2f2011%2f02%2f13%2f2011-02-13-pipeline-processing-2%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2011%2f02%2f13%2f2011-02-13-pipeline-processing-2%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2011%2f02%2f13%2f2011-02-13-pipeline-processing-2%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+

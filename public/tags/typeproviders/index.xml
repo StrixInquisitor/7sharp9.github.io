@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Typeproviders on 7sharp9</title>
+    <link>http://7sharpnine.com/tags/typeproviders/</link>
+    <description>Recent content in Typeproviders on 7sharp9</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Dave Thomas</copyright>
+    <lastBuildDate>Sun, 16 Nov 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://7sharpnine.com/tags/typeproviders/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>I saw my reflection and cried ...</title>
+      <link>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
+      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
+      <description>
+
+&lt;p&gt;While I was visiting Boston earlier in the year I had the misfortune of kicking myself in the teeth with reflection.  It&amp;rsquo;s something all programmers inevitably go through with reflection API&amp;rsquo;s as they are inherently untyped, a simple typo can leave you tearing out your hair or punching through your monitor!  Yeah there&amp;rsquo;s things the horizon that will help namely the &lt;a href=&#34;http://msdn.microsoft.com/en-us/magazine/dn802602.aspx&#34;&gt;nameof&lt;/a&gt; expression in C#6 which should help in some areas, that&amp;rsquo;s if your willing to pay the price of using C#, but I wont go into that here :-).  In F# we can leverage Type Providers fairly easily to wrap API usages in cases that we are interested in, or even create a general usage with a little more effort.&lt;br /&gt;
+&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;using-the-type-provider&#34;&gt;Using the Type Provider&lt;/h3&gt;
+
+&lt;p&gt;In usage it will look like this vs the usual reflection API:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;
+//traditional reflection using untyped method
+let tt = typeof&amp;lt;DateTime&amp;gt;
+let meth = tt.GetMethod(&amp;quot;Add&amp;quot;)
+let result = meth.Invoke(DateTime.Now, [|TimeSpan.FromDays(1.)|])
+
+//using the type provider to provide a little safety net
+type rt = TypedReflection.Reflection&amp;lt; &amp;quot;System.DateTime&amp;quot;, &amp;quot;AddSeconds&amp;quot;&amp;gt;
+let result = rt.AddSeconds(DateTime.Now, 1.)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you make a mistake the compiler will tell you and you will be forces to fix the typo or add namespace prefixes etc.  You also get intellisense.autocompletion on usage and you can give actual parameters rather than arrays of loose objects etc.&lt;/p&gt;
+
+&lt;h3 id=&#34;code-dump&#34;&gt;Code Dump&lt;/h3&gt;
+
+&lt;p&gt;First of all I&amp;rsquo;m just going to leave the code here, and then talk through it below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[&amp;lt;TypeProvider&amp;gt;]
+type public ReflectionTypeProvider(config : TypeProviderConfig) as this = 
+    inherit TypeProviderForNamespaces()
+
+    let assembly = Assembly.GetExecutingAssembly()
+    let nameSpace = this.GetType().Namespace
+    let providerType =
+        ProvidedTypeDefinition(assembly, nameSpace, &amp;quot;Reflection&amp;quot;, Some typeof&amp;lt;obj&amp;gt;, 
+                               IsErased = true, HideObjectMethods = true)
+
+    let buildReflection typeName (parameters : obj[]) =  
+        let reflectionType = string parameters.[0]
+        let methodName = string parameters.[1]
+
+        let theType = Type.GetType(reflectionType, true)
+        let meth = theType.GetMethod(methodName)
+        if meth = null then failwith &amp;quot;No such method!&amp;quot;
+
+        let wrapper = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some (typeof&amp;lt;obj&amp;gt;),
+                                             HideObjectMethods = true )
+
+        let parameterInfoToProvidedParameter (meth:MethodInfo) =
+            let pi = meth.GetParameters()
+
+            let instance = ProvidedParameter(&amp;quot;instance&amp;quot;, meth.ReflectedType)
+            let parameters =
+                pi
+                |&amp;gt; Seq.map (fun p -&amp;gt; ProvidedParameter(p.Name, p.ParameterType) )
+                |&amp;gt; Seq.toList
+            instance :: parameters
+            
+        let reflectionWrapper =
+            ProvidedMethod (meth.Name, parameterInfoToProvidedParameter meth, meth.ReturnType,
+                            IsStaticMethod = true,
+                            InvokeCode = function
+                                         | instance :: parameters -&amp;gt;
+                                             try Expr.Call (instance, meth, parameters)
+                                             with exn -&amp;gt; failwith &amp;quot;Error creating Invoke code.&amp;quot;
+                                         | _ -&amp;gt; failwith &amp;quot;Error: unexpected number of parameters&amp;quot; )
+        wrapper.AddMember reflectionWrapper
+        wrapper
+
+    do 
+        providerType.DefineStaticParameters
+            ([ ProvidedStaticParameter(&amp;quot;Type&amp;quot;, typeof&amp;lt;string&amp;gt;)
+               ProvidedStaticParameter(&amp;quot;Method&amp;quot;, typeof&amp;lt;string&amp;gt;) ], 
+             buildReflection)
+
+        this.AddNamespace (nameSpace, [ providerType ])
+
+[&amp;lt;assembly:TypeProviderAssembly&amp;gt;] 
+do()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;skeleton-code&#34;&gt;Skeleton code&lt;/h3&gt;
+
+&lt;p&gt;Reading from the bottom up you can see the parameters that our Type Provider accepts are &lt;code&gt;Type&lt;/code&gt; and &lt;code&gt;Method&lt;/code&gt;, those a pretty self explanatory.  You should also notice other boiler plate Type Provider code if you read my last &lt;a href=&#34;http://7sharpnine.com/posts/flux-compression-redux/&#34;&gt;ZipProvider post&lt;/a&gt;.  The important part here is the &lt;code&gt;buildReflection&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;h3 id=&#34;buildreflection&#34;&gt;buildReflection&lt;/h3&gt;
+
+&lt;p&gt;First of all on lines &lt;code&gt;12/13&lt;/code&gt; we scrape of the configuration parameters &lt;code&gt;theType&lt;/code&gt; and &lt;code&gt;meth&lt;/code&gt;, we then do a quick check to ensure the type and method actually exist, if they don&amp;rsquo;t we raise an error on line &lt;code&gt;17&lt;/code&gt; so the use can correct the code.&lt;/p&gt;
+
+&lt;p&gt;Next we create a variable named wrapper which &lt;em&gt;wraps&lt;/em&gt; round the reflection API by creating a &lt;code&gt;ProvidedTypeDefinition&lt;/code&gt; on line &lt;code&gt;19&lt;/code&gt;.  We now have two methods which we use to create our safe API, &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; and &lt;code&gt;reflectionWrapper&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;parameterinfotoprovidedparameter&#34;&gt;parameterInfoToProvidedParameter&lt;/h3&gt;
+
+&lt;p&gt;The purpose of this is a mapping function from the reflection API&amp;rsquo;s untyped abstract form to our typed form that we use in the construction of the Provided methods.  Essentially this is pretty simple, we get the parameters for the &lt;code&gt;MethodInfo&lt;/code&gt; which we are wrapping on line &lt;code&gt;23&lt;/code&gt;.  The first parameter will be the instance of the reflected method will be working on, and the rest of the parameters will be those of the reflected method.  To add those we loop over the parameters from the &lt;code&gt;MethodInfo&lt;/code&gt; and map then to &lt;code&gt;ProvidedProperties&lt;/code&gt; by using the &lt;code&gt;Name&lt;/code&gt; and &lt;code&gt;ParameterType&lt;/code&gt; properties.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Thinking about this we could do it slightly differently by adding a &lt;code&gt;ProvidedConstructor&lt;/code&gt; which could take the initial instance, this could be added fairly easily if we really needed it.  )&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;reflectionwrapper&#34;&gt;reflectionWrapper&lt;/h3&gt;
+
+&lt;p&gt;The reflectionWrapper is where the magic happens, we create a &lt;code&gt;ProvidedMethod&lt;/code&gt; using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s name&amp;rsquo;, we add the parameters by using the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function, and we also add the return type by using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s &lt;code&gt;ReturnType&lt;/code&gt; parameter&amp;rsquo;.  We can also take advantage of &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233192.aspx#sectionToggle4&#34;&gt;object initializers&lt;/a&gt; here to set &lt;code&gt;IsStaticMethod&lt;/code&gt; to true, and to add in the invoke code.&lt;/p&gt;
+
+&lt;p&gt;The invoke code uses the &lt;code&gt;function&lt;/code&gt; keyword which is really just a pattern match expression using only a single argument, here we use pattern matching on a list to extract the &lt;code&gt;head|tail&lt;/code&gt; arguments.  If you remember the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function then you will know that it returns a list &lt;code&gt;instance :: parameters&lt;/code&gt;.  We can now use the &lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/ee370577.aspx&#34;&gt;Quotations &lt;code&gt;Expr&lt;/code&gt;&lt;/a&gt; type with the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370395.aspx&#34;&gt;&lt;code&gt;Call&lt;/code&gt;&lt;/a&gt; function and pass in our instance and parameters in directly (instance is the reflected methods instance type, &lt;code&gt;meth&lt;/code&gt; is the &lt;code&gt;MethodInfo&lt;/code&gt; we will be calling, parameters are the parameters the &lt;code&gt;MethodInfo&lt;/code&gt; requires.&lt;/p&gt;
+
+&lt;h3 id=&#34;wrapping-up&#34;&gt;Wrapping up&lt;/h3&gt;
+
+&lt;p&gt;Finally we just add the &lt;code&gt;ProvidedMethod&lt;/code&gt; &lt;em&gt;&lt;code&gt;reflectionWrapper&lt;/code&gt;&lt;/em&gt; to the &lt;code&gt;ProvidedType&lt;/code&gt; &lt;em&gt;&lt;code&gt;wrapper&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This is a fairly simple implementation but it could be &lt;strong&gt;beefed up&lt;/strong&gt; quite easily into something a little more elaborate without too much trouble.  If you use your imagination then there are numerous possibilities with Type Providers!&lt;/p&gt;
+
+&lt;p&gt;Reminds me of an old proverb:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;If you have a problem ...  
+if no one else can help ...  
+and if you cant find an existing one ...  
+maybe you can build ...  
+a Type Provider.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;:-)&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/b/ba/Dirt.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Alice In Chains - Dirt&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Alice In Chains - Dirt&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/2/24/Alice_in_Chains_%28album%29.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;Alice In Chains - Alice In Chains&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;Alice In Chains - Alice In Chains&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>Flux Compression (redux)</title>
+      <link>http://7sharpnine.com/2014/11/05/2014-11-05-flux-compression-redux/</link>
+      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://7sharpnine.com/2014/11/05/2014-11-05-flux-compression-redux/</guid>
+      <description>
+
+&lt;p&gt;First of all the title, redux because I&amp;rsquo;m revising post I started on earlier in the year, compression because this has to do with compression, and Flux, which is also part of the redux, one of the first things I remember writing on the net was an article about Flux Compression Generators on &lt;a href=&#34;http://www.h2g2.com&#34;&gt;H2G2&lt;/a&gt;, its still there too!
+&lt;!-- more --&gt;
+This was a post I started writing back in January that I never got round to finishing.&lt;/p&gt;
+
+&lt;p&gt;Once upon a time I had a need to quickly browse a zip file and it&amp;rsquo;s Crc, so I quickly put together a &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/hh156509.aspx&#34;&gt;Type Provider&lt;/a&gt; as a way to help in this en-devour.  I&amp;rsquo;m going to split the code into a few section and run a commentary over each block so you can see what I did and why.&lt;/p&gt;
+
+&lt;h1 id=&#34;zip-provider&#34;&gt;Zip Provider&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;m going to use &lt;a href=&#34;https://sharpcompress.codeplex.com&#34;&gt;SharpCompress&lt;/a&gt; as the basis for peering into zip files, you could also choose any other zip API.  Essentially to open and peruse a zip the API consists of the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let zipfile = SharpCompress.Archive.ArchiveFactory.Open(fileName)
+
+for entry in zipFile.Entries do
+	...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This gives us the ability to open a zip file and to iterate over its contents via a sequence of &lt;code&gt;IArchiveEntry&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;creating-the-type-provider&#34;&gt;Creating the Type Provider&lt;/h2&gt;
+
+&lt;p&gt;To create a Type Provider we need to create a type which looks like this, also notice the &lt;code&gt;TypeProviderAssembly&lt;/code&gt; attribute:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[&amp;lt;TypeProvider&amp;gt;]
+type public ZipProvider(cfg : TypeProviderConfig) as this =
+    inherit TypeProviderForNamespaces()
+
+    let asm = Assembly.GetExecutingAssembly()
+    let ns = &amp;quot;Xebec&amp;quot;
+    let root = ProvidedTypeDefinition(asm, ns, &amp;quot;ZipProvider&amp;quot;, Some(typeof&amp;lt;obj&amp;gt;))
+    let filePathParam = ProvidedStaticParameter(&amp;quot;FilePath&amp;quot;, typeof&amp;lt;string&amp;gt;)
+
+    let buildTypes (typeName:string) (args:obj[]) =
+        let fileName = args.[0] :?&amp;gt; string
+        ...
+
+    do root.DefineStaticParameters ([filePathParam], buildTypes)
+    do this.AddNamespace(ns, [root])
+        
+[&amp;lt;TypeProviderAssembly&amp;gt;]
+do()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Assuming &lt;code&gt;buildTypes&lt;/code&gt; is complete and working the following user code might be used to use the Type Provider:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type myZip = Xebex.ZipProvider&amp;lt;&amp;quot;myfile.zip&amp;quot;&amp;gt;
+
+let file1Crc = myZip.MyFile1.Crc
+let file1Size = myZip.MyFile1.Size
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I always try think how the Type Provider might be used before undertaking work like this, Type Providers are supposed to aid usability not hinder it.  I&amp;rsquo;m not a fan of big mechanistic design sessions and pencil pushing, I like to get into the field and working things out, that&amp;rsquo;s just my way though.&lt;/p&gt;
+
+&lt;h2 id=&#34;build-it-and-they-will-come&#34;&gt;Build it and they will come&lt;/h2&gt;
+
+&lt;p&gt;Next we need to create types based on the output of SharpCompress.  The property &lt;code&gt;zipFile.Entries&lt;/code&gt; returns a sequence of &lt;code&gt;IArchiveEntry&lt;/code&gt; which have properties such as &lt;code&gt;Size&lt;/code&gt;, &lt;code&gt;Crc&lt;/code&gt;, &lt;code&gt;FileName&lt;/code&gt; etc, so we&amp;rsquo;ll use these as we construct the type system.&lt;/p&gt;
+
+&lt;p&gt;One thing to be aware of with SharpCompress is the &lt;code&gt;Entries&lt;/code&gt; properties returns a flat list of all the files in the archive.  If you have a simple archive with only files at the root level then things are very simple.  Once you move to an archive that has a complex directory hierarchy then things get a little trickier.  One of the reasons is type namespace collisions, if we have file&amp;rsquo;s with the same name but different directories then the type system needs to match this to avoid adding a type with the same name.  It doesn&amp;rsquo;t really make sense to have a flattened list anyway as I was using this provider to quickly peruse zip files from &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233175.aspx&#34;&gt;FSI&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the bulk of &lt;code&gt;buildTypes&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let buildTypes (typeName:string) (args:obj[]) =
+    let fileName = args.[0] :?&amp;gt; string
+    let zipfile = SharpCompress.Archive.ArchiveFactory.Open(fileName)
+    let zipType = ProvidedTypeDefinition(asm, ns, typeName, Some(typeof&amp;lt;obj&amp;gt;))
+
+    ...
+
+    for entry in zipfile.Entries do
+
+        //we need to add types for each directory before adding the zipEntryType to the last occurrence
+        let dirs = Path.getAllDirectories entry.FilePath
+        let parent = processDirectories dirs zipType
+
+        if entry.IsDirectory then
+            parent.AddMembers &amp;lt;| mkProperties entry
+        else
+            let zipEntry = ProvidedTypeDefinition(safeTypeName entry.FilePath, Some(typeof&amp;lt;obj&amp;gt;))
+            zipEntry.AddMembers &amp;lt;| mkProperties entry
+            parent.AddMember(zipEntry)
+
+    zipType
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There are a few parts of code missing, but I&amp;rsquo;ll get to those in a second.  You can see we create a root type to hold the type system that will represent the zip file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let zipType = ProvidedTypeDefinition(asm, ns, typeName, Some(typeof&amp;lt;obj&amp;gt;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SharpCompress is then used to open the archive and loop over the entries.  For each file entry found we create a &lt;code&gt;ProvidedTypeDefinition&lt;/code&gt; and corresponding properties and add it to the parent, but for each directory we only add properties to an existing ProvidedType.&lt;/p&gt;
+
+&lt;p&gt;The important functions missing here are &lt;code&gt;mkProperties&lt;/code&gt;, &lt;code&gt;getAllDirectories&lt;/code&gt; and &lt;code&gt;processDirectories&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;mkproperties&#34;&gt;mkProperties&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;mkProperties&lt;/code&gt; is the meat and potatoes here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let mkProperties (entry:IArchiveEntry) = 
+    [yield PP.MkStatic (&amp;quot;FilePath&amp;quot;, fun _ -&amp;gt; Expr.Value entry.FilePath)
+     if not entry.IsDirectory then yield PP.MkStatic (&amp;quot;Crc&amp;quot;, fun _ -&amp;gt; Expr.Value entry.Crc)
+     yield PP.MkStatic (&amp;quot;PackedSize&amp;quot;, fun _ -&amp;gt; Expr.Value entry.CompressedSize)
+     yield PP.MkStatic (&amp;quot;Size&amp;quot;, fun _ -&amp;gt; Expr.Value entry.Size)
+     yield PP.MkStatic (&amp;quot;CompressionRatio&amp;quot;, fun _ -&amp;gt; Expr.Value (float entry.Size / float entry.CompressedSize))
+     yield PP.MkStatic (&amp;quot;SpaceSavings&amp;quot;, fun _ -&amp;gt; Expr.Value (1.0 - float entry.CompressedSize / float entry.Size))]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This function take a &lt;code&gt;IArchiveEntry&lt;/code&gt; and returns a bunch of &lt;code&gt;ProvidedProperties&lt;/code&gt;, one for each property we are interested in exposing in our type system.  &lt;code&gt;PP&lt;/code&gt; is a &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233246.aspx&#34;&gt;Type Abbreviation&lt;/a&gt; for &lt;code&gt;ProvidedProperty&lt;/code&gt;, &lt;code&gt;MkStatic&lt;/code&gt; is a &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233211.aspx&#34;&gt;Type Extension&lt;/a&gt;, these will both explained further on.  In this function we are creating a list comprehension with each of the properties we want to represent.  &lt;code&gt;MkStatic&lt;/code&gt; is just a wrapper around the &lt;code&gt;ProvidedProperty&lt;/code&gt; constructor, each property has a name, type and the getter function as represented by an expression.  In this instance our expression is just the value of the property in &lt;code&gt;IArchiveEntry&lt;/code&gt; so we represent this with &lt;code&gt;Expr.Value entry.x&lt;/code&gt;.  You might of been tempted to write this expression as &amp;lt;@@ entry.x @@&amp;gt; which uses the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233212.aspx&#34;&gt;Untyped Quotation&lt;/a&gt; syntax but this would of resulted in an error from the compiler when in use.  This is to do with type erasure, and the fact that only simple types can be represented as values in the quotation blocks.  There&amp;rsquo;s a &lt;a href=&#34;http://stackoverflow.com/questions/10161437/type-provider-providing-me-with-an-unsuported-constant-type-system-double-er&#34;&gt;stackoverflow question&lt;/a&gt; that covers this too.  The last two properties and not simple properties but calculations, that&amp;rsquo;s one of the beauties of Type Providers, you can easily leverage an existing API and make it more usable for your domain.&lt;/p&gt;
+
+&lt;h3 id=&#34;getalldirectories&#34;&gt;getAllDirectories&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;getAllDirectories&lt;/code&gt; is a module that extends &lt;code&gt;Path&lt;/code&gt; so that a list of directory elements are returned for a path string.  e.g. &amp;ldquo;/Users/dave/test&amp;rdquo; would yield [&amp;ldquo;Users&amp;rdquo;; &amp;ldquo;dave&amp;rdquo;; &amp;ldquo;test&amp;rdquo;].  We use this in &lt;code&gt;processDirectories&lt;/code&gt; to ensure that each part of the path has a corresponding type stemming from the root.  This ensures the ZipProvider provides the same hierarchy as a file browser.  To be fair I&amp;rsquo;ve reinvented the wheel as this functionality is in &lt;code&gt;Uri.Segments&lt;/code&gt;, but this serves as a &lt;em&gt;how-to&lt;/em&gt; on extending existing type to bend them to your will!  &lt;em&gt;(That&amp;rsquo;s my excuse anyway!)&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;module Path =
+    let getAllDirectories (path:string) =
+        let dname = Path.GetDirectoryName path
+        dname.Split ([|Path.DirectorySeparatorChar|], StringSplitOptions.RemoveEmptyEntries)
+        |&amp;gt; List.ofArray
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;processdirectories&#34;&gt;processDirectories&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;processDirectories&lt;/code&gt; is a recursive function that takes a list of directories and an initial base type and ensures that each directory has been assigned a type and a valid parent.  Once the function has processed the entire path the last &lt;code&gt;ProvidedTypeDefintion&lt;/code&gt; is returned from the function.  You can see this used in &lt;code&gt;buildTypes&lt;/code&gt; to either add files or directory properties as explained above.  Sometime recursive functions can take a while to click in you brain, the secret here is in the &lt;code&gt;acc&lt;/code&gt; or accumulator parameter which is the current parent that&amp;rsquo;s used to add the next type to.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let directoriesAdded = Dictionary&amp;lt;_,_&amp;gt; ()
+
+let processDirectories directories (root:ProvidedTypeDefinition) =
+    let rec loop list (acc:ProvidedTypeDefinition) =
+        match list with
+        | currentDir :: t -&amp;gt;
+            if directoriesAdded.ContainsKey currentDir
+            then loop t directoriesAdded.[currentDir]
+            else
+                //create provided type definition
+                let pt = ProvidedTypeDefinition(currentDir, Some(typeof&amp;lt;obj&amp;gt;))
+                //add to parent provided type
+                acc.AddMember pt
+                //add to dictionary
+                directoriesAdded.Add (currentDir, pt)
+                //recurse
+                loop t pt
+
+        | [] -&amp;gt; (*return acc on completion*) acc
+    loop directories root
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There&amp;rsquo;s also &lt;code&gt;safeTypeName&lt;/code&gt; shown below, essentially this makes sure the type name is just the last segment of the path and that it doesn&amp;rsquo;t have leading or trailing slashes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let safeTypeName name =
+    //try get just the filename
+    let filename = Path.GetFileName(name)
+    //if it&#39;s empty then it will be a directory
+    if String.IsNullOrEmpty filename
+    then name.Trim [|Path.DirectorySeparatorChar|]
+    else filename
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;and-another-thing&#34;&gt;And Another Thing &amp;hellip;&lt;/h2&gt;
+
+&lt;p&gt;Oh I almost forgot, the type extension and type abbreviation I mentioned above, I used these to make things a little easier:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;type PP = ProvidedProperty
+
+type ProvidedProperty =
+    static member MkStatic&amp;lt;&#39;a&amp;gt; (name, getter, ?setter) =
+        let pp = PP (name, typeof&amp;lt;&#39;a&amp;gt;, IsStatic = true, GetterCode = getter)
+        setter |&amp;gt; Option.iter (fun v -&amp;gt; pp.SetterCode &amp;lt;- v)
+        pp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I added the &lt;code&gt;MkStatic&amp;lt;&#39;a&amp;gt;&lt;/code&gt; extension to slim down the code necessary to create a &lt;code&gt;ProvidedProperty&lt;/code&gt;, without this the creation of a &lt;code&gt;ProvidedProperty&lt;/code&gt; would be a little longer:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;let pp = ProvidedProperty (&amp;quot;name&amp;quot;, typeof&amp;lt;mytype&amp;gt;, IsStatic = true, GetterCode = (fun _ -&amp;gt; Expr.Value 42)) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It&amp;rsquo;s pure laziness, I get sick of typing &lt;code&gt;typeof&amp;lt;&#39;a&amp;gt;&lt;/code&gt; all the time, and the object initializer property names like &lt;code&gt;GetterCode = ...&lt;/code&gt;.  The same goes for the type abbreviation.  If I find myself typing a lot of repetitive long type names like &lt;code&gt;ProvidedProperty&lt;/code&gt; then why not shorten it to PP.  I do this  when working with quotation types too.&lt;/p&gt;
+
+&lt;p&gt;If you wondering about the namespace I use, &lt;em&gt;Xebec&lt;/em&gt;, its part of a suite of things I&amp;rsquo;ve been working on and off for a while involving lots of different things, it just my private codename I use&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;99-ways-to-die&#34;&gt;99 Ways To Die&lt;/h2&gt;
+
+&lt;p&gt;OK here&amp;rsquo;s all the code from top to bottom 99 lines. I don&amp;rsquo;t really like to duplicate but after the explanation about it will probably (hopefully) make sense now to read through.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;namespace Xebex.Zip
+
+open System
+open System.Collections
+open System.Collections.Generic
+open System.IO
+open System.Reflection
+open System.Collections
+open Microsoft.FSharp
+open Microsoft.FSharp.Core.CompilerServices
+open Microsoft.FSharp.Quotations
+open ProviderImplementation.ProvidedTypes
+open SharpCompress.Archive
+
+module Path =
+    let getAllDirectories (path:string) =
+        let dname = Path.GetDirectoryName path
+        dname.Split ([|Path.DirectorySeparatorChar|], StringSplitOptions.RemoveEmptyEntries)
+        |&amp;gt; List.ofArray
+
+type PP = ProvidedProperty
+
+type ProvidedProperty =
+    static member MkStatic&amp;lt;&#39;a&amp;gt; (name, getter, ?setter) =
+        let pp = PP (name, typeof&amp;lt;&#39;a&amp;gt;, IsStatic = true, GetterCode = getter)
+        setter |&amp;gt; Option.iter (fun v -&amp;gt; pp.SetterCode &amp;lt;- v)
+        pp
+
+[&amp;lt;TypeProvider&amp;gt;]
+type public ZipProvider(cfg : TypeProviderConfig) as this =
+    inherit TypeProviderForNamespaces()
+
+    let asm = Assembly.GetExecutingAssembly()
+    let ns = &amp;quot;Xebec&amp;quot;
+    let root = ProvidedTypeDefinition(asm, ns, &amp;quot;ZipProvider&amp;quot;, Some(typeof&amp;lt;obj&amp;gt;))
+    let filePathParam = ProvidedStaticParameter(&amp;quot;FilePath&amp;quot;, typeof&amp;lt;string&amp;gt;)
+
+    let buildTypes (typeName:string) (args:obj[]) =
+        let fileName = args.[0] :?&amp;gt; string
+        let zipfile = SharpCompress.Archive.ArchiveFactory.Open(fileName)
+        let zipType = ProvidedTypeDefinition(asm, ns, typeName, Some(typeof&amp;lt;obj&amp;gt;))
+
+        let directoriesAdded = Dictionary&amp;lt;_,_&amp;gt; ()
+
+        let processDirectories directories (root:ProvidedTypeDefinition) =
+            let rec loop list (acc:ProvidedTypeDefinition) =
+                match list with
+                | currentDir :: t -&amp;gt;
+                    if directoriesAdded.ContainsKey currentDir
+                    then loop t directoriesAdded.[currentDir]
+                    else
+                        //create provided type definition
+                        let pt = ProvidedTypeDefinition(currentDir, Some(typeof&amp;lt;obj&amp;gt;))
+                        //add to parent provided type
+                        acc.AddMember pt
+                        //add to dictionary
+                        directoriesAdded.Add (currentDir, pt)
+                        //recurse
+                        loop t pt
+
+                | [] -&amp;gt; (*return acc on completion*) acc
+            loop directories root
+
+        let safeTypeName name =
+            //try get just the filename
+            let filename = Path.GetFileName(name)
+            //if it&#39;s empty then it will be a directory
+            if String.IsNullOrEmpty filename
+            then name.Trim [|Path.DirectorySeparatorChar|]
+            else filename
+
+        let mkProperties (entry:IArchiveEntry) = 
+            [yield PP.MkStatic (&amp;quot;FilePath&amp;quot;, fun _ -&amp;gt; Expr.Value entry.FilePath)
+             if not entry.IsDirectory then yield PP.MkStatic (&amp;quot;Crc&amp;quot;, fun _ -&amp;gt; Expr.Value entry.Crc)
+             yield PP.MkStatic (&amp;quot;PackedSize&amp;quot;, fun _ -&amp;gt; Expr.Value entry.CompressedSize)
+             yield PP.MkStatic (&amp;quot;Size&amp;quot;, fun _ -&amp;gt; Expr.Value entry.Size)
+             yield PP.MkStatic (&amp;quot;CompressionRatio&amp;quot;, fun _ -&amp;gt; Expr.Value (float entry.Size / float entry.CompressedSize))
+             yield PP.MkStatic (&amp;quot;SpaceSavings&amp;quot;, fun _ -&amp;gt; Expr.Value (1.0 - float entry.CompressedSize / float entry.Size))]
+
+        for entry in zipfile.Entries do
+
+            //we need to add types for each directory before adding the zipEntryType to the last occurrence
+            let dirs = Path.getAllDirectories entry.FilePath
+            let parent = processDirectories dirs zipType
+
+            if entry.IsDirectory then
+                parent.AddMembers &amp;lt;| mkProperties entry
+            else
+                let zipEntry = ProvidedTypeDefinition(safeTypeName entry.FilePath, Some(typeof&amp;lt;obj&amp;gt;))
+                zipEntry.AddMembers &amp;lt;| mkProperties entry
+                parent.AddMember(zipEntry)
+
+        zipType
+
+    do root.DefineStaticParameters ([filePathParam], buildTypes)
+    do this.AddNamespace(ns, [root])
+        
+[&amp;lt;TypeProviderAssembly&amp;gt;]
+do()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So if you made it this far you have seen: Type Providers, recursive functions, list comprehensions, type extensions, type abbreviations, object initialisers, pattern matching, and quotations, quite a few F# features!&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr style=&#34;margin: 1em 0&#34;&gt;
+&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
+
+
+&lt;div class=&#34;pure-g&#34;&gt;
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/8/85/Axiscover.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;The Jimi Hendrix Experience - Axis: Bold as Love&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;The Jimi Hendrix Experience - Axis: Bold as Love&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+  
+  
+  
+  
+  &lt;div class=&#34;&#34;&gt;
+    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
+        &lt;figure style=&#34;margin: 0&#34;&gt;
+            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/b/bf/JimiHendrixValleysOfNeptune.jpg&#34; style=&#34;margin: 0&#34;
+                 alt=&#34;The Jimi Hendrix Experience - Valleys of Neptune&#34; /&gt;
+            &lt;figcaption&gt;
+                &lt;h6&gt;The Jimi Hendrix Experience - Valleys of Neptune&lt;/h4&gt;
+            &lt;/figcaption&gt;
+        &lt;/figure&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+
+&lt;/div&gt;
+
+
+
+
+</description>
+    </item>
+    
+  </channel>
+</rss>
