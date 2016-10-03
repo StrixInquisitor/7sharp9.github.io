@@ -369,11 +369,11 @@ the email address to be retrieved.&lt;/p&gt;
 &lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
 
 &lt;p&gt;This post never intended to explain in detail about creating the web application more just to expose some of the more
-interesting parts and so show how much fun working in Elm is.&lt;/p&gt;
+interesting parts and to show how much fun it is working in Elm is.&lt;/p&gt;
 
-&lt;p&gt;I used VSCode with the [elm addin] to build the entire thing and it worked out wonderfully.&lt;/p&gt;
+&lt;p&gt;I used VSCode with the &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=sbrink.elm&#34;&gt;elm addin&lt;/a&gt; to build the entire thing and it worked out wonderfully.&lt;/p&gt;
 
-&lt;h2 id=&#34;comparision-with-fable&#34;&gt;Comparision with Fable&lt;/h2&gt;
+&lt;h2 id=&#34;comparison-with-fable&#34;&gt;Comparison with Fable&lt;/h2&gt;
 
 &lt;p&gt;This is the bit I was dreading a little.  &lt;a href=&#34;https://fable-compiler.github.io/&#34;&gt;Fable&lt;/a&gt; is a F# -&amp;gt; JavaScript transpiler.  I&amp;rsquo;ve done quite a lot of hacking
 with Fable and also made some contributions lately.  I would describe Elm as batteries included, and very slick, and
