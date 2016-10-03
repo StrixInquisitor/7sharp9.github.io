@@ -7,8 +7,392 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
-    <lastBuildDate>Thu, 30 Jun 2016 13:53:45 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 03 Oct 2016 00:32:48 +0100</lastBuildDate>
     <atom:link href="http://7sharpnine.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Building a single page application with Elm</title>
+      <link>http://7sharpnine.com/2016/10/03/building-an-spa-with-elm/</link>
+      <pubDate>Mon, 03 Oct 2016 00:32:48 +0100</pubDate>
+      
+      <guid>http://7sharpnine.com/2016/10/03/building-an-spa-with-elm/</guid>
+      <description>
+
+&lt;p&gt;I&amp;rsquo;ve been meaning to write this for a while but got sidetracked with other things, so this is an experience report of
+using Elm to build a single page application.&lt;/p&gt;
+
+&lt;p&gt;First of all you can see the final site &lt;a href=&#34;http://lynseythomas.com&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;basic-structure&#34;&gt;Basic Structure&lt;/h1&gt;
+
+&lt;p&gt;The basic structure is a navigation driven single page application, which also uses &lt;a href=&#34;https://guide.elm-lang.org/architecture/&#34;&gt;The Elm Architecture&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I split the site into separate file mainly based on &lt;a href=&#34;http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html&#34;&gt;how i structure elm apps&lt;/a&gt; by &lt;a href=&#34;https://twitter.com/krisajenkins&#34;&gt;Kris Jenkins&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;├─ App.elm
+├─ Data.elm
+├─ Shared.elm
+├─ State.elm
+├─ Types.elm
+├─ View.elm
+│
+├─ About
+│  └─ View.elm
+├─ Category
+│  └─ View.elm
+├─ Contact
+│  └─ View.elm
+├─ Detail
+│  └─ View.elm
+├─ Gallery
+│  └─ View.elm
+└─ Home
+   └─ View.elm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I think its slightly overkill for a site of this size and complexity but its nice to understand where things will lead
+on a bigger site where you have additional files like &lt;code&gt;State.elm&lt;/code&gt;, &lt;code&gt;Types.elm&lt;/code&gt; and &lt;code&gt;Rest.elm&lt;/code&gt; etc.&lt;/p&gt;
+
+&lt;p&gt;One of the things that I did find a annoying at times was if I had &lt;code&gt;About/View.elm&lt;/code&gt; and &lt;code&gt;Category/View.elm&lt;/code&gt; both open in
+the tabs of my editor.  Only &lt;code&gt;View.elm&lt;/code&gt; is shown in the tab so I had to hovering on the tab to see the full path or read
+the module name at the top of the file.  Renaming the file to &lt;code&gt;AboutView.elm&lt;/code&gt; would mean the import statement would have
+to change to &lt;code&gt;import About.AboutView&lt;/code&gt; as Elm enforces the directory name prefix.&lt;/p&gt;
+
+&lt;h1 id=&#34;application-structure&#34;&gt;Application structure&lt;/h1&gt;
+
+&lt;p&gt;As per the &lt;a href=&#34;http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html&#34;&gt;how i structure elm apps&lt;/a&gt; article my application was structured like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;module Main exposing (..)
+import View exposing (rootView)
+import Navigation
+import State
+
+
+main : Program Never
+main =
+    Navigation.program (Navigation.makeParser State.pathParser)
+        { init = State.init
+        , view = View.rootView
+        , update = State.update
+        , urlUpdate = State.urlUpdate
+        , subscriptions = State.subscriptions
+        }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All the main elements of the application are imported and a &lt;code&gt;Navigation.program&lt;/code&gt; is started with the appropriate &lt;code&gt;init&lt;/code&gt;,
+&lt;code&gt;view&lt;/code&gt;, &lt;code&gt;update&lt;/code&gt;, &lt;code&gt;urlUpdate&lt;/code&gt; and &lt;code&gt;subscriptions&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;model-messages-and-types&#34;&gt;Model Messages and types&lt;/h1&gt;
+
+&lt;h2 id=&#34;model&#34;&gt;Model&lt;/h2&gt;
+
+&lt;p&gt;The model is super simple, all that has to be recorded is the current page:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type alias Model =
+    { page : Page }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;messages&#34;&gt;Messages&lt;/h2&gt;
+
+&lt;p&gt;The messages the application will deal with are also pretty simple:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Msg
+    = NavigateTo Page
+    | NavigateBack
+    | GmailCaptcha
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;NavigateTo&lt;/code&gt; simply navigates to the page in question.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NavigateBack&lt;/code&gt; just navigates back one page.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GmailCaptcha&lt;/code&gt; displays a captcha request which then shows an email address on success.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Page is just a union type consisting of the pages in the application:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type Page
+    = Home
+    | About
+    | Contact
+    | Gallery
+    | CategoryDetail CategoryType
+    | ItemDetail String
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And &lt;code&gt;CategoryType&lt;/code&gt; another union:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type CategoryType
+    = Perfumes
+    | Seasides
+    | IllustratedQuotes
+    | Bottles
+    | Cocktails
+    | Architecture
+    | VintageCameras
+    | Cakes
+    | Unknown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Category and Item are simple records:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;type alias Category =
+    {categoryType : CategoryType, img : String, description : String}
+
+type alias Item =
+    {id : String, title : String, img : String, description : String, category : CategoryType}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;update&#34;&gt;update&lt;/h1&gt;
+
+&lt;p&gt;All Elm application have an &lt;code&gt;update&lt;/code&gt; function and ours is defined like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;update : Msg -&amp;gt; Model -&amp;gt; ( Model, Cmd b )
+update msg model =
+    case msg of
+        NavigateTo page -&amp;gt;
+            ( model, (Navigation.newUrl &amp;lt;| pageToString page) )
+
+        NavigateBack -&amp;gt;
+            model =&amp;gt; (Navigation.back 1)
+
+        GmailCaptcha -&amp;gt;
+            ( model, captcha() )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We pattern match on the &lt;code&gt;msg&lt;/code&gt; and either use the commands described in &lt;a href=&#34;#messages&#34;&gt;Messages&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;view&#34;&gt;View&lt;/h1&gt;
+
+&lt;p&gt;The View is quite simple its a virtual dom defined by the following nodes on the `rootView:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;rootView model =
+    div [class &amp;quot;container&amp;quot;]
+        [
+            nav [ class &amp;quot;navbar navbar-light&amp;quot;, attribute &amp;quot;role&amp;quot; &amp;quot;navigation&amp;quot; ]
+                [ a [class &amp;quot;pull-xs-left&amp;quot;
+                    , href &amp;lt;| toHash Home
+                    , onClick&#39; &amp;lt;| NavigateTo Home
+                    ]
+                    [img [id &amp;quot;logo&amp;quot;, class &amp;quot;img-fluid&amp;quot;, src &amp;quot;/img/logogreen.png&amp;quot;, srcset [&amp;quot;/img/logogreen.png&amp;quot;,&amp;quot;/img/logogreen@2x.png&amp;quot; ] ] []]
+                  ,  button [ attribute &amp;quot;aria-controls&amp;quot; &amp;quot;exCollapsingNavbar2&amp;quot;
+                            , attribute &amp;quot;aria-expanded&amp;quot; &amp;quot;false&amp;quot;
+                            , attribute &amp;quot;aria-label&amp;quot; &amp;quot;Toggle navigation&amp;quot;
+                            , class &amp;quot;navbar-toggler hidden-sm-up flex-center&amp;quot;
+                            , attribute &amp;quot;data-target&amp;quot; &amp;quot;#exCollapsingNavbar2&amp;quot;
+                            , attribute &amp;quot;data-toggle&amp;quot; &amp;quot;collapse&amp;quot;
+                            , type&#39; &amp;quot;button&amp;quot;
+                            ]
+                                [ text &amp;quot;☰&amp;quot; ]
+                        
+                , div [ class &amp;quot;collapse navbar-toggleable-xs&amp;quot;, id &amp;quot;exCollapsingNavbar2&amp;quot; ]
+                    [   ul [ class &amp;quot;nav navbar-nav pull-sm-right text-xs-center&amp;quot; ]
+                        [ renderMenuItem model Home &amp;quot;Home&amp;quot;
+                        , renderMenuItem model About &amp;quot;About&amp;quot;
+                        , renderMenuItem model Gallery &amp;quot;Gallery&amp;quot;
+                        , renderMenuItem model Contact &amp;quot;Contact&amp;quot;
+                        ]
+                    ]
+                ]
+        , div [class &amp;quot;content container-fluid&amp;quot;] [viewPage model]
+        , footer
+        ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;renderMenuItem&lt;/code&gt; is just changing a navigations item&amp;rsquo;s style based on the current page so I have omitted that.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;viewPage&lt;/code&gt; is where the view is updated depending on which page is current:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;viewPage model =
+    case model.page of
+        Home -&amp;gt; getHomePage ()
+        About -&amp;gt; getAboutPage ()
+        Gallery -&amp;gt; getGalleryAsCards ()
+        Contact -&amp;gt; getContactPage () 
+        CategoryDetail category -&amp;gt; getCategoryPageCards category
+        ItemDetail item -&amp;gt; getItemPage item
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see there is a separate view for each page which in return a list of nodes for that particular view, I wont list
+them all as the are relatively similar.&lt;/p&gt;
+
+&lt;p&gt;Heres an example of the &lt;code&gt;Category.View&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;getCategoryPageCards category =
+    let
+        items =
+            List.filter (\c -&amp;gt; c.category == category) Data.items
+        colClass =
+            case List.length items of
+                1 -&amp;gt; &amp;quot;col-xs-12&amp;quot;
+                2 -&amp;gt; &amp;quot;col-xs-12 col-sm-6&amp;quot;
+                _ -&amp;gt; &amp;quot;col-xs-12 col-sm-6 col-md-4&amp;quot;
+
+
+        itemMapper item =
+            div [ class colClass ]
+                [ div [ class &amp;quot;card&amp;quot;]
+                    [ a [ noContextMenu
+                        , href (toHash &amp;lt;| ItemDetail item.id)
+                        , onClick&#39; (NavigateTo &amp;lt;| ItemDetail item.id)
+                        ]
+                        [ img [ noContextMenu, class &amp;quot;card-img-top img-fluid&amp;quot;, src item.img ] [] ]
+                    , div [ class &amp;quot;card-block&amp;quot; ]
+                        [ p [ class &amp;quot;card-text&amp;quot; ] [ text item.title ] ]
+                    ]
+                ]
+    in
+        div [ class &amp;quot;container-fluid&amp;quot; ]
+            [ div [ class &amp;quot;row&amp;quot; ]
+                (items |&amp;gt; List.map itemMapper)
+            , div [] [ backButton ]
+            ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The nodes returned from &lt;code&gt;getCategoryPageCards&lt;/code&gt; are returned as part of &lt;code&gt;viewPage&lt;/code&gt;.  Data.items are filtered by the current
+category and mapped into &lt;code&gt;divs&lt;/code&gt; with &lt;code&gt;onClick&lt;/code&gt; navigation to the &lt;code&gt;ItemDetail&lt;/code&gt; page&lt;/p&gt;
+
+&lt;h1 id=&#34;navigation&#34;&gt;Navigation&lt;/h1&gt;
+
+&lt;p&gt;Navigation is handled with Elm &lt;a href=&#34;http://package.elm-lang.org/packages/elm-lang/navigation/latest&#34;&gt;Navigation&lt;/a&gt; which provides the &lt;code&gt;Navigation.program&lt;/code&gt; you saw in &lt;a href=&#34;#application-structure&#34;&gt;Application structure&lt;/a&gt;.&lt;br /&gt;
+The program function has been extended with an additional two arguments.&lt;/p&gt;
+
+&lt;p&gt;The first additional argument is a &lt;code&gt;Parser&lt;/code&gt;, there is a utility function called &lt;code&gt;makeParser that allows us to turn a 
+browser&lt;/code&gt;Location` into whatever data we want to.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;makeParser : (Location -&amp;gt; a) -&amp;gt; Parser a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the &lt;code&gt;Navigation.program&lt;/code&gt; you can see this used along with the functions below to parse a &lt;code&gt;Location&lt;/code&gt; into a &lt;code&gt;Page&lt;/code&gt;: &lt;code&gt;Navigation.program (Navigation.makeParser State.pathParser)&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;pathParser : Navigation.Location -&amp;gt; Result String Page
+pathParser location =
+    parse identity pageParser (String.dropLeft 1 location.pathname)
+
+
+pageParser : UrlParser.Parser (Page -&amp;gt; a) a
+pageParser =
+    oneOf
+        [ format Home (oneOf [ s &amp;quot;home&amp;quot;, s &amp;quot;&amp;quot; ])
+        , format About (s &amp;quot;about&amp;quot;)
+        , format Shop (s &amp;quot;shop&amp;quot;)
+        , format Gallery (s &amp;quot;gallery&amp;quot;)
+        , format Contact (s &amp;quot;contact&amp;quot;)
+        , format (stringToCategoryType &amp;gt;&amp;gt; CategoryDetail) (s &amp;quot;category&amp;quot; &amp;lt;/&amp;gt; UrlParser.string)
+        , format ItemDetail (s &amp;quot;item&amp;quot; &amp;lt;/&amp;gt; UrlParser.string)
+        ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This leads nicely into parsing, actually first lets look at &lt;code&gt;urlUpdate&lt;/code&gt; because its pretty simple:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;urlUpdate : Result a Page -&amp;gt; Model -&amp;gt; ( Model, Cmd c )
+urlUpdate result model =
+    case result of
+        Err _ -&amp;gt;
+            ( model, Navigation.modifyUrl (pageToString model.page) )
+
+        Ok page -&amp;gt;
+            { model | page = page } =&amp;gt; updateAnalytics (pageToString page)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We pattern match on the &lt;code&gt;result&lt;/code&gt; and if its &lt;code&gt;Ok&lt;/code&gt; we update the models page to the one passed in.  If the result is an
+error (&lt;code&gt;Err&lt;/code&gt;) then we modify the url with &lt;code&gt;Navigation.modifyUrl&lt;/code&gt; just pointing it back to the previous page.  &lt;code&gt;pageToString&lt;/code&gt;
+simply turns the &lt;code&gt;Page&lt;/code&gt; type back into a string.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m going to strategically ignore &lt;code&gt;updateAnalytics&lt;/code&gt;
+for now as this will be covered later.&lt;/p&gt;
+
+&lt;h1 id=&#34;parsing&#34;&gt;Parsing&lt;/h1&gt;
+
+&lt;p&gt;Parsing is handled with a small parser combinator library &lt;a href=&#34;http://package.elm-lang.org/packages/evancz/url-parser/latest/&#34;&gt;url-parser&lt;/a&gt; in the function above you can see how combinators
+are used to parse &lt;code&gt;Navigation&lt;/code&gt; into a &lt;code&gt;Page&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;oneOf&lt;/code&gt; is a combinator that will try to match one of the parsers in a list.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt; is a string combinator matching a particular string like &amp;ldquo;home&amp;rdquo;, &amp;ldquo;shop&amp;rdquo; etc.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;/&amp;gt;&lt;/code&gt; is a combinator that matches a &lt;code&gt;/&lt;/code&gt; character in the location like &lt;code&gt;item/myitem&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UrlParser.string&lt;/code&gt; matches any string.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;format&lt;/code&gt; Is a combinator that allows you to customise or map another &lt;code&gt;Parser&lt;/code&gt;, here it is used to Parsed output into the union types that represent them.&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;google-analytics&#34;&gt;Google Analytics&lt;/h1&gt;
+
+&lt;p&gt;Ok back to &lt;code&gt;updateAnalytics&lt;/code&gt; remember from &lt;code&gt;urlUpdate&lt;/code&gt;?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;{ model | page = page } =&amp;gt; updateAnalytics (pageToString page)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;updateAnalytics&lt;/code&gt; is a function defined as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;port updateAnalytics: String -&amp;gt; Cmd msg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes its just a type signature as this is a &lt;a href=&#34;https://guide.elm-lang.org/interop/javascript.html#ports&#34;&gt;port&lt;/a&gt; where we will be sending information out of our app into the fabulous
+JavaScript world, I&amp;rsquo;m glad you can&amp;rsquo;t hear the sarcasm in my voice :-)&lt;/p&gt;
+
+&lt;p&gt;Because this is a single page application we need to provide a way to update Google analytics whenever the page navigation
+changes otherwise everything will be displayed as a hit to the root.  Luckily all we need is a call to the normal
+Google Analytics script via the port we just set up.&lt;/p&gt;
+
+&lt;p&gt;The JavaScript looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-JavaScript&#34;&gt;var Elm = require(&#39;./App&#39;);
+var app = Elm.Main.embed(document.getElementById(&#39;main&#39;));
+
+app.ports.updateAnalytics.subscribe(function (page) {
+    ga(&#39;set&#39;, &#39;page&#39;, page);
+    ga(&#39;send&#39;, &#39;pageview&#39;);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the fist two lines you can see where Elm is embedded into the the html &lt;code&gt;main&lt;/code&gt; element, the important part is where
+&lt;code&gt;app.ports.updateAnalytics.subscribe&lt;/code&gt; is used to subscribe to the port Elm is publishing whenever &lt;code&gt;updateAnalytics&lt;/code&gt; is
+being called with the new &lt;code&gt;Page&lt;/code&gt;.  The result of this is we can now use Google Analytics to see exactly what page a user
+is visiting.&lt;/p&gt;
+
+&lt;p&gt;Actually the &lt;code&gt;GmailCaptcha&lt;/code&gt; message is the same except it uses a &lt;code&gt;Port&lt;/code&gt; defined like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-elm&#34;&gt;port captcha : () -&amp;gt; Cmd msg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then the JavaScript subscription is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-JavaScript&#34;&gt;app.ports.captcha.subscribe(function () {
+    window.open(&#39;http://www.google.com/recaptcha/mailhide/...&#39;, &#39;&#39;, &#39;toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300&#39;);
+    return false;
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All that&amp;rsquo;s happening here is that when the &lt;code&gt;GmailCaptcha&lt;/code&gt; message is sent a window is opened via the &lt;code&gt;Port&lt;/code&gt; and JavaScript to allow
+the email address to be retrieved.&lt;/p&gt;
+
+&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+
+&lt;p&gt;This post never intended to explain in detail about creating the web application more just to expose some of the more
+interesting parts and so show how much fun working in Elm is.&lt;/p&gt;
+
+&lt;p&gt;I used VSCode with the [elm addin] to build the entire thing and it worked out wonderfully.&lt;/p&gt;
+
+&lt;h2 id=&#34;comparision-with-fable&#34;&gt;Comparision with Fable&lt;/h2&gt;
+
+&lt;p&gt;This is the bit I was dreading a little.  &lt;a href=&#34;https://fable-compiler.github.io/&#34;&gt;Fable&lt;/a&gt; is a F# -&amp;gt; JavaScript transpiler.  I&amp;rsquo;ve done quite a lot of hacking
+with Fable and also made some contributions lately.  I would describe Elm as batteries included, and very slick, and
+lovely to work in.  I really love using it!  I really like the great compiler message, I also like the public type
+annotations that the Elm compiler nudges you to add.  Its very useful when reading code on-line to know the types on the
+publicly exposed parts so that you don&amp;rsquo;t have to use a visual editor to find out.  I could probably write an entire post
+comparing the two languages so I&amp;rsquo;ll leave it there for now.&lt;/p&gt;
+
+&lt;h1 id=&#34;so-whats-left&#34;&gt;So whats Left?&lt;/h1&gt;
+
+&lt;p&gt;All that&amp;rsquo;s left is the deployment and hosting side of thing which I&amp;rsquo;ll delve into that another time.&lt;/p&gt;
+
+&lt;p&gt;If you have any requests for me to go into parts in more detail please leave a comment or ping me on Twitter and I&amp;rsquo;ll add that in too.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+
+&lt;hr /&gt;
+</description>
+    </item>
     
     <item>
       <title>Elmtastic Updates</title>
@@ -2626,181 +3010,6 @@ static member Create(infoReader:InfoReader, m, denv, items, reactor, checkAlive)
                  alt=&#34;Exodus - Fabulous Disaster&#34; /&gt;
             &lt;figcaption&gt;
                 &lt;h6&gt;Exodus - Fabulous Disaster&lt;/h4&gt;
-            &lt;/figcaption&gt;
-        &lt;/figure&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-
-&lt;/div&gt;
-
-
-
-
-</description>
-    </item>
-    
-    <item>
-      <title>I saw my reflection and cried ...</title>
-      <link>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
-      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
-      
-      <guid>http://7sharpnine.com/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
-      <description>
-
-&lt;p&gt;While I was visiting Boston earlier in the year I had the misfortune of kicking myself in the teeth with reflection.  It&amp;rsquo;s something all programmers inevitably go through with reflection API&amp;rsquo;s as they are inherently untyped, a simple typo can leave you tearing out your hair or punching through your monitor!  Yeah there&amp;rsquo;s things the horizon that will help namely the &lt;a href=&#34;http://msdn.microsoft.com/en-us/magazine/dn802602.aspx&#34;&gt;nameof&lt;/a&gt; expression in C#6 which should help in some areas, that&amp;rsquo;s if your willing to pay the price of using C#, but I wont go into that here :-).  In F# we can leverage Type Providers fairly easily to wrap API usages in cases that we are interested in, or even create a general usage with a little more effort.&lt;br /&gt;
-&lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;using-the-type-provider&#34;&gt;Using the Type Provider&lt;/h3&gt;
-
-&lt;p&gt;In usage it will look like this vs the usual reflection API:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;
-//traditional reflection using untyped method
-let tt = typeof&amp;lt;DateTime&amp;gt;
-let meth = tt.GetMethod(&amp;quot;Add&amp;quot;)
-let result = meth.Invoke(DateTime.Now, [|TimeSpan.FromDays(1.)|])
-
-//using the type provider to provide a little safety net
-type rt = TypedReflection.Reflection&amp;lt; &amp;quot;System.DateTime&amp;quot;, &amp;quot;AddSeconds&amp;quot;&amp;gt;
-let result = rt.AddSeconds(DateTime.Now, 1.)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you make a mistake the compiler will tell you and you will be forces to fix the typo or add namespace prefixes etc.  You also get intellisense.autocompletion on usage and you can give actual parameters rather than arrays of loose objects etc.&lt;/p&gt;
-
-&lt;h3 id=&#34;code-dump&#34;&gt;Code Dump&lt;/h3&gt;
-
-&lt;p&gt;First of all I&amp;rsquo;m just going to leave the code here, and then talk through it below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;[&amp;lt;TypeProvider&amp;gt;]
-type public ReflectionTypeProvider(config : TypeProviderConfig) as this = 
-    inherit TypeProviderForNamespaces()
-
-    let assembly = Assembly.GetExecutingAssembly()
-    let nameSpace = this.GetType().Namespace
-    let providerType =
-        ProvidedTypeDefinition(assembly, nameSpace, &amp;quot;Reflection&amp;quot;, Some typeof&amp;lt;obj&amp;gt;, 
-                               IsErased = true, HideObjectMethods = true)
-
-    let buildReflection typeName (parameters : obj[]) =  
-        let reflectionType = string parameters.[0]
-        let methodName = string parameters.[1]
-
-        let theType = Type.GetType(reflectionType, true)
-        let meth = theType.GetMethod(methodName)
-        if meth = null then failwith &amp;quot;No such method!&amp;quot;
-
-        let wrapper = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some (typeof&amp;lt;obj&amp;gt;),
-                                             HideObjectMethods = true )
-
-        let parameterInfoToProvidedParameter (meth:MethodInfo) =
-            let pi = meth.GetParameters()
-
-            let instance = ProvidedParameter(&amp;quot;instance&amp;quot;, meth.ReflectedType)
-            let parameters =
-                pi
-                |&amp;gt; Seq.map (fun p -&amp;gt; ProvidedParameter(p.Name, p.ParameterType) )
-                |&amp;gt; Seq.toList
-            instance :: parameters
-            
-        let reflectionWrapper =
-            ProvidedMethod (meth.Name, parameterInfoToProvidedParameter meth, meth.ReturnType,
-                            IsStaticMethod = true,
-                            InvokeCode = function
-                                         | instance :: parameters -&amp;gt;
-                                             try Expr.Call (instance, meth, parameters)
-                                             with exn -&amp;gt; failwith &amp;quot;Error creating Invoke code.&amp;quot;
-                                         | _ -&amp;gt; failwith &amp;quot;Error: unexpected number of parameters&amp;quot; )
-        wrapper.AddMember reflectionWrapper
-        wrapper
-
-    do 
-        providerType.DefineStaticParameters
-            ([ ProvidedStaticParameter(&amp;quot;Type&amp;quot;, typeof&amp;lt;string&amp;gt;)
-               ProvidedStaticParameter(&amp;quot;Method&amp;quot;, typeof&amp;lt;string&amp;gt;) ], 
-             buildReflection)
-
-        this.AddNamespace (nameSpace, [ providerType ])
-
-[&amp;lt;assembly:TypeProviderAssembly&amp;gt;] 
-do()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;skeleton-code&#34;&gt;Skeleton code&lt;/h3&gt;
-
-&lt;p&gt;Reading from the bottom up you can see the parameters that our Type Provider accepts are &lt;code&gt;Type&lt;/code&gt; and &lt;code&gt;Method&lt;/code&gt;, those a pretty self explanatory.  You should also notice other boiler plate Type Provider code if you read my last &lt;a href=&#34;http://7sharpnine.com/posts/flux-compression-redux/&#34;&gt;ZipProvider post&lt;/a&gt;.  The important part here is the &lt;code&gt;buildReflection&lt;/code&gt; function.&lt;/p&gt;
-
-&lt;h3 id=&#34;buildreflection&#34;&gt;buildReflection&lt;/h3&gt;
-
-&lt;p&gt;First of all on lines &lt;code&gt;12/13&lt;/code&gt; we scrape of the configuration parameters &lt;code&gt;theType&lt;/code&gt; and &lt;code&gt;meth&lt;/code&gt;, we then do a quick check to ensure the type and method actually exist, if they don&amp;rsquo;t we raise an error on line &lt;code&gt;17&lt;/code&gt; so the use can correct the code.&lt;/p&gt;
-
-&lt;p&gt;Next we create a variable named wrapper which &lt;em&gt;wraps&lt;/em&gt; round the reflection API by creating a &lt;code&gt;ProvidedTypeDefinition&lt;/code&gt; on line &lt;code&gt;19&lt;/code&gt;.  We now have two methods which we use to create our safe API, &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; and &lt;code&gt;reflectionWrapper&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;parameterinfotoprovidedparameter&#34;&gt;parameterInfoToProvidedParameter&lt;/h3&gt;
-
-&lt;p&gt;The purpose of this is a mapping function from the reflection API&amp;rsquo;s untyped abstract form to our typed form that we use in the construction of the Provided methods.  Essentially this is pretty simple, we get the parameters for the &lt;code&gt;MethodInfo&lt;/code&gt; which we are wrapping on line &lt;code&gt;23&lt;/code&gt;.  The first parameter will be the instance of the reflected method will be working on, and the rest of the parameters will be those of the reflected method.  To add those we loop over the parameters from the &lt;code&gt;MethodInfo&lt;/code&gt; and map then to &lt;code&gt;ProvidedProperties&lt;/code&gt; by using the &lt;code&gt;Name&lt;/code&gt; and &lt;code&gt;ParameterType&lt;/code&gt; properties.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;(Thinking about this we could do it slightly differently by adding a &lt;code&gt;ProvidedConstructor&lt;/code&gt; which could take the initial instance, this could be added fairly easily if we really needed it.  )&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;reflectionwrapper&#34;&gt;reflectionWrapper&lt;/h3&gt;
-
-&lt;p&gt;The reflectionWrapper is where the magic happens, we create a &lt;code&gt;ProvidedMethod&lt;/code&gt; using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s name&amp;rsquo;, we add the parameters by using the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function, and we also add the return type by using the &lt;code&gt;MethodInfo&lt;/code&gt;&amp;rsquo;s &lt;code&gt;ReturnType&lt;/code&gt; parameter&amp;rsquo;.  We can also take advantage of &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/dd233192.aspx#sectionToggle4&#34;&gt;object initializers&lt;/a&gt; here to set &lt;code&gt;IsStaticMethod&lt;/code&gt; to true, and to add in the invoke code.&lt;/p&gt;
-
-&lt;p&gt;The invoke code uses the &lt;code&gt;function&lt;/code&gt; keyword which is really just a pattern match expression using only a single argument, here we use pattern matching on a list to extract the &lt;code&gt;head|tail&lt;/code&gt; arguments.  If you remember the &lt;code&gt;parameterInfoToProvidedParameter&lt;/code&gt; function then you will know that it returns a list &lt;code&gt;instance :: parameters&lt;/code&gt;.  We can now use the &lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/ee370577.aspx&#34;&gt;Quotations &lt;code&gt;Expr&lt;/code&gt;&lt;/a&gt; type with the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ee370395.aspx&#34;&gt;&lt;code&gt;Call&lt;/code&gt;&lt;/a&gt; function and pass in our instance and parameters in directly (instance is the reflected methods instance type, &lt;code&gt;meth&lt;/code&gt; is the &lt;code&gt;MethodInfo&lt;/code&gt; we will be calling, parameters are the parameters the &lt;code&gt;MethodInfo&lt;/code&gt; requires.&lt;/p&gt;
-
-&lt;h3 id=&#34;wrapping-up&#34;&gt;Wrapping up&lt;/h3&gt;
-
-&lt;p&gt;Finally we just add the &lt;code&gt;ProvidedMethod&lt;/code&gt; &lt;em&gt;&lt;code&gt;reflectionWrapper&lt;/code&gt;&lt;/em&gt; to the &lt;code&gt;ProvidedType&lt;/code&gt; &lt;em&gt;&lt;code&gt;wrapper&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;This is a fairly simple implementation but it could be &lt;strong&gt;beefed up&lt;/strong&gt; quite easily into something a little more elaborate without too much trouble.  If you use your imagination then there are numerous possibilities with Type Providers!&lt;/p&gt;
-
-&lt;p&gt;Reminds me of an old proverb:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;If you have a problem ...  
-if no one else can help ...  
-and if you cant find an existing one ...  
-maybe you can build ...  
-a Type Provider.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;:-)&lt;/p&gt;
-
-&lt;p&gt;Until next time!&lt;/p&gt;
-
-&lt;hr style=&#34;margin: 1em 0&#34;&gt;
-&lt;h1 id=&#34;essential-listening&#34;&gt;Essential listening:&lt;/h1&gt;
-
-
-&lt;div class=&#34;pure-g&#34;&gt;
-
-  
-  
-  
-  
-  &lt;div class=&#34;&#34;&gt;
-    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
-        &lt;figure style=&#34;margin: 0&#34;&gt;
-            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/b/ba/Dirt.jpg&#34; style=&#34;margin: 0&#34;
-                 alt=&#34;Alice In Chains - Dirt&#34; /&gt;
-            &lt;figcaption&gt;
-                &lt;h6&gt;Alice In Chains - Dirt&lt;/h4&gt;
-            &lt;/figcaption&gt;
-        &lt;/figure&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  
-
-  
-  
-  
-  
-  &lt;div class=&#34;&#34;&gt;
-    &lt;div style=&#34;width: 20%; float: left;padding: 0 .2em .2em 0&#34;&gt;
-        &lt;figure style=&#34;margin: 0&#34;&gt;
-            &lt;img src=&#34;http://upload.wikimedia.org/wikipedia/en/2/24/Alice_in_Chains_%28album%29.jpg&#34; style=&#34;margin: 0&#34;
-                 alt=&#34;Alice In Chains - Alice In Chains&#34; /&gt;
-            &lt;figcaption&gt;
-                &lt;h6&gt;Alice In Chains - Alice In Chains&lt;/h4&gt;
             &lt;/figcaption&gt;
         &lt;/figure&gt;
     &lt;/div&gt;

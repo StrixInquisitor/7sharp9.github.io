@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Building a single page application with Elm &middot; Dave Thomas</title>
+        <meta name="description" content="Building a single page application with Elm">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-10152365-8', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Building a single page application with Elm</h1>
+    
+        <p class="post-description" itemprop="description">Building a single page application with Elm</p>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2016-10-03" itemprop="datePublished">Mon, Oct 3, 2016</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<p>I&rsquo;ve been meaning to write this for a while but got sidetracked with other things, so this is an experience report of
+using Elm to build a single page application.</p>
+
+<p>First of all you can see the final site <a href="http://lynseythomas.com">here</a></p>
+
+<h1 id="basic-structure">Basic Structure</h1>
+
+<p>The basic structure is a navigation driven single page application, which also uses <a href="https://guide.elm-lang.org/architecture/">The Elm Architecture</a></p>
+
+<p>I split the site into separate file mainly based on <a href="http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html">how i structure elm apps</a> by <a href="https://twitter.com/krisajenkins">Kris Jenkins</a>.</p>
+
+<pre><code class="language-bash">├─ App.elm
+├─ Data.elm
+├─ Shared.elm
+├─ State.elm
+├─ Types.elm
+├─ View.elm
+│
+├─ About
+│  └─ View.elm
+├─ Category
+│  └─ View.elm
+├─ Contact
+│  └─ View.elm
+├─ Detail
+│  └─ View.elm
+├─ Gallery
+│  └─ View.elm
+└─ Home
+   └─ View.elm
+</code></pre>
+
+<p>I think its slightly overkill for a site of this size and complexity but its nice to understand where things will lead
+on a bigger site where you have additional files like <code>State.elm</code>, <code>Types.elm</code> and <code>Rest.elm</code> etc.</p>
+
+<p>One of the things that I did find a annoying at times was if I had <code>About/View.elm</code> and <code>Category/View.elm</code> both open in
+the tabs of my editor.  Only <code>View.elm</code> is shown in the tab so I had to hovering on the tab to see the full path or read
+the module name at the top of the file.  Renaming the file to <code>AboutView.elm</code> would mean the import statement would have
+to change to <code>import About.AboutView</code> as Elm enforces the directory name prefix.</p>
+
+<h1 id="application-structure">Application structure</h1>
+
+<p>As per the <a href="http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html">how i structure elm apps</a> article my application was structured like this:</p>
+
+<pre><code class="language-elm">module Main exposing (..)
+import View exposing (rootView)
+import Navigation
+import State
+
+
+main : Program Never
+main =
+    Navigation.program (Navigation.makeParser State.pathParser)
+        { init = State.init
+        , view = View.rootView
+        , update = State.update
+        , urlUpdate = State.urlUpdate
+        , subscriptions = State.subscriptions
+        }
+</code></pre>
+
+<p>All the main elements of the application are imported and a <code>Navigation.program</code> is started with the appropriate <code>init</code>,
+<code>view</code>, <code>update</code>, <code>urlUpdate</code> and <code>subscriptions</code>.</p>
+
+<h1 id="model-messages-and-types">Model Messages and types</h1>
+
+<h2 id="model">Model</h2>
+
+<p>The model is super simple, all that has to be recorded is the current page:</p>
+
+<pre><code class="language-elm">type alias Model =
+    { page : Page }
+</code></pre>
+
+<h2 id="messages">Messages</h2>
+
+<p>The messages the application will deal with are also pretty simple:</p>
+
+<pre><code class="language-elm">type Msg
+    = NavigateTo Page
+    | NavigateBack
+    | GmailCaptcha
+</code></pre>
+
+<ul>
+<li><code>NavigateTo</code> simply navigates to the page in question.</li>
+<li><code>NavigateBack</code> just navigates back one page.</li>
+<li><code>GmailCaptcha</code> displays a captcha request which then shows an email address on success.</li>
+</ul>
+
+<p>Page is just a union type consisting of the pages in the application:</p>
+
+<pre><code class="language-elm">type Page
+    = Home
+    | About
+    | Contact
+    | Gallery
+    | CategoryDetail CategoryType
+    | ItemDetail String
+</code></pre>
+
+<p>And <code>CategoryType</code> another union:</p>
+
+<pre><code class="language-elm">type CategoryType
+    = Perfumes
+    | Seasides
+    | IllustratedQuotes
+    | Bottles
+    | Cocktails
+    | Architecture
+    | VintageCameras
+    | Cakes
+    | Unknown
+</code></pre>
+
+<p>Category and Item are simple records:</p>
+
+<pre><code class="language-elm">type alias Category =
+    {categoryType : CategoryType, img : String, description : String}
+
+type alias Item =
+    {id : String, title : String, img : String, description : String, category : CategoryType}
+
+</code></pre>
+
+<h1 id="update">update</h1>
+
+<p>All Elm application have an <code>update</code> function and ours is defined like this:</p>
+
+<pre><code class="language-elm">update : Msg -&gt; Model -&gt; ( Model, Cmd b )
+update msg model =
+    case msg of
+        NavigateTo page -&gt;
+            ( model, (Navigation.newUrl &lt;| pageToString page) )
+
+        NavigateBack -&gt;
+            model =&gt; (Navigation.back 1)
+
+        GmailCaptcha -&gt;
+            ( model, captcha() )
+</code></pre>
+
+<p>We pattern match on the <code>msg</code> and either use the commands described in <a href="#messages">Messages</a></p>
+
+<h1 id="view">View</h1>
+
+<p>The View is quite simple its a virtual dom defined by the following nodes on the `rootView:</p>
+
+<pre><code class="language-elm">rootView model =
+    div [class &quot;container&quot;]
+        [
+            nav [ class &quot;navbar navbar-light&quot;, attribute &quot;role&quot; &quot;navigation&quot; ]
+                [ a [class &quot;pull-xs-left&quot;
+                    , href &lt;| toHash Home
+                    , onClick' &lt;| NavigateTo Home
+                    ]
+                    [img [id &quot;logo&quot;, class &quot;img-fluid&quot;, src &quot;/img/logogreen.png&quot;, srcset [&quot;/img/logogreen.png&quot;,&quot;/img/logogreen@2x.png&quot; ] ] []]
+                  ,  button [ attribute &quot;aria-controls&quot; &quot;exCollapsingNavbar2&quot;
+                            , attribute &quot;aria-expanded&quot; &quot;false&quot;
+                            , attribute &quot;aria-label&quot; &quot;Toggle navigation&quot;
+                            , class &quot;navbar-toggler hidden-sm-up flex-center&quot;
+                            , attribute &quot;data-target&quot; &quot;#exCollapsingNavbar2&quot;
+                            , attribute &quot;data-toggle&quot; &quot;collapse&quot;
+                            , type' &quot;button&quot;
+                            ]
+                                [ text &quot;☰&quot; ]
+                        
+                , div [ class &quot;collapse navbar-toggleable-xs&quot;, id &quot;exCollapsingNavbar2&quot; ]
+                    [   ul [ class &quot;nav navbar-nav pull-sm-right text-xs-center&quot; ]
+                        [ renderMenuItem model Home &quot;Home&quot;
+                        , renderMenuItem model About &quot;About&quot;
+                        , renderMenuItem model Gallery &quot;Gallery&quot;
+                        , renderMenuItem model Contact &quot;Contact&quot;
+                        ]
+                    ]
+                ]
+        , div [class &quot;content container-fluid&quot;] [viewPage model]
+        , footer
+        ]
+</code></pre>
+
+<p><code>renderMenuItem</code> is just changing a navigations item&rsquo;s style based on the current page so I have omitted that.</p>
+
+<p><code>viewPage</code> is where the view is updated depending on which page is current:</p>
+
+<pre><code class="language-elm">viewPage model =
+    case model.page of
+        Home -&gt; getHomePage ()
+        About -&gt; getAboutPage ()
+        Gallery -&gt; getGalleryAsCards ()
+        Contact -&gt; getContactPage () 
+        CategoryDetail category -&gt; getCategoryPageCards category
+        ItemDetail item -&gt; getItemPage item
+</code></pre>
+
+<p>You can see there is a separate view for each page which in return a list of nodes for that particular view, I wont list
+them all as the are relatively similar.</p>
+
+<p>Heres an example of the <code>Category.View</code>:</p>
+
+<pre><code class="language-elm">getCategoryPageCards category =
+    let
+        items =
+            List.filter (\c -&gt; c.category == category) Data.items
+        colClass =
+            case List.length items of
+                1 -&gt; &quot;col-xs-12&quot;
+                2 -&gt; &quot;col-xs-12 col-sm-6&quot;
+                _ -&gt; &quot;col-xs-12 col-sm-6 col-md-4&quot;
+
+
+        itemMapper item =
+            div [ class colClass ]
+                [ div [ class &quot;card&quot;]
+                    [ a [ noContextMenu
+                        , href (toHash &lt;| ItemDetail item.id)
+                        , onClick' (NavigateTo &lt;| ItemDetail item.id)
+                        ]
+                        [ img [ noContextMenu, class &quot;card-img-top img-fluid&quot;, src item.img ] [] ]
+                    , div [ class &quot;card-block&quot; ]
+                        [ p [ class &quot;card-text&quot; ] [ text item.title ] ]
+                    ]
+                ]
+    in
+        div [ class &quot;container-fluid&quot; ]
+            [ div [ class &quot;row&quot; ]
+                (items |&gt; List.map itemMapper)
+            , div [] [ backButton ]
+            ]
+</code></pre>
+
+<p>The nodes returned from <code>getCategoryPageCards</code> are returned as part of <code>viewPage</code>.  Data.items are filtered by the current
+category and mapped into <code>divs</code> with <code>onClick</code> navigation to the <code>ItemDetail</code> page</p>
+
+<h1 id="navigation">Navigation</h1>
+
+<p>Navigation is handled with Elm <a href="http://package.elm-lang.org/packages/elm-lang/navigation/latest">Navigation</a> which provides the <code>Navigation.program</code> you saw in <a href="#application-structure">Application structure</a>.<br />
+The program function has been extended with an additional two arguments.</p>
+
+<p>The first additional argument is a <code>Parser</code>, there is a utility function called <code>makeParser that allows us to turn a 
+browser</code>Location` into whatever data we want to.</p>
+
+<pre><code class="language-elm">makeParser : (Location -&gt; a) -&gt; Parser a
+</code></pre>
+
+<p>In the <code>Navigation.program</code> you can see this used along with the functions below to parse a <code>Location</code> into a <code>Page</code>: <code>Navigation.program (Navigation.makeParser State.pathParser)</code></p>
+
+<pre><code class="language-elm">pathParser : Navigation.Location -&gt; Result String Page
+pathParser location =
+    parse identity pageParser (String.dropLeft 1 location.pathname)
+
+
+pageParser : UrlParser.Parser (Page -&gt; a) a
+pageParser =
+    oneOf
+        [ format Home (oneOf [ s &quot;home&quot;, s &quot;&quot; ])
+        , format About (s &quot;about&quot;)
+        , format Shop (s &quot;shop&quot;)
+        , format Gallery (s &quot;gallery&quot;)
+        , format Contact (s &quot;contact&quot;)
+        , format (stringToCategoryType &gt;&gt; CategoryDetail) (s &quot;category&quot; &lt;/&gt; UrlParser.string)
+        , format ItemDetail (s &quot;item&quot; &lt;/&gt; UrlParser.string)
+        ]
+</code></pre>
+
+<p>This leads nicely into parsing, actually first lets look at <code>urlUpdate</code> because its pretty simple:</p>
+
+<pre><code class="language-elm">urlUpdate : Result a Page -&gt; Model -&gt; ( Model, Cmd c )
+urlUpdate result model =
+    case result of
+        Err _ -&gt;
+            ( model, Navigation.modifyUrl (pageToString model.page) )
+
+        Ok page -&gt;
+            { model | page = page } =&gt; updateAnalytics (pageToString page)
+</code></pre>
+
+<p>We pattern match on the <code>result</code> and if its <code>Ok</code> we update the models page to the one passed in.  If the result is an
+error (<code>Err</code>) then we modify the url with <code>Navigation.modifyUrl</code> just pointing it back to the previous page.  <code>pageToString</code>
+simply turns the <code>Page</code> type back into a string.</p>
+
+<p>I&rsquo;m going to strategically ignore <code>updateAnalytics</code>
+for now as this will be covered later.</p>
+
+<h1 id="parsing">Parsing</h1>
+
+<p>Parsing is handled with a small parser combinator library <a href="http://package.elm-lang.org/packages/evancz/url-parser/latest/">url-parser</a> in the function above you can see how combinators
+are used to parse <code>Navigation</code> into a <code>Page</code></p>
+
+<ul>
+<li><code>oneOf</code> is a combinator that will try to match one of the parsers in a list.</li>
+<li><code>s</code> is a string combinator matching a particular string like &ldquo;home&rdquo;, &ldquo;shop&rdquo; etc.</li>
+<li><code>&lt;/&gt;</code> is a combinator that matches a <code>/</code> character in the location like <code>item/myitem</code>.</li>
+<li><code>UrlParser.string</code> matches any string.</li>
+<li><code>format</code> Is a combinator that allows you to customise or map another <code>Parser</code>, here it is used to Parsed output into the union types that represent them.<br /></li>
+</ul>
+
+<h1 id="google-analytics">Google Analytics</h1>
+
+<p>Ok back to <code>updateAnalytics</code> remember from <code>urlUpdate</code>?</p>
+
+<pre><code class="language-elm">{ model | page = page } =&gt; updateAnalytics (pageToString page)
+</code></pre>
+
+<p><code>updateAnalytics</code> is a function defined as follows:</p>
+
+<pre><code class="language-elm">port updateAnalytics: String -&gt; Cmd msg
+</code></pre>
+
+<p>Yes its just a type signature as this is a <a href="https://guide.elm-lang.org/interop/javascript.html#ports">port</a> where we will be sending information out of our app into the fabulous
+JavaScript world, I&rsquo;m glad you can&rsquo;t hear the sarcasm in my voice :-)</p>
+
+<p>Because this is a single page application we need to provide a way to update Google analytics whenever the page navigation
+changes otherwise everything will be displayed as a hit to the root.  Luckily all we need is a call to the normal
+Google Analytics script via the port we just set up.</p>
+
+<p>The JavaScript looks like this:</p>
+
+<pre><code class="language-JavaScript">var Elm = require('./App');
+var app = Elm.Main.embed(document.getElementById('main'));
+
+app.ports.updateAnalytics.subscribe(function (page) {
+    ga('set', 'page', page);
+    ga('send', 'pageview');
+});
+</code></pre>
+
+<p>On the fist two lines you can see where Elm is embedded into the the html <code>main</code> element, the important part is where
+<code>app.ports.updateAnalytics.subscribe</code> is used to subscribe to the port Elm is publishing whenever <code>updateAnalytics</code> is
+being called with the new <code>Page</code>.  The result of this is we can now use Google Analytics to see exactly what page a user
+is visiting.</p>
+
+<p>Actually the <code>GmailCaptcha</code> message is the same except it uses a <code>Port</code> defined like this:</p>
+
+<pre><code class="language-elm">port captcha : () -&gt; Cmd msg
+</code></pre>
+
+<p>And then the JavaScript subscription is as follows:</p>
+
+<pre><code class="language-JavaScript">app.ports.captcha.subscribe(function () {
+    window.open('http://www.google.com/recaptcha/mailhide/...', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300');
+    return false;
+});
+</code></pre>
+
+<p>All that&rsquo;s happening here is that when the <code>GmailCaptcha</code> message is sent a window is opened via the <code>Port</code> and JavaScript to allow
+the email address to be retrieved.</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>This post never intended to explain in detail about creating the web application more just to expose some of the more
+interesting parts and so show how much fun working in Elm is.</p>
+
+<p>I used VSCode with the [elm addin] to build the entire thing and it worked out wonderfully.</p>
+
+<h2 id="comparision-with-fable">Comparision with Fable</h2>
+
+<p>This is the bit I was dreading a little.  <a href="https://fable-compiler.github.io/">Fable</a> is a F# -&gt; JavaScript transpiler.  I&rsquo;ve done quite a lot of hacking
+with Fable and also made some contributions lately.  I would describe Elm as batteries included, and very slick, and
+lovely to work in.  I really love using it!  I really like the great compiler message, I also like the public type
+annotations that the Elm compiler nudges you to add.  Its very useful when reading code on-line to know the types on the
+publicly exposed parts so that you don&rsquo;t have to use a visual editor to find out.  I could probably write an entire post
+comparing the two languages so I&rsquo;ll leave it there for now.</p>
+
+<h1 id="so-whats-left">So whats Left?</h1>
+
+<p>All that&rsquo;s left is the deployment and hosting side of thing which I&rsquo;ll delve into that another time.</p>
+
+<p>If you have any requests for me to go into parts in more detail please leave a comment or ping me on Twitter and I&rsquo;ll add that in too.</p>
+
+<p>Until next time!</p>
+
+<hr />
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/elm/">Elm</a>
+            
+                 <a href="/tags/spa/">SPA</a>
+            
+                 <a href="/tags/seo/">SEO</a>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/fable/">Fable</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Building%20a%20single%20page%20application%20with%20Elm&url=http%3a%2f%2f7sharpnine.com%2f2016%2f10%2f03%2fbuilding-an-spa-with-elm%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2016%2f10%2f03%2fbuilding-an-spa-with-elm%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2016%2f10%2f03%2fbuilding-an-spa-with-elm%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = '7sharp9';
+    var disqus_identifier = 'http:\/\/7sharpnine.com\/2016\/10\/03\/building-an-spa-with-elm\/';
+    var disqus_title = 'Building a single page application with Elm';
+    var disqus_url = 'http:\/\/7sharpnine.com\/2016\/10\/03\/building-an-spa-with-elm\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
+        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
+        <script src="http://7sharpnine.com/js/scripts.js"></script>
+    </body>
+</html>
+
