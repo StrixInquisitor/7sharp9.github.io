@@ -18,7 +18,7 @@
       <guid>http://7sharpnine.com/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
       <description>
 
-&lt;p&gt;So as promised heres an expanded post on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;So as promised here&amp;rsquo;s an expanded post on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
 
@@ -130,6 +130,10 @@ type myViewController(ptr) =
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You can see in &lt;code&gt;ViewDidLoad&lt;/code&gt; we added an event handler to &lt;code&gt;button1&lt;/code&gt; and consume the relevant UI components.&lt;/p&gt;
+
+&lt;h2 id=&#34;benefits&#34;&gt;Benefits&lt;/h2&gt;
+
+&lt;p&gt;The benefits of this approach depend of what angle you look from.  From the C# approach at the start of this post there&amp;rsquo;s the reduced complexity of not having partial types and the designer generated parts being part of the project.  You still get all the benefits of the UI controls being able to be consumed and available in auto completion etc.  Compared to the current F# approach there&amp;rsquo;s less boiler plate because you dont have to manually add properties and &lt;code&gt;Outlet&lt;/code&gt; attributes to your &lt;code&gt;ViewController&lt;/code&gt;, there&amp;rsquo;s also the pitfall of stringly types which are extremly error prone.  The final advantage is that if the storyboard is changed so that a control is deleted, the compilation will fail at design time rather than runtime.  Type providers provide a welcome safety net and boiler plate reduction in this scenario.&lt;/p&gt;
 
 &lt;h2 id=&#34;generated-code&#34;&gt;Generated Code&lt;/h2&gt;
 
