@@ -62,7 +62,7 @@
   }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I&amp;rsquo;ve always found the idea of partial class a bit of a cop out and never enjoyed having them around, which is why I do not miss them in F#.  It does, however, pose a bit of problem with dealing with feature parity between C# and F# where designer files are generated as partial classes and you have to implement code in the other partial classes.  In F# that whole aspect is entirely missing due to the lack of partial classes, which mean anyone with a penchant for visual designers will be disappointed.  &lt;em&gt;(You can read more about how the iOS designer works in Xamarin.iOS)&lt;/em&gt; &lt;a href=&#34;https://developer.xamarin.com/guides/ios/user_interface/designer/introduction/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve always found the idea of partial class a bit of a cop out and never enjoyed having them around, which is why I do not miss them in F#.  It does, however, pose a bit of problem with dealing with feature parity between C# and F# where designer files are generated as partial classes and you have to implement code in the other partial classes.  In F# that whole aspect is entirely missing due to the lack of partial classes, which means anyone with a penchant for visual designers will be disappointed.  &lt;em&gt;(You can read more about how the iOS designer works in Xamarin.iOS)&lt;/em&gt; &lt;a href=&#34;https://developer.xamarin.com/guides/ios/user_interface/designer/introduction/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&#34;is-there-be-a-better-way&#34;&gt;Is there be a better way?&lt;/h1&gt;
 
