@@ -129,7 +129,7 @@ type myViewController(ptr) =
                         |&amp;gt; String.concat &amp;quot; &amp;quot; )
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;In &lt;code&gt;ViewDidLoad&lt;/code&gt; we can add an event handler to &lt;code&gt;button1&lt;/code&gt; and consume the relevant UI components.&lt;/p&gt;
+&lt;p&gt;You can see in &lt;code&gt;ViewDidLoad&lt;/code&gt; we added an event handler to &lt;code&gt;button1&lt;/code&gt; and consume the relevant UI components.&lt;/p&gt;
 
 &lt;h2 id=&#34;generated-code&#34;&gt;Generated Code&lt;/h2&gt;
 
