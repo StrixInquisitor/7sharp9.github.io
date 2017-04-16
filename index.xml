@@ -22,9 +22,9 @@
 
 &lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
 
-&lt;p&gt;In iOS user interfaces can be represented by storyboards, essentially a storyboard is a big ball of xml that is produced by a visual designer like Xcode or Xamarin&amp;rsquo;s Designer.&lt;/p&gt;
+&lt;p&gt;In iOS, user interfaces can be represented by storyboards, essentially a storyboard is a big ball of xml that is produced by a visual designer like Xcode or Xamarin&amp;rsquo;s Designer.&lt;/p&gt;
 
-&lt;p&gt;The basic premise of designer based user interfaces in .Net is the concept of a code behind file and and a partial class.  For a Xamarin.iOS project something a bit like this will be present as a partial class:&lt;/p&gt;
+&lt;p&gt;The basic premise of designer based user interfaces in .Net is the concept of a code behind file and and a partial class.  For a C# Xamarin.iOS storyboard project something a bit like this will be present as a partial class:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-csharp&#34;&gt;namespace Designer
 {
@@ -62,7 +62,7 @@
   }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I&amp;rsquo;ve always found the idea of partial class a bit of a cop out and never enjoyed having them around, which is why I do not miss them in F#.  It does, however, pose a bit of problem with dealing with the interop between C# and F# features where designer files are generated as partial classes and you have to implement code in the other fragments.  &lt;em&gt;(You can read more about how the iOS designer works in Xamarin.iOS)&lt;/em&gt; &lt;a href=&#34;https://developer.xamarin.com/guides/ios/user_interface/designer/introduction/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve always found the idea of partial class a bit of a cop out and never enjoyed having them around, which is why I do not miss them in F#.  It does, however, pose a bit of problem with dealing with the feature parity between C# and F# features where designer files are generated as partial classes and you have to implement code in the other fragments.  In F# that whole aspect is entirely missing due to the lack of partial classes, which mean anyone with a penchant foe visual designers will be dissapointed.     &lt;em&gt;(You can read more about how the iOS designer works in Xamarin.iOS)&lt;/em&gt; &lt;a href=&#34;https://developer.xamarin.com/guides/ios/user_interface/designer/introduction/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&#34;is-there-be-a-better-way&#34;&gt;Is there be a better way?&lt;/h1&gt;
 
