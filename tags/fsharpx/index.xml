@@ -115,8 +115,7 @@ type myViewController(ptr) =
 
 &lt;p&gt;Due to the way Xamarin.iOS works we have to place a &lt;code&gt;Register&lt;/code&gt; attribute on the type so that the the iOS runtime can instantiate the correct type when the storyboard is constructed.  Another feature of the iOS designer type provider is that the &lt;code&gt;CustomClass&lt;/code&gt; name is exposed as a convenience so that you don&amp;rsquo;t have to remember or retype the name of the &lt;code&gt;ViewController&lt;/code&gt; avoiding stringly typed hell.  You can also see that &lt;code&gt;ourViewControllerBase&lt;/code&gt; is called using the &lt;code&gt;nativeint&lt;/code&gt; constructor: &lt;code&gt;inherit VCContainer.ourViewControllerBase(ptr)&lt;/code&gt;, this is how the storyboard infrastructure in iOS creates an instance of your ViewController`.&lt;/p&gt;
 
-&lt;p&gt;When we come to wire up events and consume the controls we can do so very easily via auto completion.  Say we want to wire up &lt;code&gt;button1&lt;/code&gt; so that when it is clicked we concatenate the contents of the &lt;code&gt;Entry&lt;/code&gt; controls and place the text into &lt;code&gt;label1&lt;/code&gt; we could do so like this:&lt;br /&gt;
-In &lt;code&gt;ViewDidLoad&lt;/code&gt; we can add an event handler to &lt;code&gt;button1&lt;/code&gt; and consume the relevant UI components.&lt;/p&gt;
+&lt;p&gt;When we come to wire up events and consume the controls we can do so very easily via auto completion.  Say we want to wire up &lt;code&gt;button1&lt;/code&gt; so that when it is clicked we concatenate the contents of the &lt;code&gt;Entry&lt;/code&gt; controls and place the text into &lt;code&gt;label1&lt;/code&gt; we could do so like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-fsharp&#34;&gt;    override x.ViewDidLoad () =
         base.ViewDidLoad ()
@@ -129,6 +128,8 @@ In &lt;code&gt;ViewDidLoad&lt;/code&gt; we can add an event handler to &lt;code&
                           x.entyr4.Text ]
                         |&amp;gt; String.concat &amp;quot; &amp;quot; )
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In &lt;code&gt;ViewDidLoad&lt;/code&gt; we can add an event handler to &lt;code&gt;button1&lt;/code&gt; and consume the relevant UI components.&lt;/p&gt;
 
 &lt;h2 id=&#34;generated-code&#34;&gt;Generated Code&lt;/h2&gt;
 

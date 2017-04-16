@@ -215,8 +215,7 @@ type myViewController(ptr) =
 
 <p>Due to the way Xamarin.iOS works we have to place a <code>Register</code> attribute on the type so that the the iOS runtime can instantiate the correct type when the storyboard is constructed.  Another feature of the iOS designer type provider is that the <code>CustomClass</code> name is exposed as a convenience so that you don&rsquo;t have to remember or retype the name of the <code>ViewController</code> avoiding stringly typed hell.  You can also see that <code>ourViewControllerBase</code> is called using the <code>nativeint</code> constructor: <code>inherit VCContainer.ourViewControllerBase(ptr)</code>, this is how the storyboard infrastructure in iOS creates an instance of your ViewController`.</p>
 
-<p>When we come to wire up events and consume the controls we can do so very easily via auto completion.  Say we want to wire up <code>button1</code> so that when it is clicked we concatenate the contents of the <code>Entry</code> controls and place the text into <code>label1</code> we could do so like this:<br />
-In <code>ViewDidLoad</code> we can add an event handler to <code>button1</code> and consume the relevant UI components.</p>
+<p>When we come to wire up events and consume the controls we can do so very easily via auto completion.  Say we want to wire up <code>button1</code> so that when it is clicked we concatenate the contents of the <code>Entry</code> controls and place the text into <code>label1</code> we could do so like this:</p>
 
 <pre><code class="language-fsharp">    override x.ViewDidLoad () =
         base.ViewDidLoad ()
@@ -229,6 +228,8 @@ In <code>ViewDidLoad</code> we can add an event handler to <code>button1</code> 
                           x.entyr4.Text ]
                         |&gt; String.concat &quot; &quot; )
 </code></pre>
+
+<p>In <code>ViewDidLoad</code> we can add an event handler to <code>button1</code> and consume the relevant UI components.</p>
 
 <h2 id="generated-code">Generated Code</h2>
 
