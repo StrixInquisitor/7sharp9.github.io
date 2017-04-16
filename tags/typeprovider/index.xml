@@ -72,11 +72,11 @@
 
 &lt;h1 id=&#34;introducing-the-ios-designer-provider&#34;&gt;Introducing the iOS designer provider&lt;/h1&gt;
 
-&lt;p&gt;Type providers come in two distinct forms, generative and erasing, generally most people use erasing providers where the code is erased at compile time to objects leaving only raw functionality.  This is particularly useful for large schemas where information is generated on demand or the runtime representation is only data and methods.  Generative providers produce real types that can be consumed and augmented in the normal fashion.  Due to the nature of the iOS runtime and the way the Xamarin iOS works generative type providers are needed.&lt;/p&gt;
+&lt;p&gt;Type providers come in two distinct forms, generative and erasing, generally most people use erasing providers where the code is erased at compile time to objects leaving only raw functionality.  This is particularly useful for large schemas where information is generated on demand or the runtime representation is only data and methods.  Generative providers produce real types that can be consumed and augmented in the normal fashion.  Due to the nature of the iOS runtime and the way the Xamarin iOS works, generative type providers are needed.&lt;/p&gt;
 
 &lt;h2 id=&#34;how-does-it-work&#34;&gt;How does it work?&lt;/h2&gt;
 
-&lt;p&gt;The storyboard files within the current project are processed and any &lt;code&gt;ViewControllers&lt;/code&gt; that have been assigned a name are processed by the type provider.  Each control within the &lt;code&gt;ViewController&lt;/code&gt; are processed if they have been assigned a name.  A property and disposal logic is generated as well as an abstract type for the controller.&lt;/p&gt;
+&lt;p&gt;The storyboard files within the current project are processed and any &lt;code&gt;ViewControllers&lt;/code&gt; that have been assigned a name are processed by the type provider.  Each control within the &lt;code&gt;ViewController&lt;/code&gt; are also processed if they have been assigned a name.  A property and disposal logic is generated as well as an abstract type for the controller.&lt;/p&gt;
 
 &lt;h2 id=&#34;example-storyboard&#34;&gt;Example storyboard&lt;/h2&gt;
 

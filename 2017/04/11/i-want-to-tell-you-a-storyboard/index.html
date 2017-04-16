@@ -172,11 +172,11 @@ ga('send', 'pageview');
 
 <h1 id="introducing-the-ios-designer-provider">Introducing the iOS designer provider</h1>
 
-<p>Type providers come in two distinct forms, generative and erasing, generally most people use erasing providers where the code is erased at compile time to objects leaving only raw functionality.  This is particularly useful for large schemas where information is generated on demand or the runtime representation is only data and methods.  Generative providers produce real types that can be consumed and augmented in the normal fashion.  Due to the nature of the iOS runtime and the way the Xamarin iOS works generative type providers are needed.</p>
+<p>Type providers come in two distinct forms, generative and erasing, generally most people use erasing providers where the code is erased at compile time to objects leaving only raw functionality.  This is particularly useful for large schemas where information is generated on demand or the runtime representation is only data and methods.  Generative providers produce real types that can be consumed and augmented in the normal fashion.  Due to the nature of the iOS runtime and the way the Xamarin iOS works, generative type providers are needed.</p>
 
 <h2 id="how-does-it-work">How does it work?</h2>
 
-<p>The storyboard files within the current project are processed and any <code>ViewControllers</code> that have been assigned a name are processed by the type provider.  Each control within the <code>ViewController</code> are processed if they have been assigned a name.  A property and disposal logic is generated as well as an abstract type for the controller.</p>
+<p>The storyboard files within the current project are processed and any <code>ViewControllers</code> that have been assigned a name are processed by the type provider.  Each control within the <code>ViewController</code> are also processed if they have been assigned a name.  A property and disposal logic is generated as well as an abstract type for the controller.</p>
 
 <h2 id="example-storyboard">Example storyboard</h2>
 
