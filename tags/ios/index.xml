@@ -133,7 +133,9 @@ type myViewController(ptr) =
 
 &lt;h2 id=&#34;benefits&#34;&gt;Benefits&lt;/h2&gt;
 
-&lt;p&gt;The benefits of this approach depend of what angle you look from.  From the C# approach at the start of this post there&amp;rsquo;s the reduced complexity of not having partial types and the designer generated parts being part of the project.  You still get all the benefits of the UI controls being able to be consumed and available in auto completion etc.  Compared to the current F# approach there&amp;rsquo;s less boiler plate because you dont have to manually add properties and &lt;code&gt;Outlet&lt;/code&gt; attributes to your &lt;code&gt;ViewController&lt;/code&gt;, with this approach there&amp;rsquo;s also the pitfall of stringly types which are extremly error prone.  The final advantage is that if the storyboard is changed so that a control is deleted, the compilation will fail at design time rather than runtime.  Type providers provide a welcome safety net and boiler plate reduction in this scenario.&lt;/p&gt;
+&lt;p&gt;The benefits of this approach depend of what angle you look from.  From the C# approach at the start of this post there&amp;rsquo;s the reduced complexity of not having partial types and the designer generated parts being part of the project.  You still get all the benefits of the UI controls being able to be consumed and available in auto completion etc.  Compared to the current F# approach there&amp;rsquo;s less boiler plate because you dont have to manually add properties and &lt;code&gt;Outlet&lt;/code&gt; attributes to your &lt;code&gt;ViewController&lt;/code&gt;, with this approach there&amp;rsquo;s also the pitfall of stringly types which are extremly error prone.  The final advantage is that if the storyboard is changed so that a control is deleted, the compilation will fail at design time rather than runtime.&lt;/p&gt;
+
+&lt;p&gt;Type providers provide a welcome safety net and boiler plate reduction in this type of scenarios.&lt;/p&gt;
 
 &lt;h2 id=&#34;generated-code&#34;&gt;Generated Code&lt;/h2&gt;
 
