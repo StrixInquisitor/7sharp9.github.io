@@ -8,7 +8,9 @@
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Fri, 29 Apr 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://7sharpnine.com/page/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://7sharpnine.com/page/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>About Me</title>
@@ -16,22 +18,9 @@
       <pubDate>Fri, 29 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>http://7sharpnine.com/page/about/</guid>
-      <description>&lt;p&gt;
-&lt;figure &gt;
-    
-        &lt;img src=&#34;http://7sharpnine.com/img/working.jpg&#34; /&gt;
-    
-    
-&lt;/figure&gt;
-
-Hi, my name is Dave Thomas and Im a software engineer from the Uk.  I work primarily in F# but also like to tinker with pretty much any interesting language.  Im drawn to more functional languages like F#, Elixir, Elm, but also like to use Go, Rust, and recently Pony.&lt;/p&gt;
-
-&lt;p&gt;When Im not working I like: playing guitar, woodworking, watercolour sketching, and practicing yoga.&lt;/p&gt;
-
-&lt;p&gt;Have questions or suggestions? Feel free to &lt;a href=&#34;https://twitter.com/7sharp9_exhumed&#34;&gt;ask me on Twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-</description>
+      <description>Hi, my name is Dave Thomas and Im a software engineer from the Uk. I work primarily in F# but also like to tinker with pretty much any interesting language. Im drawn to more functional languages like F#, Elixir, Elm, but also like to use Go, Rust, and recently Pony.
+When Im not working I like: playing guitar, woodworking, watercolour sketching, and practicing yoga.
+Have questions or suggestions? Feel free to ask me on Twitter.</description>
     </item>
     
   </channel>
