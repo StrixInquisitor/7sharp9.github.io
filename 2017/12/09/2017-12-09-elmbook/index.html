@@ -302,7 +302,7 @@ Lets start to flesh things out further by further defining the model and other r
 
 <h2 id="view">View</h2>
 
-<p>The View is quite simple based on a standard Bootstrap 4 Navbar navigation.  We can define it by adapting some standard bootstrap html:</p>
+<p>The View is quite simple based on a standard Bootstrap 4 <code>Navbar</code> navigation.  We can define it by adapting some standard bootstrap html:</p>
 
 <pre><code class="language-html">&lt;nav class=&quot;navbar navbar-light bg-faded&quot;&gt;
   &lt;a class=&quot;navbar-brand&quot; href=&quot;#&quot;&gt;Navbar&lt;/a&gt;
@@ -366,7 +366,7 @@ Lets start to flesh things out further by further defining the model and other r
 
 <h2 id="converting-pages-to-hrefs">Converting pages to hrefs</h2>
 
-<p>When we want to navigate we can either use a href node or send a command to navigate via the Elm architecture.  If we want to navigate using href then we need some way to convert our representation of a page into something that can be represented in the url in the browser navigation:</p>
+<p>When we want to navigate we can either use a <code>href</code> node or send a command to navigate via the Elm architecture.  If we want to navigate using <code>href</code> then we need some way to convert our representation of a page into something that can be represented in the url in the browser navigation:</p>
 
 <pre><code class="language-elm">toHref : Page -&gt; String
 toHash page =
@@ -407,7 +407,7 @@ onClick_ msg =
 
 <h2 id="multiple-images-sources-based-on-pixel-density">Multiple images sources based on pixel density</h2>
 
-<p><code>srcset</code> is an html 5 img attribute that can be used to apply different images depending on the native resolution of the browser, [Mozilla.org][6] describes it as follows:</p>
+<p><code>srcset</code> is an html 5 <code>img</code> attribute that can be used to apply different images depending on the native resolution of the browser, [Mozilla.org][6] describes it as follows:</p>
 
 <blockquote>
 <p>A list of one or more strings separated by commas indicating a set of possible image sources for the user agent to use. Each string is composed of:
@@ -730,7 +730,7 @@ urlUpdate result model =
 <li>Setting up a project with a structure that supports a lot more expansion rather than having thousands of lines crammed into a single file.<br /></li>
 <li>We used a model and type based approach to model the navigation and pages with the application</li>
 <li>We learned how Navigation works in single page applications</li>
-<li>Used Html 5 img <code>srcset</code> attribute to apply different images based on pixel density</li>
+<li>Used Html 5 <code>img</code> <code>srcset</code> attribute to apply different images based on pixel density</li>
 <li>Added custom events to override default browser behavior on navigation to a url</li>
 <li>Learned how to use parser combinators to parse url fragments</li>
 <li>Used ports to communicate with JavaScript</li>
