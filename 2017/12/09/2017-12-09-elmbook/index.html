@@ -248,24 +248,22 @@ Lets start to flesh things out further by further defining the model and other r
     = Seasides
     | IllustratedQuotes
     | Architecture```
+</code></pre>
 
+<p>The same cannot be said about <code>ItemDetail</code> as thats just going to be a key to the items name, it could equally be a number but lets keep that as a simple string for now.  Lets update the Page type to take those new types into account:</p>
 
-The same cannot be said about `ItemDetail` as thats just going to be a key to the items name, it could equally be a number but lets keep that as a simple string for now.  Lets update the Page type to take those new types into account:  
-
-```elm
-type Page
+<pre><code class="language-elm">type Page
     = Home
     | About
     | Contact
     | Gallery
     | CategoryDetail CategoryDetail
     | ItemDetail String
-    ```
+</code></pre>
 
-We can now also update the Model so that the field page is represented by the `Page` type:
+<p>We can now also update the Model so that the field page is represented by the <code>Page</code> type:</p>
 
-```elm
-type alias Model =
+<pre><code class="language-elm">type alias Model =
     { page : Page }
 </code></pre>
 
