@@ -134,6 +134,7 @@ ga('send', 'pageview');
 
 <pre><code>Navigation bar: [About|Gallery|Contact]
 &lt;Main content view, this is based on the current navigation selection&gt;
+&lt;fixed footer&gt;
 </code></pre>
 
 <h2 id="about-view">About View</h2>
@@ -142,21 +143,31 @@ ga('send', 'pageview');
 
 <h2 id="gallery-view">Gallery View</h2>
 
-<p>The gallery view is a list of categories showing an image and description for each.  Clicking on the image result in navigating to the Item View.</p>
+<p>The gallery view is a list of categories showing an image and description for each.  Clicking on the image result in navigating to the Item View, theres also a back button to navigate back to Home.</p>
 
 <pre><code> &lt;fixed description text&gt;
- Category1 image1
- Category2 image2
- Category3 image3
+ Category1 image
+ Category2 image
+ Category3 image
+ &lt;back button&gt;
 </code></pre>
 
 <h2 id="contact-view">Contact View</h2>
 
 <p>The contact view contain some text and links to various social media, and a link to navigate back to Home.</p>
 
+<pre><code>&lt;text&gt;
+&lt;back button&gt;
+</code></pre>
+
 <h2 id="item-view">Item View</h2>
 
 <p>The item view contains a image and descriptive text as well as a means to navigate back to the Gallery.</p>
+
+<pre><code>&lt;text&gt;
+&lt;image&gt;
+&lt;back button&gt;
+</code></pre>
 
 <hr />
 
