@@ -128,28 +128,39 @@ ga('send', 'pageview');
 
 <p>The basic structure of the application we will be constructing comprises a home, about, contact, gallery and item view as follows:</p>
 
-<pre><code>Home View
-Navigation[About|Gallery|Contact]
-[Main view below based on navigation selection]
+<h3 id="home-view">Home View</h3>
 
-About View
-[About details]
+<p>This will contain a basic navigation bar at the top with the contents reflecting the current selection</p>
 
-Contact View
-[Contact details]
-
-Gallery View
-[Gallery items    |
- fixed description text
- Category1 image  |
- Category2 image  |
- Category3 image] |
-
-Item View
-[Image Description]
+<pre><code>Navigation bar: [About|Gallery|Contact]
+&lt;Main content view, this is based on the current navigation selection&gt;
 </code></pre>
 
+<h2 id="about-view">About View</h2>
+
+<p>The About view is simply a page displaying details, like a description and image.</p>
+
+<h2 id="gallery-view">Gallery View</h2>
+
+<p>The gallery view is a list of categories showing an image and description for each.  Clicking on the image result in navigating to the Item View.</p>
+
+<pre><code> &lt;fixed description text&gt;
+ Category1 image1
+ Category2 image2
+ Category3 image3
+</code></pre>
+
+<h2 id="contact-view">Contact View</h2>
+
+<p>The contact view contain some text and links to various social media, and a link to navigate back to Home.</p>
+
+<h2 id="item-view">Item View</h2>
+
+<p>The item view contains a image and descriptive text as well as a means to navigate back to the <code>Gallery</code>.</p>
+
 <p>The basic structure of this single page application is relatively simple and also follows <a href="https://guide.elm-lang.org/architecture/">The elm architecture</a> as you would expect.</p>
+
+<hr />
 
 <p>This single page application will be split into files loosely based on <a href="http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html">How i structure elm apps</a> by <a href="https://twitter.com/krisajenkins">Kris Jenkins</a>.</p>
 
