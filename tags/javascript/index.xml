@@ -2,40 +2,40 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Javascript on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/javascript/</link>
+    <link>http://7sharpnine.github.io/site/tags/javascript/</link>
     <description>Recent content in Javascript on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Tue, 07 Jun 2016 13:20:49 +0100</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Creating fuse applications with fable</title>
-      <link>http://7sharpnine.github.io/2016/06/07/fable-fuse-template/</link>
+      <link>http://7sharpnine.github.io/site/2016/06/07/fable-fuse-template/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/2016/06/07/fable-fuse-template/</guid>
+      <guid>http://7sharpnine.github.io/site/2016/06/07/fable-fuse-template/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a guide to creating your first &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Light The Fuse</title>
-      <link>http://7sharpnine.github.io/2016/06/03/light-the-fuse/</link>
+      <link>http://7sharpnine.github.io/site/2016/06/03/light-the-fuse/</link>
       <pubDate>Fri, 03 Jun 2016 11:21:57 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/2016/06/03/light-the-fuse/</guid>
+      <guid>http://7sharpnine.github.io/site/2016/06/03/light-the-fuse/</guid>
       <description>&lt;p&gt;In this post Im going to be introducing something new and exciting the combination of F#, Fable and Fuse.  If I was American I might say this was the holy trinity of awesomeness!&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Whats in your toolbox?</title>
-      <link>http://7sharpnine.github.io/2012/08/27/2012-08-23-whats-in-your-toolbox/</link>
+      <link>http://7sharpnine.github.io/site/2012/08/27/2012-08-23-whats-in-your-toolbox/</link>
       <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/08/27/2012-08-23-whats-in-your-toolbox/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/08/27/2012-08-23-whats-in-your-toolbox/</guid>
       <description>If I walk into my garage now and open up a toolbox, whats inside?
 Here&amp;rsquo;s a quick selection:
  Ball-peen hammer Jointer plane 1&amp;frasl;2 inch mortise chisel Soldering iron Set square Low angle block plane Torx screw drivers Hack saw Monkey wrench Pipe cutter  Notice it doesn&amp;rsquo;t just contain:

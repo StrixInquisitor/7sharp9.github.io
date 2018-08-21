@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Xamarin.forms on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/xamarin.forms/</link>
+    <link>http://7sharpnine.github.io/site/tags/xamarin.forms/</link>
     <description>Recent content in Xamarin.forms on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Wed, 28 May 2014 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/xamarin.forms/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/xamarin.forms/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Xamarin 3 F# Awesomeness</title>
-      <link>http://7sharpnine.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
+      <link>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
+      <guid>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
       <description>With the release of Xamarin 3 there is a swathe of new features to the platform, but obviously the most important one is obviously F# support is now included by default in Xamarin Studio so there is no escape from the awesomeness of F#!
 So what else have we got, well loads of other goodies too like Xamarin Designer for iOS, Xamarin.Forms, Major IDE enhancements, Improved code sharing with PCL and Shared projects, and BCL Documentation.</description>
     </item>

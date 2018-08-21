@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Asynchronous on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/asynchronous/</link>
+    <link>http://7sharpnine.github.io/site/tags/asynchronous/</link>
     <description>Recent content in Asynchronous on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 15 Jul 2012 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/asynchronous/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/asynchronous/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Lurking Horror</title>
-      <link>http://7sharpnine.github.io/2012/07/15/2012-07-15-the-lurking-horror/</link>
+      <link>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/07/15/2012-07-15-the-lurking-horror/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</guid>
       <description>Deep in the darkest depths lurks an ancient horror, when the time is right it will rise forth and leave you screaming for mercy and begging for forgiveness&amp;hellip;
  OK, I have a penchant for being over dramatic but in this post I am going to reveal some little known caveats in a well known and much revelled area of F#, agents aka the MailboxProcessor. Gasp!
 First let me give you a demonstration:</description>
@@ -25,10 +25,10 @@ First let me give you a demonstration:</description>
     
     <item>
       <title>FSharp Dataflow agents III</title>
-      <link>http://7sharpnine.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
+      <link>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
       <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
       <description>This will be the last post on rebuilding the MailboxProcessor using TDF, here&amp;rsquo;s a quick discussion of the missing pieces&amp;hellip;
 First, lets start with the simple ones, these don&amp;rsquo;t really require much discussion.
 DefaultTimeout let mutable defaultTimeout = Timeout.Infinite member x.DefaultTimeout with get() = defaultTimeout and set(value) = defaultTimeout &amp;lt;- value  This simply provides a mutable property using Timeout.Infinite as a default setting.
@@ -37,59 +37,59 @@ CurrentQueueLength member x.CurrentQueueLength() = incomingMessages.Count  Anoth
     
     <item>
       <title>F# Dataflow Agents Part II</title>
-      <link>http://7sharpnine.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
+      <link>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
       <pubDate>Mon, 30 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
       <description>Right, no messing about this time, straight to the code.
 Construction This is pretty straight forward and I don&amp;rsquo;t want to detract from the important bits of this post, the only thing of note is the cancellationToken which is initialized to a default value using the defaultArg function if the optional parameter cancellationToken is not supplied. The TDF construct that we to use to perform most of the hard work is incomingMessages which is a BufferBlock&amp;lt;&#39;Msg&amp;gt;.</description>
     </item>
     
     <item>
       <title>F# Dataflow Agents Part I</title>
-      <link>http://7sharpnine.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
+      <link>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
       <pubDate>Sun, 22 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
       <description>This is going to be a new series on using TPL Dataflow with F#. First a little bit of history and background.
 TPL Dataflows heritage and background TPL Dataflow or (TDF) has been around for quite a while, it first surfaced more than a year ago as the successor to the Concurrency and Coordination Runtime (CCR) and with coming release of .Net 4.5 it will be part of the System.</description>
     </item>
     
     <item>
       <title> Agents and ObjectPools</title>
-      <link>http://7sharpnine.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</link>
+      <link>http://7sharpnine.github.io/site/2011/06/05/2011-06-05-agents-and-objectpools/</link>
       <pubDate>Sun, 05 Jun 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
+      <guid>http://7sharpnine.github.io/site/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
       <description>Everyone knows F# agents are cool right? Well here&amp;rsquo;s yet another example of how versatile they can be&amp;hellip;
 There was a series of posts last April by Stephen Toub from the pfxteam at Microsoft. I was reading through some of the posts again the other day and thought some of the ideas presented there would make interesting projects in F# to demonstrate the flexibility and succinctness of the language. I thought the ObjectPool example would make an interesting project in F# using agents aka MailboxProcessors.</description>
     </item>
     
     <item>
       <title>Pipeline processing 3</title>
-      <link>http://7sharpnine.github.io/2011/04/04/2011-04-04-pipeline-processing-3/</link>
+      <link>http://7sharpnine.github.io/site/2011/04/04/2011-04-04-pipeline-processing-3/</link>
       <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2011/04/04/2011-04-04-pipeline-processing-3/</guid>
+      <guid>http://7sharpnine.github.io/site/2011/04/04/2011-04-04-pipeline-processing-3/</guid>
       <description>Ok so I have been offline for a while now, what with starting a new financial contract in London and not having any broadband access for a while. I have been working on something, honest!
 Since the last post I have been reflecting on the pipeline design and it had a distinct object orientated feel to it that I wasnt happy with, so I have amended the structure of the code and come up with the following which simplifies in some areas and expands in others&amp;hellip;module Pipeline open System.</description>
     </item>
     
     <item>
       <title>Pipeline processing 2</title>
-      <link>http://7sharpnine.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <link>http://7sharpnine.github.io/site/2011/02/13/2011-02-13-pipeline-processing-2/</link>
       <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <guid>http://7sharpnine.github.io/site/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
       <description>Welcome to pipeline processing part 2. I feel I need to backtrack slightly from the previous post, having worked with pipelines for quite some time I have the advantage of knowing all of the details that may be alluded to in these articles without being effected by any omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going to try and rectify that a bit now.</description>
     </item>
     
     <item>
       <title>Pipeline processing 1</title>
-      <link>http://7sharpnine.github.io/2011/02/01/2011-02-01-pipeline-processing-1/</link>
+      <link>http://7sharpnine.github.io/site/2011/02/01/2011-02-01-pipeline-processing-1/</link>
       <pubDate>Tue, 01 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2011/02/01/2011-02-01-pipeline-processing-1/</guid>
+      <guid>http://7sharpnine.github.io/site/2011/02/01/2011-02-01-pipeline-processing-1/</guid>
       <description>Welcome to new series of articles on pipeline processing. First up, what&amp;rsquo;s a pipeline? Well according to Wikipedia:
  A pipeline is a set of data processing elements connected in series, so that the output of one element is the input of the next one. The elements of a pipeline are often executed in parallel or in time-sliced fashion; in that case, some amount of buffer storage is often inserted between elements.</description>
     </item>

@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Async on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/async/</link>
+    <link>http://7sharpnine.github.io/site/tags/async/</link>
     <description>Recent content in Async on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 05 May 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/async/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/async/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I node something (Bout You)</title>
-      <link>http://7sharpnine.github.io/2013/05/05/2013-05-05-i-node-something/</link>
+      <link>http://7sharpnine.github.io/site/2013/05/05/2013-05-05-i-node-something/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2013/05/05/2013-05-05-i-node-something/</guid>
+      <guid>http://7sharpnine.github.io/site/2013/05/05/2013-05-05-i-node-something/</guid>
       <description>What is Edge.js?  Unless you live in a hole you have probably heard of node.js so I&amp;rsquo;ll not bother to explain what it is or what it does. An interesting project has come to light lately, namely Edge.js. The Edge.js project allows you to connect node.js with .Net.
 The creator of Edge.js Tomasz Janczuk sums this up nicely:
  An edge connects two nodes
@@ -26,39 +26,39 @@ This edge connects node.js with .</description>
     
     <item>
       <title>iOS async revisited</title>
-      <link>http://7sharpnine.github.io/2013/04/18/2013-04-18-ios-async-revisited/</link>
+      <link>http://7sharpnine.github.io/site/2013/04/18/2013-04-18-ios-async-revisited/</link>
       <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2013/04/18/2013-04-18-ios-async-revisited/</guid>
+      <guid>http://7sharpnine.github.io/site/2013/04/18/2013-04-18-ios-async-revisited/</guid>
       <description>In this post weare going to look as async again, but from the perspective of F#.
 Xamarin Evolve 2013   I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
     </item>
     
     <item>
       <title>A little bit of iOS async</title>
-      <link>http://7sharpnine.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
+      <link>http://7sharpnine.github.io/site/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
       <pubDate>Tue, 16 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
+      <guid>http://7sharpnine.github.io/site/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
       <description>I was going to title this post as &amp;lsquo;Now for something completely different&amp;rsquo; but felt that a little bit too Pythonesque, and when I thought about it a bit it isn&amp;rsquo;t really completely just slightly different, namely C# rather than my usual F# posts. Right, enough of the waffling, this post is a little tour into the relatively unknown area of async on iOS. Xamarin announced the alpha preview of async await on March 11th this year (2013).</description>
     </item>
     
     <item>
       <title>Back to the Primitive II</title>
-      <link>http://7sharpnine.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
+      <link>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
       <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
       <description>In the last post I discussed an asynchronous version of the ManualResetEvent and as promised this time we will be looking at an asynchronous version of the AutoResetEvent. I&amp;rsquo;m using Stephen Toubs post as reference and we will be building a version that is functional in style that maps straight into asynchronous work flows without and conversion or adaptors.
 What is an AutoResetEvent? An AutoResetEvent can be described as a turnstile mechanism, it lets a single waiting person through before re-latching waiting for the next signal.</description>
     </item>
     
     <item>
       <title>Back to the Primitive</title>
-      <link>http://7sharpnine.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</link>
+      <link>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</link>
       <pubDate>Thu, 12 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
       <description>In this post we are going back to the primitive. No it&amp;rsquo;s not about the same named song by Soulfly, (which incidentally does contains F# notes) but a return to thread synchronisation primitives and their asynchronous counterparts.
 We are going to be looking at an asynchronous version of the ManualResetEvent. This was recently covered by Stephen Toub on the pfx team blog. We will be taking a slightly different view on this as we will be using asynchronous workflows which will give us nice idiomatic usage within F#.</description>
     </item>

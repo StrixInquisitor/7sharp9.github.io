@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rx on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/rx/</link>
+    <link>http://7sharpnine.github.io/site/tags/rx/</link>
     <description>Recent content in Rx on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sat, 01 Jun 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/rx/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/rx/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Some kind of monster</title>
-      <link>http://7sharpnine.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</link>
+      <link>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</link>
       <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
+      <guid>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
       <description>What&amp;rsquo;s 100 meters high and weighs in at around 60,000 tons? No its not Godzilla, its Reactive extensions!
 Lately on one of my projects I have been doing a lot of stream manipulation, and although I solved the problem quite easily using F# async workflows, there were other solutions available to help solve the problem. I could of used things like async await, TPL Dataflow(TDF), and Reactive Extensions (Rx).</description>
     </item>

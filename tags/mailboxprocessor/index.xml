@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mailboxprocessor on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/mailboxprocessor/</link>
+    <link>http://7sharpnine.github.io/site/tags/mailboxprocessor/</link>
     <description>Recent content in Mailboxprocessor on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 15 Jul 2012 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/mailboxprocessor/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/mailboxprocessor/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Lurking Horror</title>
-      <link>http://7sharpnine.github.io/2012/07/15/2012-07-15-the-lurking-horror/</link>
+      <link>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2012/07/15/2012-07-15-the-lurking-horror/</guid>
+      <guid>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</guid>
       <description>Deep in the darkest depths lurks an ancient horror, when the time is right it will rise forth and leave you screaming for mercy and begging for forgiveness&amp;hellip;
  OK, I have a penchant for being over dramatic but in this post I am going to reveal some little known caveats in a well known and much revelled area of F#, agents aka the MailboxProcessor. Gasp!
 First let me give you a demonstration:</description>

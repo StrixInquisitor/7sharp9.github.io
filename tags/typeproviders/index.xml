@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Typeproviders on 7sharp9</title>
-    <link>http://7sharpnine.github.io/tags/typeproviders/</link>
+    <link>http://7sharpnine.github.io/site/tags/typeproviders/</link>
     <description>Recent content in Typeproviders on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 16 Nov 2014 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/tags/typeproviders/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/site/tags/typeproviders/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I saw my reflection and cried ...</title>
-      <link>http://7sharpnine.github.io/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
+      <link>http://7sharpnine.github.io/site/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
       <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
+      <guid>http://7sharpnine.github.io/site/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
       <description>While I was visiting Boston earlier in the year I had the misfortune of kicking myself in the teeth with reflection. It&amp;rsquo;s something all programmers inevitably go through with reflection API&amp;rsquo;s as they are inherently untyped, a simple typo can leave you tearing out your hair or punching through your monitor! Yeah there&amp;rsquo;s things the horizon that will help namely the nameof expression in C#6 which should help in some areas, that&amp;rsquo;s if your willing to pay the price of using C#, but I wont go into that here :-).</description>
     </item>
     
     <item>
       <title>Flux Compression (redux)</title>
-      <link>http://7sharpnine.github.io/2014/11/05/2014-11-05-flux-compression-redux/</link>
+      <link>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-flux-compression-redux/</link>
       <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/2014/11/05/2014-11-05-flux-compression-redux/</guid>
+      <guid>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-flux-compression-redux/</guid>
       <description>First of all the title, redux because I&amp;rsquo;m revising post I started on earlier in the year, compression because this has to do with compression, and Flux, which is also part of the redux, one of the first things I remember writing on the net was an article about Flux Compression Generators on H2G2, its still there too! This was a post I started writing back in January that I never got round to finishing.</description>
     </item>
     
