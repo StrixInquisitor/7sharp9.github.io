@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Storyboard on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/storyboard/</link>
+    <link>http://7sharp9.github.io/tags/storyboard/</link>
     <description>Recent content in Storyboard on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Tue, 11 Apr 2017 23:11:55 +0100</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/storyboard/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/storyboard/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I want to tell you a storyboard</title>
-      <link>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
+      <link>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
+      <guid>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a post with more detail on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;
 &lt;/p&gt;</description>
     </item>

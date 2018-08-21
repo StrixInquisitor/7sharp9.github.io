@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Games on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/games/</link>
+    <link>http://7sharp9.github.io/tags/games/</link>
     <description>Recent content in Games on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 29 Sep 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/games/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/games/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Adding Touch To SpriteKit</title>
-      <link>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
+      <link>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
       <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
+      <guid>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
       <description>Only a quick post this week. Last time we looked at SpriteKit and how to add some particle emmiters to simulate a star-field and exhaust on a spaceship, this time lets look at adding some touch based input to move the spaceship around. The first thing we need to do is add a type of gesture recogniser, there are various built in gestures:
  UITapGestureRecognizer UIPinchGestureRecognizer UIRotationGestureRecognizer UISwipeGestureRecognizer UIPanGestureRecognizer UIScreenEdgePanGestureRecognizer UILongPressGestureRecognizer  From the names above it&amp;rsquo;s pretty easy to get a feel for how they should be used, you can create your own subclass of UIGestureRecognizer if you need a custom one.</description>
     </item>
     
     <item>
       <title>Spritekit particle fun</title>
-      <link>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
+      <link>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
       <pubDate>Fri, 20 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
+      <guid>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
       <description>I have been meaning to write this post for quite a while now. Since the first announcement of the iOS7 beta I immediately saw the list of new API&amp;rsquo;s and SpriteKit caught my eye straight away. I only managed to get time to briefly look over the API and saw that is wasn&amp;rsquo;t the usual trashy API with a million method overloads, internal mutation sucker punch type thing. It seems to be very declarative and intuitive, which makes for a nice change.</description>
     </item>
     

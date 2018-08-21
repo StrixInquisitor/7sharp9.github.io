@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Solid on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/solid/</link>
+    <link>http://7sharp9.github.io/tags/solid/</link>
     <description>Recent content in Solid on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Mon, 22 Aug 2011 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/solid/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/solid/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>F# and Design principles - SOLID</title>
-      <link>http://7sharpnine.github.io/site/2011/08/22/2011-08-22-fsharp_solid/</link>
+      <link>http://7sharp9.github.io/2011/08/22/2011-08-22-fsharp_solid/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/08/22/2011-08-22-fsharp_solid/</guid>
+      <guid>http://7sharp9.github.io/2011/08/22/2011-08-22-fsharp_solid/</guid>
       <description>SOLID and its relevance to F# There has been an increasing amount of exposure for F# and functional programming lately. If you come from an object-orientated background a change in mindset is required when working with functional programming, there is a lot of misinformation on functional languages and their relationship with object-orientated design. In this post we run quickly through SOLID to see if these object-orientated principles apply to F#, and if so, how.</description>
     </item>
     

@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Threading on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/threading/</link>
+    <link>http://7sharp9.github.io/tags/threading/</link>
     <description>Recent content in Threading on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 22 Apr 2012 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/threading/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/threading/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Back to the Primitive II</title>
-      <link>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
+      <link>http://7sharp9.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
       <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
+      <guid>http://7sharp9.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
       <description>In the last post I discussed an asynchronous version of the ManualResetEvent and as promised this time we will be looking at an asynchronous version of the AutoResetEvent. I&amp;rsquo;m using Stephen Toubs post as reference and we will be building a version that is functional in style that maps straight into asynchronous work flows without and conversion or adaptors.
 What is an AutoResetEvent? An AutoResetEvent can be described as a turnstile mechanism, it lets a single waiting person through before re-latching waiting for the next signal.</description>
     </item>
     
     <item>
       <title>Back to the Primitive</title>
-      <link>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</link>
+      <link>http://7sharp9.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</link>
       <pubDate>Thu, 12 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
+      <guid>http://7sharp9.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
       <description>In this post we are going back to the primitive. No it&amp;rsquo;s not about the same named song by Soulfly, (which incidentally does contains F# notes) but a return to thread synchronisation primitives and their asynchronous counterparts.
 We are going to be looking at an asynchronous version of the ManualResetEvent. This was recently covered by Stephen Toub on the pfx team blog. We will be taking a slightly different view on this as we will be using asynchronous workflows which will give us nice idiomatic usage within F#.</description>
     </item>

@@ -2,42 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Xamarin on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/xamarin/</link>
+    <link>http://7sharp9.github.io/tags/xamarin/</link>
     <description>Recent content in Xamarin on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Tue, 11 Apr 2017 23:11:55 +0100</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/xamarin/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/xamarin/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I want to tell you a storyboard</title>
-      <link>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
+      <link>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
+      <guid>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a post with more detail on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>New Adventures</title>
-      <link>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</link>
+      <link>http://7sharp9.github.io/2016/05/31/new-adventures/</link>
       <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</guid>
+      <guid>http://7sharp9.github.io/2016/05/31/new-adventures/</guid>
       <description>&lt;p&gt;So today was my last day at Xamarin.&lt;br /&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Anything you can do ...</title>
-      <link>http://7sharpnine.github.io/site/2014/06/01/2014-06-01-anything-you-can-do/</link>
+      <link>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/06/01/2014-06-01-anything-you-can-do/</guid>
+      <guid>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</guid>
       <description>For any of you that are aware of the newly updated Xamarin Web site, you may have seen the following:
  Objective-C was ahead of its time 30 years ago. C# is ahead of its time today. Anything you can do in Objective-C or Java, you can do in C# with Xamarin—usually more succinctly and with fewer bugs.
  What is also true is that F# is way ahead of its time, and you can produce even more succinct code with even fewer bugs than C#!</description>
@@ -45,49 +45,49 @@
     
     <item>
       <title>Xamarin 3 F# Awesomeness</title>
-      <link>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
+      <link>http://7sharp9.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
+      <guid>http://7sharp9.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
       <description>With the release of Xamarin 3 there is a swathe of new features to the platform, but obviously the most important one is obviously F# support is now included by default in Xamarin Studio so there is no escape from the awesomeness of F#!
 So what else have we got, well loads of other goodies too like Xamarin Designer for iOS, Xamarin.Forms, Major IDE enhancements, Improved code sharing with PCL and Shared projects, and BCL Documentation.</description>
     </item>
     
     <item>
       <title>Danger unstable structure - No more!</title>
-      <link>http://7sharpnine.github.io/site/2014/02/10/2014-02-10-danger-unstable-structure/</link>
+      <link>http://7sharp9.github.io/2014/02/10/2014-02-10-danger-unstable-structure/</link>
       <pubDate>Mon, 10 Feb 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/02/10/2014-02-10-danger-unstable-structure/</guid>
+      <guid>http://7sharp9.github.io/2014/02/10/2014-02-10-danger-unstable-structure/</guid>
       <description>Over the last year a lot of work has been done on the F# addin for Xamarin Studio. Lots of great new features have been added and a lot of bugs have been squashed. I want to talk a bit about whats been happening and the evolution of the F# addin.
 The F# addin for MonoDevelop / Xamarin Studio hasn&amp;rsquo;t always been as stable and pretty as it is now.</description>
     </item>
     
     <item>
       <title>Adding Touch To SpriteKit</title>
-      <link>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
+      <link>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
       <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
+      <guid>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
       <description>Only a quick post this week. Last time we looked at SpriteKit and how to add some particle emmiters to simulate a star-field and exhaust on a spaceship, this time lets look at adding some touch based input to move the spaceship around. The first thing we need to do is add a type of gesture recogniser, there are various built in gestures:
  UITapGestureRecognizer UIPinchGestureRecognizer UIRotationGestureRecognizer UISwipeGestureRecognizer UIPanGestureRecognizer UIScreenEdgePanGestureRecognizer UILongPressGestureRecognizer  From the names above it&amp;rsquo;s pretty easy to get a feel for how they should be used, you can create your own subclass of UIGestureRecognizer if you need a custom one.</description>
     </item>
     
     <item>
       <title>Spritekit particle fun</title>
-      <link>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
+      <link>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
       <pubDate>Fri, 20 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
+      <guid>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
       <description>I have been meaning to write this post for quite a while now. Since the first announcement of the iOS7 beta I immediately saw the list of new API&amp;rsquo;s and SpriteKit caught my eye straight away. I only managed to get time to briefly look over the API and saw that is wasn&amp;rsquo;t the usual trashy API with a million method overloads, internal mutation sucker punch type thing. It seems to be very declarative and intuitive, which makes for a nice change.</description>
     </item>
     
     <item>
       <title>MonoTouch and F# part II</title>
-      <link>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
+      <link>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
       <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
+      <guid>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
       <description>In the last post we left at the point where everything was running fine and dandy on the Simulator. So what happens if we compile for the real hardware?
 Lets change the active configuration to Debug|iPhone and hit build, what do we get?Boom! Error MT2002: Could not resolve: FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (MT2002) (singleview)
 So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference to it:</description>
@@ -95,10 +95,10 @@ So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference
     
     <item>
       <title>MonoTouch and F# part I</title>
-      <link>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
+      <link>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
       <pubDate>Sun, 03 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
+      <guid>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
       <description>MonoTouch and F# that would be a cool duo right?
 Well let me explain what needs to be done and why to get this pair working together.
 I heard rumours a while ago that F# and MonoTouch would not play together nicely because of limitations in the ahead of time compilation (AOT). So I thought I would either prove or disprove this with some concentrated hacking. How hard can it be?</description>

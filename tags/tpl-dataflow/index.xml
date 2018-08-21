@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tpl Dataflow on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/tpl-dataflow/</link>
+    <link>http://7sharp9.github.io/tags/tpl-dataflow/</link>
     <description>Recent content in Tpl Dataflow on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Mon, 20 Feb 2012 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/tpl-dataflow/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/tpl-dataflow/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>FSharp Dataflow agents III</title>
-      <link>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
+      <link>http://7sharp9.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
       <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
+      <guid>http://7sharp9.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
       <description>This will be the last post on rebuilding the MailboxProcessor using TDF, here&amp;rsquo;s a quick discussion of the missing pieces&amp;hellip;
 First, lets start with the simple ones, these don&amp;rsquo;t really require much discussion.
 DefaultTimeout let mutable defaultTimeout = Timeout.Infinite member x.DefaultTimeout with get() = defaultTimeout and set(value) = defaultTimeout &amp;lt;- value  This simply provides a mutable property using Timeout.Infinite as a default setting.
@@ -26,20 +26,20 @@ CurrentQueueLength member x.CurrentQueueLength() = incomingMessages.Count  Anoth
     
     <item>
       <title>F# Dataflow Agents Part II</title>
-      <link>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
+      <link>http://7sharp9.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
       <pubDate>Mon, 30 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
+      <guid>http://7sharp9.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
       <description>Right, no messing about this time, straight to the code.
 Construction This is pretty straight forward and I don&amp;rsquo;t want to detract from the important bits of this post, the only thing of note is the cancellationToken which is initialized to a default value using the defaultArg function if the optional parameter cancellationToken is not supplied. The TDF construct that we to use to perform most of the hard work is incomingMessages which is a BufferBlock&amp;lt;&#39;Msg&amp;gt;.</description>
     </item>
     
     <item>
       <title>F# Dataflow Agents Part I</title>
-      <link>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
+      <link>http://7sharp9.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
       <pubDate>Sun, 22 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
+      <guid>http://7sharp9.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
       <description>This is going to be a new series on using TPL Dataflow with F#. First a little bit of history and background.
 TPL Dataflows heritage and background TPL Dataflow or (TDF) has been around for quite a while, it first surfaced more than a year ago as the successor to the Concurrency and Coordination Runtime (CCR) and with coming release of .Net 4.5 it will be part of the System.</description>
     </item>

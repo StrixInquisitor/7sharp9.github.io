@@ -2,42 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mono on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/mono/</link>
+    <link>http://7sharp9.github.io/tags/mono/</link>
     <description>Recent content in Mono on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Wed, 05 Jun 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/mono/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/mono/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Monster Zero - Revisited</title>
-      <link>http://7sharpnine.github.io/site/2013/06/05/2013-06-05-monster-zero-revisited/</link>
+      <link>http://7sharp9.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
+      <guid>http://7sharp9.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
       <description>This creature is capable of tremendous destruction due to it&amp;rsquo;s size, flight (with the creature&amp;rsquo;s wings also generating hurricane strength winds) and possesses several breath weapons (e.g., heat and energy).
 What am I talking about here? Maybe it&amp;rsquo;s Monster Zero or King Ghidorah as it&amp;rsquo;s sometimes known. No it&amp;rsquo;s TPL Dataflow! Yeah, yeah, I have a penchant for being over dramatic and writing quirky intros. This post is about TPL Dataflow otherwise known as TDF.</description>
     </item>
     
     <item>
       <title>Some kind of monster</title>
-      <link>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</link>
+      <link>http://7sharp9.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</link>
       <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
+      <guid>http://7sharp9.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
       <description>What&amp;rsquo;s 100 meters high and weighs in at around 60,000 tons? No its not Godzilla, its Reactive extensions!
 Lately on one of my projects I have been doing a lot of stream manipulation, and although I solved the problem quite easily using F# async workflows, there were other solutions available to help solve the problem. I could of used things like async await, TPL Dataflow(TDF), and Reactive Extensions (Rx).</description>
     </item>
     
     <item>
       <title>MonoTouch and F# part II</title>
-      <link>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
+      <link>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
       <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
+      <guid>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
       <description>In the last post we left at the point where everything was running fine and dandy on the Simulator. So what happens if we compile for the real hardware?
 Lets change the active configuration to Debug|iPhone and hit build, what do we get?Boom! Error MT2002: Could not resolve: FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (MT2002) (singleview)
 So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference to it:</description>
@@ -45,10 +45,10 @@ So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference
     
     <item>
       <title>MonoTouch and F# part I</title>
-      <link>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
+      <link>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
       <pubDate>Sun, 03 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
+      <guid>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
       <description>MonoTouch and F# that would be a cool duo right?
 Well let me explain what needs to be done and why to get this pair working together.
 I heard rumours a while ago that F# and MonoTouch would not play together nicely because of limitations in the ahead of time compilation (AOT). So I thought I would either prove or disprove this with some concentrated hacking. How hard can it be?</description>
@@ -56,39 +56,39 @@ I heard rumours a while ago that F# and MonoTouch would not play together nicely
     
     <item>
       <title>MonoGame subdivision and platonics</title>
-      <link>http://7sharpnine.github.io/site/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</link>
+      <link>http://7sharp9.github.io/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</guid>
+      <guid>http://7sharp9.github.io/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</guid>
       <description>I&amp;rsquo;ve been on a bit of a break from my normal jovial self due to a shit storm of bad stuff happening that I wont go into here, but hopefully this years going to be awesome. Anyway, here&amp;rsquo;s the next exciting installment in my series on MonoGame. (Well I find it exciting anyway :-) )
 If you remember back to the last post I mentioned the platonic solids, and we created and rendered the tetrahedron, lets recap on what the five solids are:</description>
     </item>
     
     <item>
       <title>MonoGame 3D basics</title>
-      <link>http://7sharpnine.github.io/site/2012/11/25/2012-11-25-monogame-3d-basics/</link>
+      <link>http://7sharp9.github.io/2012/11/25/2012-11-25-monogame-3d-basics/</link>
       <pubDate>Sun, 25 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/25/2012-11-25-monogame-3d-basics/</guid>
+      <guid>http://7sharp9.github.io/2012/11/25/2012-11-25-monogame-3d-basics/</guid>
       <description>This time we are going to get into a little bit of code and produce the simplest of all 3d solids, the tetrahedron. I know its not the most exciting of things but we have to start somewhere. The scope of 3D graphics in computers is so vast that its very easy to get lost in the vast piles of research papers.First lets do some basic setup, if you followed my last post then you will will have a project template to use, this makes this a little easier.</description>
     </item>
     
     <item>
       <title>F# and MonoGame on the Mac</title>
-      <link>http://7sharpnine.github.io/site/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</link>
+      <link>http://7sharp9.github.io/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</link>
       <pubDate>Sun, 11 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</guid>
+      <guid>http://7sharp9.github.io/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</guid>
       <description>What we are going to do in this post is take a whistle stop tour of getting MonoGame up and running along with a simple demo in F#. Over the last few days I have been building an F# project template for MonoDevelop, this post will also how to get that installed too. First of all I&amp;rsquo;m going to assume that you have the following installed:
  Mono 3.0 beta MonoDevelop MonoDevelop F# language binding  If you don&amp;rsquo;t have a look at my previous post that explains all that, if you don&amp;rsquo;t want to build the F# binding from source then you can use the Add-in Manager.</description>
     </item>
     
     <item>
       <title>F# 3.0 In The Mac And Mono World</title>
-      <link>http://7sharpnine.github.io/site/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</link>
+      <link>http://7sharp9.github.io/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</link>
       <pubDate>Sat, 03 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</guid>
+      <guid>http://7sharp9.github.io/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</guid>
       <description>So what have I been up to lately? Well, lots of different things. I have been taking it easy on the open source and blogging side of things as its been a hectic time of late in my personal life. This seems to be changing now so I&amp;rsquo;m starting to get all of the ideas spinning around in my head into physical reality, or virtual reality, or what ever you want to call it.</description>
     </item>
     

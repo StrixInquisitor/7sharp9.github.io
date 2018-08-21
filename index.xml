@@ -2,88 +2,88 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>7sharp9</title>
-    <link>http://7sharpnine.github.io/site/</link>
+    <link>http://7sharp9.github.io/</link>
     <description>Recent content on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sat, 09 Dec 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Building a single page application with Elm</title>
-      <link>http://7sharpnine.github.io/site/2017/12/09/2017-12-09-elmbook/</link>
+      <link>http://7sharp9.github.io/2017/12/09/2017-12-09-elmbook/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2017/12/09/2017-12-09-elmbook/</guid>
+      <guid>http://7sharp9.github.io/2017/12/09/2017-12-09-elmbook/</guid>
       <description>Hi there, its been a very long while since I last blogged, I promised this ages ago, its a partial sample chapter for a book I was planning on Elm but the publisher started to muck me about so it never happened. I also have the table of contents for the rest of the book but I guess your not interested in a book Im not writing so I have omitted that.</description>
     </item>
     
     <item>
       <title>I want to tell you a storyboard</title>
-      <link>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
+      <link>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
+      <guid>http://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a post with more detail on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Elmtastic Updates</title>
-      <link>http://7sharpnine.github.io/site/2016/06/30/elmtastic-updates/</link>
+      <link>http://7sharp9.github.io/2016/06/30/elmtastic-updates/</link>
       <pubDate>Thu, 30 Jun 2016 13:53:45 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/06/30/elmtastic-updates/</guid>
+      <guid>http://7sharp9.github.io/2016/06/30/elmtastic-updates/</guid>
       <description>&lt;p&gt;With the release of Elm 0.17 there were some fundamental changes to the Elm language.  This post
 is my attempt to help those that may be struggling with these changes&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Creating fuse applications with fable</title>
-      <link>http://7sharpnine.github.io/site/2016/06/07/fable-fuse-template/</link>
+      <link>http://7sharp9.github.io/2016/06/07/fable-fuse-template/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/06/07/fable-fuse-template/</guid>
+      <guid>http://7sharp9.github.io/2016/06/07/fable-fuse-template/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a guide to creating your first &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Light The Fuse</title>
-      <link>http://7sharpnine.github.io/site/2016/06/03/light-the-fuse/</link>
+      <link>http://7sharp9.github.io/2016/06/03/light-the-fuse/</link>
       <pubDate>Fri, 03 Jun 2016 11:21:57 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/06/03/light-the-fuse/</guid>
+      <guid>http://7sharp9.github.io/2016/06/03/light-the-fuse/</guid>
       <description>&lt;p&gt;In this post Im going to be introducing something new and exciting the combination of F#, Fable and Fuse.  If I was American I might say this was the holy trinity of awesomeness!&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>New Adventures</title>
-      <link>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</link>
+      <link>http://7sharp9.github.io/2016/05/31/new-adventures/</link>
       <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</guid>
+      <guid>http://7sharp9.github.io/2016/05/31/new-adventures/</guid>
       <description>&lt;p&gt;So today was my last day at Xamarin.&lt;br /&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>flame on</title>
-      <link>http://7sharpnine.github.io/site/2016/05/29/flame-on/</link>
+      <link>http://7sharp9.github.io/2016/05/29/flame-on/</link>
       <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/05/29/flame-on/</guid>
+      <guid>http://7sharp9.github.io/2016/05/29/flame-on/</guid>
       <description>&lt;p&gt;A few weeks back I posted on Twitter that I was experimenting with flame graphs, In this post I will share how this was accomplished.  &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>About Me</title>
-      <link>http://7sharpnine.github.io/site/page/about/</link>
+      <link>http://7sharp9.github.io/page/about/</link>
       <pubDate>Fri, 29 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/page/about/</guid>
+      <guid>http://7sharp9.github.io/page/about/</guid>
       <description>Hi, my name is Dave Thomas and Im a software engineer from the Uk. I work primarily in F# but also like to tinker with pretty much any interesting language. Im drawn to more functional languages like F#, Elixir, Elm, but also like to use Go, Rust, and recently Pony.
 When Im not working I like: playing guitar, woodworking, watercolour sketching, and practicing yoga.
 Have questions or suggestions? Feel free to ask me on Twitter.</description>
@@ -91,20 +91,20 @@ Have questions or suggestions? Feel free to ask me on Twitter.</description>
     
     <item>
       <title>Building Emulators in FSharp</title>
-      <link>http://7sharpnine.github.io/site/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
+      <link>http://7sharp9.github.io/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/03/06/2016-03-06-building-emulators-in-fsharp/</guid>
+      <guid>http://7sharp9.github.io/2016/03/06/2016-03-06-building-emulators-in-fsharp/</guid>
       <description>&lt;p&gt;So I wanted to briefly talk about what I&amp;rsquo;ve been up to lately.   I&amp;rsquo;ve been doing a spot of compiler hacking, working on improving type Providers and generally tinkering with concepts relating to macros etc.  I&amp;rsquo;ve also been tinkering with the Elixir and Rust programming languages which I like a lot.  I might write about those things at a later time depending on my train of thought which can be quite disjoint.  What was I talking about again?  :-)&lt;br /&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>F# Community Hero</title>
-      <link>http://7sharpnine.github.io/site/2015/10/25/2015-10-25-f-community-hero/</link>
+      <link>http://7sharp9.github.io/2015/10/25/2015-10-25-f-community-hero/</link>
       <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/10/25/2015-10-25-f-community-hero/</guid>
+      <guid>http://7sharp9.github.io/2015/10/25/2015-10-25-f-community-hero/</guid>
       <description>&lt;p&gt;Ive been meaning to write this post for ages but Ive only just found the time.&lt;/p&gt;
 
 &lt;p&gt;On the 3rd of September my good friend Ryan Riley (aka &lt;a href=&#34;https://twitter.com/panesofglass&#34;&gt;@panesofglass&lt;/a&gt;) emailed me letting me know I had won a Community for F# hero award for 2015!&lt;br /&gt;
@@ -114,10 +114,10 @@ I want to say a big thank you to everyone who voted for me.  Its really nice to 
     
     <item>
       <title>Reckoning day</title>
-      <link>http://7sharpnine.github.io/site/2015/07/16/2015-07-16-reckoning-day/</link>
+      <link>http://7sharp9.github.io/2015/07/16/2015-07-16-reckoning-day/</link>
       <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/07/16/2015-07-16-reckoning-day/</guid>
+      <guid>http://7sharp9.github.io/2015/07/16/2015-07-16-reckoning-day/</guid>
       <description>&lt;p&gt;
 &lt;figure class=&#34;img-left&#34;&gt;
     
@@ -133,10 +133,10 @@ I&amp;rsquo;ve finally been awarded a &lt;a href=&#34;https://mvp.microsoft.com/
     
     <item>
       <title>Meta-Matic</title>
-      <link>http://7sharpnine.github.io/site/2015/07/12/2015-07-08-meta-matic/</link>
+      <link>http://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</link>
       <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/07/12/2015-07-08-meta-matic/</guid>
+      <guid>http://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</guid>
       <description>&lt;p&gt;Sit down, strap in, and prepare for take off, we&amp;rsquo;re going Meta-Matic!&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;re going to be exploring some &lt;a href=&#34;https://en.wikipedia.org/wiki/Metaprogramming&#34;&gt;metaprogramming&lt;/a&gt; magic in F#.  Transforming
@@ -146,38 +146,38 @@ it in another &lt;a href=&#34;https://en.wikipedia.org/wiki/Virtual_machine&#34;
     
     <item>
       <title>Are you my type?</title>
-      <link>http://7sharpnine.github.io/site/2015/03/30/2015-03-30-are-you-my-type/</link>
+      <link>http://7sharp9.github.io/2015/03/30/2015-03-30-are-you-my-type/</link>
       <pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/03/30/2015-03-30-are-you-my-type/</guid>
+      <guid>http://7sharp9.github.io/2015/03/30/2015-03-30-are-you-my-type/</guid>
       <description>&lt;p&gt;Did you know there was more to the type matching operator than just pattern matching and exception handling?
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>One day you&#39;ll walk alone</title>
-      <link>http://7sharpnine.github.io/site/2015/02/13/2015-02-13-one-day-youll-walk-alone/</link>
+      <link>http://7sharp9.github.io/2015/02/13/2015-02-13-one-day-youll-walk-alone/</link>
       <pubDate>Fri, 13 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/02/13/2015-02-13-one-day-youll-walk-alone/</guid>
+      <guid>http://7sharp9.github.io/2015/02/13/2015-02-13-one-day-youll-walk-alone/</guid>
       <description>&lt;p&gt;One thing I never really thought about a great deal before was the term &amp;lsquo;on-line&amp;rsquo; friends and what it might or might not mean. I mean what does that really mean?  Are they just actual friends or just &amp;ldquo;on-line&amp;rdquo; friends?  &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Dioptric Dilemmas Of The Third Kind</title>
-      <link>http://7sharpnine.github.io/site/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</link>
+      <link>http://7sharp9.github.io/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</guid>
+      <guid>http://7sharp9.github.io/2015/02/05/2015-02-05-dioptric-dilemmas-of-the-third-kind/</guid>
       <description>&lt;p&gt;After enjoying owning a 150mm refractor telescope for a year, I decided I wanted to upgrade. &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Terror From The Deep</title>
-      <link>http://7sharpnine.github.io/site/2014/12/10/2014-12-07-terror-from-the-deep/</link>
+      <link>http://7sharp9.github.io/2014/12/10/2014-12-07-terror-from-the-deep/</link>
       <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/12/10/2014-12-07-terror-from-the-deep/</guid>
+      <guid>http://7sharp9.github.io/2014/12/10/2014-12-07-terror-from-the-deep/</guid>
       <description>&lt;figure class=&#34;img-left&#34;&gt;
     
         &lt;img src=&#34;https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0&#34; /&gt;
@@ -193,38 +193,38 @@ Actually I&amp;rsquo;m only joking, adding features to the F# compiler and F# ad
     
     <item>
       <title>I saw my reflection and cried ...</title>
-      <link>http://7sharpnine.github.io/site/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
+      <link>http://7sharp9.github.io/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</link>
       <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
+      <guid>http://7sharp9.github.io/2014/11/16/2014-11-17-i-saw-my-reflection-and-cried-dot-dot-dot/</guid>
       <description>While I was visiting Boston earlier in the year I had the misfortune of kicking myself in the teeth with reflection. It&amp;rsquo;s something all programmers inevitably go through with reflection API&amp;rsquo;s as they are inherently untyped, a simple typo can leave you tearing out your hair or punching through your monitor! Yeah there&amp;rsquo;s things the horizon that will help namely the nameof expression in C#6 which should help in some areas, that&amp;rsquo;s if your willing to pay the price of using C#, but I wont go into that here :-).</description>
     </item>
     
     <item>
       <title>As Free As a Bird</title>
-      <link>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-as-free-as-a-bird/</link>
+      <link>http://7sharp9.github.io/2014/11/05/2014-11-05-as-free-as-a-bird/</link>
       <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-as-free-as-a-bird/</guid>
+      <guid>http://7sharp9.github.io/2014/11/05/2014-11-05-as-free-as-a-bird/</guid>
       <description>Wow its been a long time since I wrote anything!
 For those of you visiting here may be pleased to know that I&amp;rsquo;m finally getting round to writing again, but before a post with any real content I just wanted to mention a few things. I&amp;rsquo;m no longer on Twitter, Ive not just disabled my account Its actually deleted now, Ive waited the 30 days for it to expire so it should finally be gone now.</description>
     </item>
     
     <item>
       <title>Flux Compression (redux)</title>
-      <link>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-flux-compression-redux/</link>
+      <link>http://7sharp9.github.io/2014/11/05/2014-11-05-flux-compression-redux/</link>
       <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/11/05/2014-11-05-flux-compression-redux/</guid>
+      <guid>http://7sharp9.github.io/2014/11/05/2014-11-05-flux-compression-redux/</guid>
       <description>First of all the title, redux because I&amp;rsquo;m revising post I started on earlier in the year, compression because this has to do with compression, and Flux, which is also part of the redux, one of the first things I remember writing on the net was an article about Flux Compression Generators on H2G2, its still there too! This was a post I started writing back in January that I never got round to finishing.</description>
     </item>
     
     <item>
       <title>Anything you can do ...</title>
-      <link>http://7sharpnine.github.io/site/2014/06/01/2014-06-01-anything-you-can-do/</link>
+      <link>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/06/01/2014-06-01-anything-you-can-do/</guid>
+      <guid>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</guid>
       <description>For any of you that are aware of the newly updated Xamarin Web site, you may have seen the following:
  Objective-C was ahead of its time 30 years ago. C# is ahead of its time today. Anything you can do in Objective-C or Java, you can do in C# with Xamarin—usually more succinctly and with fewer bugs.
  What is also true is that F# is way ahead of its time, and you can produce even more succinct code with even fewer bugs than C#!</description>
@@ -232,40 +232,40 @@ For those of you visiting here may be pleased to know that I&amp;rsquo;m finally
     
     <item>
       <title>Xamarin 3 F# Awesomeness</title>
-      <link>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
+      <link>http://7sharp9.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
+      <guid>http://7sharp9.github.io/2014/05/28/2014-05-28-xamarin-3-fsharp-awsomeness/</guid>
       <description>With the release of Xamarin 3 there is a swathe of new features to the platform, but obviously the most important one is obviously F# support is now included by default in Xamarin Studio so there is no escape from the awesomeness of F#!
 So what else have we got, well loads of other goodies too like Xamarin Designer for iOS, Xamarin.Forms, Major IDE enhancements, Improved code sharing with PCL and Shared projects, and BCL Documentation.</description>
     </item>
     
     <item>
       <title>35 days later</title>
-      <link>http://7sharpnine.github.io/site/2014/03/18/2014-03-18-35-days-later/</link>
+      <link>http://7sharp9.github.io/2014/03/18/2014-03-18-35-days-later/</link>
       <pubDate>Tue, 18 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/03/18/2014-03-18-35-days-later/</guid>
+      <guid>http://7sharp9.github.io/2014/03/18/2014-03-18-35-days-later/</guid>
       <description>After choosing to not surf the seas of Twitter, am I any less current in the world of F#, did I miss anything important that a real-time stream would of alerted me to? I know for certain that all the trivial micro updates can be interesting to read but ultimately they are quite a time suck, especially if you have alerts enabled on your mobile etc.
 So after just over a month of non tweeting, apart from responding to directly to others, things have finally calmed down.</description>
     </item>
     
     <item>
       <title>Danger unstable structure - No more!</title>
-      <link>http://7sharpnine.github.io/site/2014/02/10/2014-02-10-danger-unstable-structure/</link>
+      <link>http://7sharp9.github.io/2014/02/10/2014-02-10-danger-unstable-structure/</link>
       <pubDate>Mon, 10 Feb 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/02/10/2014-02-10-danger-unstable-structure/</guid>
+      <guid>http://7sharp9.github.io/2014/02/10/2014-02-10-danger-unstable-structure/</guid>
       <description>Over the last year a lot of work has been done on the F# addin for Xamarin Studio. Lots of great new features have been added and a lot of bugs have been squashed. I want to talk a bit about whats been happening and the evolution of the F# addin.
 The F# addin for MonoDevelop / Xamarin Studio hasn&amp;rsquo;t always been as stable and pretty as it is now.</description>
     </item>
     
     <item>
       <title>Detweeted</title>
-      <link>http://7sharpnine.github.io/site/2014/02/03/2014-02-03-detweeted/</link>
+      <link>http://7sharp9.github.io/2014/02/03/2014-02-03-detweeted/</link>
       <pubDate>Mon, 03 Feb 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2014/02/03/2014-02-03-detweeted/</guid>
+      <guid>http://7sharp9.github.io/2014/02/03/2014-02-03-detweeted/</guid>
       <description>As from today I am detaching myself from the social networking strings of Twitter.
   have quite a few Twitter followers now and don&amp;rsquo;t want to seem ignorant, nor do I want to make a point of tweeting about my detachment etc etc.
 So here&amp;rsquo;s what I&amp;rsquo;m doing. I have removed twitter from all my devices and modified my account settings so that I receive an email if I&amp;rsquo;m mentioned or receive a direct message, so I will respond so specific queries if necessary.</description>
@@ -273,59 +273,59 @@ So here&amp;rsquo;s what I&amp;rsquo;m doing. I have removed twitter from all my
     
     <item>
       <title>Adding Touch To SpriteKit</title>
-      <link>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
+      <link>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</link>
       <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
+      <guid>http://7sharp9.github.io/2013/09/29/2013-09-29-adding-touch-to-spritekit/</guid>
       <description>Only a quick post this week. Last time we looked at SpriteKit and how to add some particle emmiters to simulate a star-field and exhaust on a spaceship, this time lets look at adding some touch based input to move the spaceship around. The first thing we need to do is add a type of gesture recogniser, there are various built in gestures:
  UITapGestureRecognizer UIPinchGestureRecognizer UIRotationGestureRecognizer UISwipeGestureRecognizer UIPanGestureRecognizer UIScreenEdgePanGestureRecognizer UILongPressGestureRecognizer  From the names above it&amp;rsquo;s pretty easy to get a feel for how they should be used, you can create your own subclass of UIGestureRecognizer if you need a custom one.</description>
     </item>
     
     <item>
       <title>Spritekit particle fun</title>
-      <link>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
+      <link>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</link>
       <pubDate>Fri, 20 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
+      <guid>http://7sharp9.github.io/2013/09/20/2013-09-20-sprite-kit-particle-fun/</guid>
       <description>I have been meaning to write this post for quite a while now. Since the first announcement of the iOS7 beta I immediately saw the list of new API&amp;rsquo;s and SpriteKit caught my eye straight away. I only managed to get time to briefly look over the API and saw that is wasn&amp;rsquo;t the usual trashy API with a million method overloads, internal mutation sucker punch type thing. It seems to be very declarative and intuitive, which makes for a nice change.</description>
     </item>
     
     <item>
       <title>Can I have some F# with that?</title>
-      <link>http://7sharpnine.github.io/site/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</link>
+      <link>http://7sharp9.github.io/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</link>
       <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</guid>
+      <guid>http://7sharp9.github.io/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</guid>
       <description>There&amp;rsquo;s been a fair bit of activity lately from a project called ScriptCS, it allows you to put together a project using C# as a lightweight scripting language, forgoing the use of Visual Studio which can sometimes be too bloated and bulky.
 It also allows you to use C# in a Read Evaluate Print Loop - REPL. This is nothing new to F# and indeed lots of other languages have REPL&amp;rsquo;s too.</description>
     </item>
     
     <item>
       <title>Monster Zero - Revisited</title>
-      <link>http://7sharpnine.github.io/site/2013/06/05/2013-06-05-monster-zero-revisited/</link>
+      <link>http://7sharp9.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
+      <guid>http://7sharp9.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
       <description>This creature is capable of tremendous destruction due to it&amp;rsquo;s size, flight (with the creature&amp;rsquo;s wings also generating hurricane strength winds) and possesses several breath weapons (e.g., heat and energy).
 What am I talking about here? Maybe it&amp;rsquo;s Monster Zero or King Ghidorah as it&amp;rsquo;s sometimes known. No it&amp;rsquo;s TPL Dataflow! Yeah, yeah, I have a penchant for being over dramatic and writing quirky intros. This post is about TPL Dataflow otherwise known as TDF.</description>
     </item>
     
     <item>
       <title>Some kind of monster</title>
-      <link>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</link>
+      <link>http://7sharp9.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</link>
       <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
+      <guid>http://7sharp9.github.io/2013/06/01/2013-06-01-some-kind-of-monster/</guid>
       <description>What&amp;rsquo;s 100 meters high and weighs in at around 60,000 tons? No its not Godzilla, its Reactive extensions!
 Lately on one of my projects I have been doing a lot of stream manipulation, and although I solved the problem quite easily using F# async workflows, there were other solutions available to help solve the problem. I could of used things like async await, TPL Dataflow(TDF), and Reactive Extensions (Rx).</description>
     </item>
     
     <item>
       <title>I node something (Bout You)</title>
-      <link>http://7sharpnine.github.io/site/2013/05/05/2013-05-05-i-node-something/</link>
+      <link>http://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/05/05/2013-05-05-i-node-something/</guid>
+      <guid>http://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</guid>
       <description>What is Edge.js?  Unless you live in a hole you have probably heard of node.js so I&amp;rsquo;ll not bother to explain what it is or what it does. An interesting project has come to light lately, namely Edge.js. The Edge.js project allows you to connect node.js with .Net.
 The creator of Edge.js Tomasz Janczuk sums this up nicely:
  An edge connects two nodes
@@ -334,29 +334,29 @@ This edge connects node.js with .</description>
     
     <item>
       <title>iOS async revisited</title>
-      <link>http://7sharpnine.github.io/site/2013/04/18/2013-04-18-ios-async-revisited/</link>
+      <link>http://7sharp9.github.io/2013/04/18/2013-04-18-ios-async-revisited/</link>
       <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/04/18/2013-04-18-ios-async-revisited/</guid>
+      <guid>http://7sharp9.github.io/2013/04/18/2013-04-18-ios-async-revisited/</guid>
       <description>In this post weare going to look as async again, but from the perspective of F#.
 Xamarin Evolve 2013   I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
     </item>
     
     <item>
       <title>A little bit of iOS async</title>
-      <link>http://7sharpnine.github.io/site/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
+      <link>http://7sharp9.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
       <pubDate>Tue, 16 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
+      <guid>http://7sharp9.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
       <description>I was going to title this post as &amp;lsquo;Now for something completely different&amp;rsquo; but felt that a little bit too Pythonesque, and when I thought about it a bit it isn&amp;rsquo;t really completely just slightly different, namely C# rather than my usual F# posts. Right, enough of the waffling, this post is a little tour into the relatively unknown area of async on iOS. Xamarin announced the alpha preview of async await on March 11th this year (2013).</description>
     </item>
     
     <item>
       <title>MonoTouch and F# part II</title>
-      <link>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
+      <link>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
       <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
+      <guid>http://7sharp9.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
       <description>In the last post we left at the point where everything was running fine and dandy on the Simulator. So what happens if we compile for the real hardware?
 Lets change the active configuration to Debug|iPhone and hit build, what do we get?Boom! Error MT2002: Could not resolve: FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (MT2002) (singleview)
 So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference to it:</description>
@@ -364,10 +364,10 @@ So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference
     
     <item>
       <title>MonoTouch and F# part I</title>
-      <link>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
+      <link>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
       <pubDate>Sun, 03 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
+      <guid>http://7sharp9.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
       <description>MonoTouch and F# that would be a cool duo right?
 Well let me explain what needs to be done and why to get this pair working together.
 I heard rumours a while ago that F# and MonoTouch would not play together nicely because of limitations in the ahead of time compilation (AOT). So I thought I would either prove or disprove this with some concentrated hacking. How hard can it be?</description>
@@ -375,48 +375,48 @@ I heard rumours a while ago that F# and MonoTouch would not play together nicely
     
     <item>
       <title>MonoGame subdivision and platonics</title>
-      <link>http://7sharpnine.github.io/site/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</link>
+      <link>http://7sharp9.github.io/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</guid>
+      <guid>http://7sharp9.github.io/2013/01/04/2013-01-04-monogame-subdivision-and-platonics/</guid>
       <description>I&amp;rsquo;ve been on a bit of a break from my normal jovial self due to a shit storm of bad stuff happening that I wont go into here, but hopefully this years going to be awesome. Anyway, here&amp;rsquo;s the next exciting installment in my series on MonoGame. (Well I find it exciting anyway :-) )
 If you remember back to the last post I mentioned the platonic solids, and we created and rendered the tetrahedron, lets recap on what the five solids are:</description>
     </item>
     
     <item>
       <title>MonoGame 3D basics</title>
-      <link>http://7sharpnine.github.io/site/2012/11/25/2012-11-25-monogame-3d-basics/</link>
+      <link>http://7sharp9.github.io/2012/11/25/2012-11-25-monogame-3d-basics/</link>
       <pubDate>Sun, 25 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/25/2012-11-25-monogame-3d-basics/</guid>
+      <guid>http://7sharp9.github.io/2012/11/25/2012-11-25-monogame-3d-basics/</guid>
       <description>This time we are going to get into a little bit of code and produce the simplest of all 3d solids, the tetrahedron. I know its not the most exciting of things but we have to start somewhere. The scope of 3D graphics in computers is so vast that its very easy to get lost in the vast piles of research papers.First lets do some basic setup, if you followed my last post then you will will have a project template to use, this makes this a little easier.</description>
     </item>
     
     <item>
       <title>F# and MonoGame on the Mac</title>
-      <link>http://7sharpnine.github.io/site/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</link>
+      <link>http://7sharp9.github.io/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</link>
       <pubDate>Sun, 11 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</guid>
+      <guid>http://7sharp9.github.io/2012/11/11/2012-11-11-fsharp-and-monogame-on-the-mac/</guid>
       <description>What we are going to do in this post is take a whistle stop tour of getting MonoGame up and running along with a simple demo in F#. Over the last few days I have been building an F# project template for MonoDevelop, this post will also how to get that installed too. First of all I&amp;rsquo;m going to assume that you have the following installed:
  Mono 3.0 beta MonoDevelop MonoDevelop F# language binding  If you don&amp;rsquo;t have a look at my previous post that explains all that, if you don&amp;rsquo;t want to build the F# binding from source then you can use the Add-in Manager.</description>
     </item>
     
     <item>
       <title>F# 3.0 In The Mac And Mono World</title>
-      <link>http://7sharpnine.github.io/site/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</link>
+      <link>http://7sharp9.github.io/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</link>
       <pubDate>Sat, 03 Nov 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</guid>
+      <guid>http://7sharp9.github.io/2012/11/03/2012-11-03-fsharp-3-in-the-mac-and-mono-world/</guid>
       <description>So what have I been up to lately? Well, lots of different things. I have been taking it easy on the open source and blogging side of things as its been a hectic time of late in my personal life. This seems to be changing now so I&amp;rsquo;m starting to get all of the ideas spinning around in my head into physical reality, or virtual reality, or what ever you want to call it.</description>
     </item>
     
     <item>
       <title>Whats in your toolbox?</title>
-      <link>http://7sharpnine.github.io/site/2012/08/27/2012-08-23-whats-in-your-toolbox/</link>
+      <link>http://7sharp9.github.io/2012/08/27/2012-08-23-whats-in-your-toolbox/</link>
       <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/08/27/2012-08-23-whats-in-your-toolbox/</guid>
+      <guid>http://7sharp9.github.io/2012/08/27/2012-08-23-whats-in-your-toolbox/</guid>
       <description>If I walk into my garage now and open up a toolbox, whats inside?
 Here&amp;rsquo;s a quick selection:
  Ball-peen hammer Jointer plane 1&amp;frasl;2 inch mortise chisel Soldering iron Set square Low angle block plane Torx screw drivers Hack saw Monkey wrench Pipe cutter  Notice it doesn&amp;rsquo;t just contain:
@@ -425,10 +425,10 @@ Here&amp;rsquo;s a quick selection:
     
     <item>
       <title>The Lurking Horror</title>
-      <link>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</link>
+      <link>http://7sharp9.github.io/2012/07/15/2012-07-15-the-lurking-horror/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/07/15/2012-07-15-the-lurking-horror/</guid>
+      <guid>http://7sharp9.github.io/2012/07/15/2012-07-15-the-lurking-horror/</guid>
       <description>Deep in the darkest depths lurks an ancient horror, when the time is right it will rise forth and leave you screaming for mercy and begging for forgiveness&amp;hellip;
  OK, I have a penchant for being over dramatic but in this post I am going to reveal some little known caveats in a well known and much revelled area of F#, agents aka the MailboxProcessor. Gasp!
 First let me give you a demonstration:</description>
@@ -436,40 +436,40 @@ First let me give you a demonstration:</description>
     
     <item>
       <title>Back to the Primitive II</title>
-      <link>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
+      <link>http://7sharp9.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</link>
       <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
+      <guid>http://7sharp9.github.io/2012/04/22/2012-04-22-back-to-the-primitive-ii/</guid>
       <description>In the last post I discussed an asynchronous version of the ManualResetEvent and as promised this time we will be looking at an asynchronous version of the AutoResetEvent. I&amp;rsquo;m using Stephen Toubs post as reference and we will be building a version that is functional in style that maps straight into asynchronous work flows without and conversion or adaptors.
 What is an AutoResetEvent? An AutoResetEvent can be described as a turnstile mechanism, it lets a single waiting person through before re-latching waiting for the next signal.</description>
     </item>
     
     <item>
       <title>Back to the Primitive</title>
-      <link>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</link>
+      <link>http://7sharp9.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</link>
       <pubDate>Thu, 12 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
+      <guid>http://7sharp9.github.io/2012/04/12/2012-04-12-back-to-the-primitive/</guid>
       <description>In this post we are going back to the primitive. No it&amp;rsquo;s not about the same named song by Soulfly, (which incidentally does contains F# notes) but a return to thread synchronisation primitives and their asynchronous counterparts.
 We are going to be looking at an asynchronous version of the ManualResetEvent. This was recently covered by Stephen Toub on the pfx team blog. We will be taking a slightly different view on this as we will be using asynchronous workflows which will give us nice idiomatic usage within F#.</description>
     </item>
     
     <item>
       <title>Black-Scholes Taste Test</title>
-      <link>http://7sharpnine.github.io/site/2012/03/11/2012-03-10-black-scholes-taste-test/</link>
+      <link>http://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</link>
       <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/03/11/2012-03-10-black-scholes-taste-test/</guid>
+      <guid>http://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</guid>
       <description>In this edition we are going to be doing a taste test, C# vs F#. Oh yeah, if you quickly glanced at the title you may have thought this was a recipe for black scones, as interesting and tasty as that may be, unfortunately its going to be finance related.
 I recently presented a paper on the benefits of F#, part of this was a comparison of the famous Black-Scholes equation in both C# and F#.</description>
     </item>
     
     <item>
       <title>FSharp Dataflow agents III</title>
-      <link>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
+      <link>http://7sharp9.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</link>
       <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
+      <guid>http://7sharp9.github.io/2012/02/20/2012-02-19-fsharp-dataflow-agents-iii/</guid>
       <description>This will be the last post on rebuilding the MailboxProcessor using TDF, here&amp;rsquo;s a quick discussion of the missing pieces&amp;hellip;
 First, lets start with the simple ones, these don&amp;rsquo;t really require much discussion.
 DefaultTimeout let mutable defaultTimeout = Timeout.Infinite member x.DefaultTimeout with get() = defaultTimeout and set(value) = defaultTimeout &amp;lt;- value  This simply provides a mutable property using Timeout.Infinite as a default setting.
@@ -478,116 +478,116 @@ CurrentQueueLength member x.CurrentQueueLength() = incomingMessages.Count  Anoth
     
     <item>
       <title>F# Dataflow Agents Part II</title>
-      <link>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
+      <link>http://7sharp9.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</link>
       <pubDate>Mon, 30 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
+      <guid>http://7sharp9.github.io/2012/01/30/2012-01-24-fsharp-dataflow-agents-ii/</guid>
       <description>Right, no messing about this time, straight to the code.
 Construction This is pretty straight forward and I don&amp;rsquo;t want to detract from the important bits of this post, the only thing of note is the cancellationToken which is initialized to a default value using the defaultArg function if the optional parameter cancellationToken is not supplied. The TDF construct that we to use to perform most of the hard work is incomingMessages which is a BufferBlock&amp;lt;&#39;Msg&amp;gt;.</description>
     </item>
     
     <item>
       <title>F# Dataflow Agents Part I</title>
-      <link>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
+      <link>http://7sharp9.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</link>
       <pubDate>Sun, 22 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
+      <guid>http://7sharp9.github.io/2012/01/22/2012-01-22-fsharp-dataflow-agents-i/</guid>
       <description>This is going to be a new series on using TPL Dataflow with F#. First a little bit of history and background.
 TPL Dataflows heritage and background TPL Dataflow or (TDF) has been around for quite a while, it first surfaced more than a year ago as the successor to the Concurrency and Coordination Runtime (CCR) and with coming release of .Net 4.5 it will be part of the System.</description>
     </item>
     
     <item>
       <title>Fixing a hole...</title>
-      <link>http://7sharpnine.github.io/site/2011/12/11/2011-12-11-fixing-a-hole/</link>
+      <link>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/12/11/2011-12-11-fixing-a-hole/</guid>
+      <guid>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
       <description>Due to popular demand&amp;hellip; well, I had a couple of requests anyway :-) Heres a post inspired by my recent encounters profiling some of the code in Fracture-IO. I have recently been profiling the code in fracture to remove any so called low hanging fruits. During this time I also noticed an increase in memory allocation. I remembered I had recently been experimenting in a branch using pipelets as a buffer between the send and receive stages in the Http Server, so I set up a simple test to see if pipelets were contributing to the memory allocation issues I was seeing.</description>
     </item>
     
     <item>
       <title>F# and Design principles - SOLID</title>
-      <link>http://7sharpnine.github.io/site/2011/08/22/2011-08-22-fsharp_solid/</link>
+      <link>http://7sharp9.github.io/2011/08/22/2011-08-22-fsharp_solid/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/08/22/2011-08-22-fsharp_solid/</guid>
+      <guid>http://7sharp9.github.io/2011/08/22/2011-08-22-fsharp_solid/</guid>
       <description>SOLID and its relevance to F# There has been an increasing amount of exposure for F# and functional programming lately. If you come from an object-orientated background a change in mindset is required when working with functional programming, there is a lot of misinformation on functional languages and their relationship with object-orientated design. In this post we run quickly through SOLID to see if these object-orientated principles apply to F#, and if so, how.</description>
     </item>
     
     <item>
       <title>From C# to F#: A Developer&#39;s Perspective</title>
-      <link>http://7sharpnine.github.io/site/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</link>
+      <link>http://7sharp9.github.io/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</link>
       <pubDate>Sat, 16 Jul 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</guid>
+      <guid>http://7sharp9.github.io/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</guid>
       <description>I recently wrote an article for Developer Fusion on the changes in mindset required when moving from C# to F#.
 The article has proved to be more more popular than I envisaged. I think a lot of .Net developers are interested in F# but are unsure on the path to take when trying to accomplish this. For me it was almost a leap of faith, I saw the potential benefits and just jumped right in.</description>
     </item>
     
     <item>
       <title>Agent based scheduling</title>
-      <link>http://7sharpnine.github.io/site/2011/07/03/2011-07-03-agent-based-scheduling/</link>
+      <link>http://7sharp9.github.io/2011/07/03/2011-07-03-agent-based-scheduling/</link>
       <pubDate>Sun, 03 Jul 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/07/03/2011-07-03-agent-based-scheduling/</guid>
+      <guid>http://7sharp9.github.io/2011/07/03/2011-07-03-agent-based-scheduling/</guid>
       <description>One of the areas that I am very interested in is agents and I have been doing quite a lot of work in this area lately.
 Agents can be used for a multitude of different purposes ranging from: isolated message passing, object caching, finite state machines, web crawling, and even reactive user interfaces. One of the ideas that I have been looking into lately is agent based scheduling.SchedulerAgent A simple Agent based scheduler:</description>
     </item>
     
     <item>
       <title> Agents and ObjectPools</title>
-      <link>http://7sharpnine.github.io/site/2011/06/05/2011-06-05-agents-and-objectpools/</link>
+      <link>http://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</link>
       <pubDate>Sun, 05 Jun 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
+      <guid>http://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
       <description>Everyone knows F# agents are cool right? Well here&amp;rsquo;s yet another example of how versatile they can be&amp;hellip;
 There was a series of posts last April by Stephen Toub from the pfxteam at Microsoft. I was reading through some of the posts again the other day and thought some of the ideas presented there would make interesting projects in F# to demonstrate the flexibility and succinctness of the language. I thought the ObjectPool example would make an interesting project in F# using agents aka MailboxProcessors.</description>
     </item>
     
     <item>
       <title>Pipeline processing 3</title>
-      <link>http://7sharpnine.github.io/site/2011/04/04/2011-04-04-pipeline-processing-3/</link>
+      <link>http://7sharp9.github.io/2011/04/04/2011-04-04-pipeline-processing-3/</link>
       <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/04/04/2011-04-04-pipeline-processing-3/</guid>
+      <guid>http://7sharp9.github.io/2011/04/04/2011-04-04-pipeline-processing-3/</guid>
       <description>Ok so I have been offline for a while now, what with starting a new financial contract in London and not having any broadband access for a while. I have been working on something, honest!
 Since the last post I have been reflecting on the pipeline design and it had a distinct object orientated feel to it that I wasnt happy with, so I have amended the structure of the code and come up with the following which simplifies in some areas and expands in others&amp;hellip;module Pipeline open System.</description>
     </item>
     
     <item>
       <title>Pipeline processing 2</title>
-      <link>http://7sharpnine.github.io/site/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <link>http://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</link>
       <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <guid>http://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
       <description>Welcome to pipeline processing part 2. I feel I need to backtrack slightly from the previous post, having worked with pipelines for quite some time I have the advantage of knowing all of the details that may be alluded to in these articles without being effected by any omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going to try and rectify that a bit now.</description>
     </item>
     
     <item>
       <title>Pipeline processing 1</title>
-      <link>http://7sharpnine.github.io/site/2011/02/01/2011-02-01-pipeline-processing-1/</link>
+      <link>http://7sharp9.github.io/2011/02/01/2011-02-01-pipeline-processing-1/</link>
       <pubDate>Tue, 01 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/02/01/2011-02-01-pipeline-processing-1/</guid>
+      <guid>http://7sharp9.github.io/2011/02/01/2011-02-01-pipeline-processing-1/</guid>
       <description>Welcome to new series of articles on pipeline processing. First up, what&amp;rsquo;s a pipeline? Well according to Wikipedia:
  A pipeline is a set of data processing elements connected in series, so that the output of one element is the input of the next one. The elements of a pipeline are often executed in parallel or in time-sliced fashion; in that case, some amount of buffer storage is often inserted between elements.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 4</title>
-      <link>http://7sharpnine.github.io/site/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
+      <link>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
+      <guid>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
       <description>Welcome to part 4 If you were looking forward to some exciting new F# code this time your going to be disappointed, however if you are like me and like looking at graphs and stats and digging in deeper into the code then your going to enjoy this, lets get started&amp;hellip;I set up a 5 minute test with 50 clients connecting to the server with a 15ms interval between each one.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 3</title>
-      <link>http://7sharpnine.github.io/site/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</link>
+      <link>http://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</link>
       <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</guid>
+      <guid>http://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</guid>
       <description>Welcome to part three! As promised heres a description of the inner workings. I&amp;rsquo;m sick to death of typing SocketAsyncEventArgs so from now on I will refer to it as SAEA.BocketPool
 The BocketPool has an interesting name and with it an interesting constructor! It takes the following parameters:
 number: The number of items to create in the BocketPool. size: The size of each buffer in bytes. callback: A callback function which is invoked whenever the SAEA object completes its operation.</description>
@@ -595,29 +595,29 @@ number: The number of items to create in the BocketPool. size: The size of each 
     
     <item>
       <title>Sockets and Bockets 2</title>
-      <link>http://7sharpnine.github.io/site/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</link>
+      <link>http://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</link>
       <pubDate>Fri, 14 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</guid>
+      <guid>http://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</guid>
       <description>Welcome to part two Lets jump in at the deep end and take a look at some code&amp;hellip;
 When you look at the method syntax for the xxxAsync methods you will notice they return a boolean value that indicates if the method completed synchronously, this means that you have to check the return value every time you use one of the methods and invoke the callback yourself if it completes synchronously.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 1</title>
-      <link>http://7sharpnine.github.io/site/2011/01/13/2011-01-13-sockets-and-bockets-1/</link>
+      <link>http://7sharp9.github.io/2011/01/13/2011-01-13-sockets-and-bockets-1/</link>
       <pubDate>Thu, 13 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/13/2011-01-13-sockets-and-bockets-1/</guid>
+      <guid>http://7sharp9.github.io/2011/01/13/2011-01-13-sockets-and-bockets-1/</guid>
       <description>Welcome to part 1 A while back I read an interesting article by Brian McNamara f-async-on-the-server-side which describes C# and F# versions of a simple asynchronous socket server, one of the driving forces behind the article was how F# can wrap the traditional asynchronous model with Asynchronous Workflows, this produces nice clean simple code compared to the C# version which uses lambda expressions, the code looks quite ugly in this style!</description>
     </item>
     
     <item>
       <title></title>
-      <link>http://7sharpnine.github.io/site/1/01/01/-2017-09-12-elmbook/</link>
+      <link>http://7sharp9.github.io/1/01/01/-2017-09-12-elmbook/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/1/01/01/-2017-09-12-elmbook/</guid>
+      <guid>http://7sharp9.github.io/1/01/01/-2017-09-12-elmbook/</guid>
       <description>Building a single page application
 In this chapter we will specify and build a single page application consisting of bootstrap based navbar navigation with a selection of views that are shown based on the navigation option selected within the applications model.
 Basic Structure

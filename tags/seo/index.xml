@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Seo on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/seo/</link>
+    <link>http://7sharp9.github.io/tags/seo/</link>
     <description>Recent content in Seo on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sat, 09 Dec 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/seo/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/seo/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Building a single page application with Elm</title>
-      <link>http://7sharpnine.github.io/site/2017/12/09/2017-12-09-elmbook/</link>
+      <link>http://7sharp9.github.io/2017/12/09/2017-12-09-elmbook/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2017/12/09/2017-12-09-elmbook/</guid>
+      <guid>http://7sharp9.github.io/2017/12/09/2017-12-09-elmbook/</guid>
       <description>Hi there, its been a very long while since I last blogged, I promised this ages ago, its a partial sample chapter for a book I was planning on Elm but the publisher started to muck me about so it never happened. I also have the table of contents for the rest of the book but I guess your not interested in a book Im not writing so I have omitted that.</description>
     </item>
     

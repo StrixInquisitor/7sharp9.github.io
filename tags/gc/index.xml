@@ -2,40 +2,40 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gc on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/gc/</link>
+    <link>http://7sharp9.github.io/tags/gc/</link>
     <description>Recent content in Gc on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 11 Dec 2011 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/gc/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/gc/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Fixing a hole...</title>
-      <link>http://7sharpnine.github.io/site/2011/12/11/2011-12-11-fixing-a-hole/</link>
+      <link>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/12/11/2011-12-11-fixing-a-hole/</guid>
+      <guid>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
       <description>Due to popular demand&amp;hellip; well, I had a couple of requests anyway :-) Heres a post inspired by my recent encounters profiling some of the code in Fracture-IO. I have recently been profiling the code in fracture to remove any so called low hanging fruits. During this time I also noticed an increase in memory allocation. I remembered I had recently been experimenting in a branch using pipelets as a buffer between the send and receive stages in the Http Server, so I set up a simple test to see if pipelets were contributing to the memory allocation issues I was seeing.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 4</title>
-      <link>http://7sharpnine.github.io/site/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
+      <link>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
+      <guid>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
       <description>Welcome to part 4 If you were looking forward to some exciting new F# code this time your going to be disappointed, however if you are like me and like looking at graphs and stats and digging in deeper into the code then your going to enjoy this, lets get started&amp;hellip;I set up a 5 minute test with 50 clients connecting to the server with a 15ms interval between each one.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 1</title>
-      <link>http://7sharpnine.github.io/site/2011/01/13/2011-01-13-sockets-and-bockets-1/</link>
+      <link>http://7sharp9.github.io/2011/01/13/2011-01-13-sockets-and-bockets-1/</link>
       <pubDate>Thu, 13 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2011/01/13/2011-01-13-sockets-and-bockets-1/</guid>
+      <guid>http://7sharp9.github.io/2011/01/13/2011-01-13-sockets-and-bockets-1/</guid>
       <description>Welcome to part 1 A while back I read an interesting article by Brian McNamara f-async-on-the-server-side which describes C# and F# versions of a simple asynchronous socket server, one of the driving forces behind the article was how F# can wrap the traditional asynchronous model with Asynchronous Workflows, this produces nice clean simple code compared to the C# version which uses lambda expressions, the code looks quite ugly in this style!</description>
     </item>
     

@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Microsoft on 7sharp9</title>
-    <link>http://7sharpnine.github.io/site/tags/microsoft/</link>
+    <link>http://7sharp9.github.io/tags/microsoft/</link>
     <description>Recent content in Microsoft on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Tue, 31 May 2016 13:24:29 +0100</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.github.io/site/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharp9.github.io/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>New Adventures</title>
-      <link>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</link>
+      <link>http://7sharp9.github.io/2016/05/31/new-adventures/</link>
       <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2016/05/31/new-adventures/</guid>
+      <guid>http://7sharp9.github.io/2016/05/31/new-adventures/</guid>
       <description>&lt;p&gt;So today was my last day at Xamarin.&lt;br /&gt;
 &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Reckoning day</title>
-      <link>http://7sharpnine.github.io/site/2015/07/16/2015-07-16-reckoning-day/</link>
+      <link>http://7sharp9.github.io/2015/07/16/2015-07-16-reckoning-day/</link>
       <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.github.io/site/2015/07/16/2015-07-16-reckoning-day/</guid>
+      <guid>http://7sharp9.github.io/2015/07/16/2015-07-16-reckoning-day/</guid>
       <description>&lt;p&gt;
 &lt;figure class=&#34;img-left&#34;&gt;
     
