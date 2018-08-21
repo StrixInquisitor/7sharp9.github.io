@@ -2,40 +2,40 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Fable on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/fable/</link>
+    <link>http://7sharpnine.github.io/tags/fable/</link>
     <description>Recent content in Fable on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sat, 09 Dec 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/fable/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/fable/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Building a single page application with Elm</title>
-      <link>http://7sharpnine.com/2017/12/09/2017-12-09-elmbook/</link>
+      <link>http://7sharpnine.github.io/2017/12/09/2017-12-09-elmbook/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2017/12/09/2017-12-09-elmbook/</guid>
+      <guid>http://7sharpnine.github.io/2017/12/09/2017-12-09-elmbook/</guid>
       <description>Hi there, its been a very long while since I last blogged, I promised this ages ago, its a partial sample chapter for a book I was planning on Elm but the publisher started to muck me about so it never happened. I also have the table of contents for the rest of the book but I guess your not interested in a book Im not writing so I have omitted that.</description>
     </item>
     
     <item>
       <title>Creating fuse applications with fable</title>
-      <link>http://7sharpnine.com/2016/06/07/fable-fuse-template/</link>
+      <link>http://7sharpnine.github.io/2016/06/07/fable-fuse-template/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/2016/06/07/fable-fuse-template/</guid>
+      <guid>http://7sharpnine.github.io/2016/06/07/fable-fuse-template/</guid>
       <description>&lt;p&gt;So as promised here&amp;rsquo;s a guide to creating your first &lt;strong&gt;fable |&amp;gt; fuse&lt;/strong&gt; application&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Light The Fuse</title>
-      <link>http://7sharpnine.com/2016/06/03/light-the-fuse/</link>
+      <link>http://7sharpnine.github.io/2016/06/03/light-the-fuse/</link>
       <pubDate>Fri, 03 Jun 2016 11:21:57 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/2016/06/03/light-the-fuse/</guid>
+      <guid>http://7sharpnine.github.io/2016/06/03/light-the-fuse/</guid>
       <description>&lt;p&gt;In this post Im going to be introducing something new and exciting the combination of F#, Fable and Fuse.  If I was American I might say this was the holy trinity of awesomeness!&lt;/p&gt;</description>
     </item>
     

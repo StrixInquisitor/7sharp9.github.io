@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Parallelism on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/parallelism/</link>
+    <link>http://7sharpnine.github.io/tags/parallelism/</link>
     <description>Recent content in Parallelism on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 13 Feb 2011 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/parallelism/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/parallelism/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Pipeline processing 2</title>
-      <link>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <link>http://7sharpnine.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</link>
       <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <guid>http://7sharpnine.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
       <description>Welcome to pipeline processing part 2. I feel I need to backtrack slightly from the previous post, having worked with pipelines for quite some time I have the advantage of knowing all of the details that may be alluded to in these articles without being effected by any omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going to try and rectify that a bit now.</description>
     </item>
     

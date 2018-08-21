@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Atari St on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/atari-st/</link>
+    <link>http://7sharpnine.github.io/tags/atari-st/</link>
     <description>Recent content in Atari St on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 06 Mar 2016 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/atari-st/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/atari-st/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Building Emulators in FSharp</title>
-      <link>http://7sharpnine.com/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
+      <link>http://7sharpnine.github.io/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2016/03/06/2016-03-06-building-emulators-in-fsharp/</guid>
+      <guid>http://7sharpnine.github.io/2016/03/06/2016-03-06-building-emulators-in-fsharp/</guid>
       <description>&lt;p&gt;So I wanted to briefly talk about what I&amp;rsquo;ve been up to lately.   I&amp;rsquo;ve been doing a spot of compiler hacking, working on improving type Providers and generally tinkering with concepts relating to macros etc.  I&amp;rsquo;ve also been tinkering with the Elixir and Rust programming languages which I like a lot.  I might write about those things at a later time depending on my train of thought which can be quite disjoint.  What was I talking about again?  :-)&lt;br /&gt;
 &lt;/p&gt;</description>
     </item>

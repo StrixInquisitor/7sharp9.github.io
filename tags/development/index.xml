@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Development on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/development/</link>
+    <link>http://7sharpnine.github.io/tags/development/</link>
     <description>Recent content in Development on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Mon, 22 Aug 2011 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/development/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/development/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>F# and Design principles - SOLID</title>
-      <link>http://7sharpnine.com/2011/08/22/2011-08-22-fsharp_solid/</link>
+      <link>http://7sharpnine.github.io/2011/08/22/2011-08-22-fsharp_solid/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2011/08/22/2011-08-22-fsharp_solid/</guid>
+      <guid>http://7sharpnine.github.io/2011/08/22/2011-08-22-fsharp_solid/</guid>
       <description>SOLID and its relevance to F# There has been an increasing amount of exposure for F# and functional programming lately. If you come from an object-orientated background a change in mindset is required when working with functional programming, there is a lot of misinformation on functional languages and their relationship with object-orientated design. In this post we run quickly through SOLID to see if these object-orientated principles apply to F#, and if so, how.</description>
     </item>
     
     <item>
       <title>From C# to F#: A Developer&#39;s Perspective</title>
-      <link>http://7sharpnine.com/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</link>
+      <link>http://7sharpnine.github.io/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</link>
       <pubDate>Sat, 16 Jul 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</guid>
+      <guid>http://7sharpnine.github.io/2011/07/16/2011-07-16-from-csharp-to-fsharp-a-developers-perspective/</guid>
       <description>I recently wrote an article for Developer Fusion on the changes in mindset required when moving from C# to F#.
 The article has proved to be more more popular than I envisaged. I think a lot of .Net developers are interested in F# but are unsure on the path to take when trying to accomplish this. For me it was almost a leap of faith, I saw the potential benefits and just jumped right in.</description>
     </item>

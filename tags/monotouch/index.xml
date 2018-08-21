@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Monotouch on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/monotouch/</link>
+    <link>http://7sharpnine.github.io/tags/monotouch/</link>
     <description>Recent content in Monotouch on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Thu, 07 Feb 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/monotouch/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/monotouch/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>MonoTouch and F# part II</title>
-      <link>http://7sharpnine.com/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
+      <link>http://7sharpnine.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</link>
       <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
+      <guid>http://7sharpnine.github.io/2013/02/07/2013-02-04-monotouch-and-fsharp-part-ii/</guid>
       <description>In the last post we left at the point where everything was running fine and dandy on the Simulator. So what happens if we compile for the real hardware?
 Lets change the active configuration to Debug|iPhone and hit build, what do we get?Boom! Error MT2002: Could not resolve: FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (MT2002) (singleview)
 So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference to it:</description>
@@ -25,10 +25,10 @@ So I guess we need to tell it where the FSharp.Core.dll is, lets add a reference
     
     <item>
       <title>MonoTouch and F# part I</title>
-      <link>http://7sharpnine.com/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
+      <link>http://7sharpnine.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</link>
       <pubDate>Sun, 03 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
+      <guid>http://7sharpnine.github.io/2013/02/03/2013-02-03-monotouch-and-fsharp-part-i/</guid>
       <description>MonoTouch and F# that would be a cool duo right?
 Well let me explain what needs to be done and why to get this pair working together.
 I heard rumours a while ago that F# and MonoTouch would not play together nicely because of limitations in the ahead of time compilation (AOT). So I thought I would either prove or disprove this with some concentrated hacking. How hard can it be?</description>

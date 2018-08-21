@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Await on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/await/</link>
+    <link>http://7sharpnine.github.io/tags/await/</link>
     <description>Recent content in Await on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Thu, 18 Apr 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/await/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/await/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>iOS async revisited</title>
-      <link>http://7sharpnine.com/2013/04/18/2013-04-18-ios-async-revisited/</link>
+      <link>http://7sharpnine.github.io/2013/04/18/2013-04-18-ios-async-revisited/</link>
       <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/04/18/2013-04-18-ios-async-revisited/</guid>
+      <guid>http://7sharpnine.github.io/2013/04/18/2013-04-18-ios-async-revisited/</guid>
       <description>In this post weare going to look as async again, but from the perspective of F#.
 Xamarin Evolve 2013   I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
     </item>
     
     <item>
       <title>A little bit of iOS async</title>
-      <link>http://7sharpnine.com/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
+      <link>http://7sharpnine.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</link>
       <pubDate>Tue, 16 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
+      <guid>http://7sharpnine.github.io/2013/04/16/2013-04-16-a-little-bit-of-ios-async/</guid>
       <description>I was going to title this post as &amp;lsquo;Now for something completely different&amp;rsquo; but felt that a little bit too Pythonesque, and when I thought about it a bit it isn&amp;rsquo;t really completely just slightly different, namely C# rather than my usual F# posts. Right, enough of the waffling, this post is a little tour into the relatively unknown area of async on iOS. Xamarin announced the alpha preview of async await on March 11th this year (2013).</description>
     </item>
     

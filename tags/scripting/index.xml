@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Scripting on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/scripting/</link>
+    <link>http://7sharpnine.github.io/tags/scripting/</link>
     <description>Recent content in Scripting on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Fri, 21 Jun 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/scripting/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/scripting/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Can I have some F# with that?</title>
-      <link>http://7sharpnine.com/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</link>
+      <link>http://7sharpnine.github.io/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</link>
       <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</guid>
+      <guid>http://7sharpnine.github.io/2013/06/21/2013-06-21-can-i-have-some-fsharp-with-that/</guid>
       <description>There&amp;rsquo;s been a fair bit of activity lately from a project called ScriptCS, it allows you to put together a project using C# as a lightweight scripting language, forgoing the use of Visual Studio which can sometimes be too bloated and bulky.
 It also allows you to use C# in a Read Evaluate Print Loop - REPL. This is nothing new to F# and indeed lots of other languages have REPL&amp;rsquo;s too.</description>
     </item>

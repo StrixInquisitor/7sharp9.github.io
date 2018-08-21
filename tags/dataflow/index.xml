@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dataflow on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/dataflow/</link>
+    <link>http://7sharpnine.github.io/tags/dataflow/</link>
     <description>Recent content in Dataflow on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Wed, 05 Jun 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/dataflow/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/dataflow/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Monster Zero - Revisited</title>
-      <link>http://7sharpnine.com/2013/06/05/2013-06-05-monster-zero-revisited/</link>
+      <link>http://7sharpnine.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
+      <guid>http://7sharpnine.github.io/2013/06/05/2013-06-05-monster-zero-revisited/</guid>
       <description>This creature is capable of tremendous destruction due to it&amp;rsquo;s size, flight (with the creature&amp;rsquo;s wings also generating hurricane strength winds) and possesses several breath weapons (e.g., heat and energy).
 What am I talking about here? Maybe it&amp;rsquo;s Monster Zero or King Ghidorah as it&amp;rsquo;s sometimes known. No it&amp;rsquo;s TPL Dataflow! Yeah, yeah, I have a penchant for being over dramatic and writing quirky intros. This post is about TPL Dataflow otherwise known as TDF.</description>
     </item>

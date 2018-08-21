@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Community Hero on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/community-hero/</link>
+    <link>http://7sharpnine.github.io/tags/community-hero/</link>
     <description>Recent content in Community Hero on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 25 Oct 2015 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/community-hero/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/community-hero/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>F# Community Hero</title>
-      <link>http://7sharpnine.com/2015/10/25/2015-10-25-f-community-hero/</link>
+      <link>http://7sharpnine.github.io/2015/10/25/2015-10-25-f-community-hero/</link>
       <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/2015/10/25/2015-10-25-f-community-hero/</guid>
+      <guid>http://7sharpnine.github.io/2015/10/25/2015-10-25-f-community-hero/</guid>
       <description>&lt;p&gt;Ive been meaning to write this post for ages but Ive only just found the time.&lt;/p&gt;
 
 &lt;p&gt;On the 3rd of September my good friend Ryan Riley (aka &lt;a href=&#34;https://twitter.com/panesofglass&#34;&gt;@panesofglass&lt;/a&gt;) emailed me letting me know I had won a Community for F# hero award for 2015!&lt;br /&gt;

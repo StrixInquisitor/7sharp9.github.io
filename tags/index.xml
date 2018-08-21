@@ -2,904 +2,904 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 7sharp9</title>
-    <link>http://7sharpnine.com/tags/</link>
+    <link>http://7sharpnine.github.io/tags/</link>
     <description>Recent content in Tags on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 06 Mar 2016 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharpnine.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://7sharpnine.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>68000</title>
-      <link>http://7sharpnine.com/tags/68000/</link>
+      <link>http://7sharpnine.github.io/tags/68000/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/68000/</guid>
+      <guid>http://7sharpnine.github.io/tags/68000/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Agents</title>
-      <link>http://7sharpnine.com/tags/agents/</link>
+      <link>http://7sharpnine.github.io/tags/agents/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/agents/</guid>
+      <guid>http://7sharpnine.github.io/tags/agents/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ast</title>
-      <link>http://7sharpnine.com/tags/ast/</link>
+      <link>http://7sharpnine.github.io/tags/ast/</link>
       <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/ast/</guid>
+      <guid>http://7sharpnine.github.io/tags/ast/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Async</title>
-      <link>http://7sharpnine.com/tags/async/</link>
+      <link>http://7sharpnine.github.io/tags/async/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/async/</guid>
+      <guid>http://7sharpnine.github.io/tags/async/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Async Workflows</title>
-      <link>http://7sharpnine.com/tags/async-workflows/</link>
+      <link>http://7sharpnine.github.io/tags/async-workflows/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/async-workflows/</guid>
+      <guid>http://7sharpnine.github.io/tags/async-workflows/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Asynchronous</title>
-      <link>http://7sharpnine.com/tags/asynchronous/</link>
+      <link>http://7sharpnine.github.io/tags/asynchronous/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/asynchronous/</guid>
+      <guid>http://7sharpnine.github.io/tags/asynchronous/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Atari St</title>
-      <link>http://7sharpnine.com/tags/atari-st/</link>
+      <link>http://7sharpnine.github.io/tags/atari-st/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/atari-st/</guid>
+      <guid>http://7sharpnine.github.io/tags/atari-st/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Await</title>
-      <link>http://7sharpnine.com/tags/await/</link>
+      <link>http://7sharpnine.github.io/tags/await/</link>
       <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/await/</guid>
+      <guid>http://7sharpnine.github.io/tags/await/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Azure</title>
-      <link>http://7sharpnine.com/tags/azure/</link>
+      <link>http://7sharpnine.github.io/tags/azure/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/azure/</guid>
+      <guid>http://7sharpnine.github.io/tags/azure/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Clojure</title>
-      <link>http://7sharpnine.com/tags/clojure/</link>
+      <link>http://7sharpnine.github.io/tags/clojure/</link>
       <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/clojure/</guid>
+      <guid>http://7sharpnine.github.io/tags/clojure/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Community Hero</title>
-      <link>http://7sharpnine.com/tags/community-hero/</link>
+      <link>http://7sharpnine.github.io/tags/community-hero/</link>
       <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/community-hero/</guid>
+      <guid>http://7sharpnine.github.io/tags/community-hero/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Compilation</title>
-      <link>http://7sharpnine.com/tags/compilation/</link>
+      <link>http://7sharpnine.github.io/tags/compilation/</link>
       <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/compilation/</guid>
+      <guid>http://7sharpnine.github.io/tags/compilation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Complexity</title>
-      <link>http://7sharpnine.com/tags/complexity/</link>
+      <link>http://7sharpnine.github.io/tags/complexity/</link>
       <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/complexity/</guid>
+      <guid>http://7sharpnine.github.io/tags/complexity/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Concurrency</title>
-      <link>http://7sharpnine.com/tags/concurrency/</link>
+      <link>http://7sharpnine.github.io/tags/concurrency/</link>
       <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/concurrency/</guid>
+      <guid>http://7sharpnine.github.io/tags/concurrency/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Csharp</title>
-      <link>http://7sharpnine.com/tags/csharp/</link>
+      <link>http://7sharpnine.github.io/tags/csharp/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/csharp/</guid>
+      <guid>http://7sharpnine.github.io/tags/csharp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Dataflow</title>
-      <link>http://7sharpnine.com/tags/dataflow/</link>
+      <link>http://7sharpnine.github.io/tags/dataflow/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/dataflow/</guid>
+      <guid>http://7sharpnine.github.io/tags/dataflow/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Delos</title>
-      <link>http://7sharpnine.com/tags/delos/</link>
+      <link>http://7sharpnine.github.io/tags/delos/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/delos/</guid>
+      <guid>http://7sharpnine.github.io/tags/delos/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Design Patterns</title>
-      <link>http://7sharpnine.com/tags/design-patterns/</link>
+      <link>http://7sharpnine.github.io/tags/design-patterns/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/design-patterns/</guid>
+      <guid>http://7sharpnine.github.io/tags/design-patterns/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Development</title>
-      <link>http://7sharpnine.com/tags/development/</link>
+      <link>http://7sharpnine.github.io/tags/development/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/development/</guid>
+      <guid>http://7sharpnine.github.io/tags/development/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Distributed Systems</title>
-      <link>http://7sharpnine.com/tags/distributed-systems/</link>
+      <link>http://7sharpnine.github.io/tags/distributed-systems/</link>
       <pubDate>Sun, 03 Jul 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/distributed-systems/</guid>
+      <guid>http://7sharpnine.github.io/tags/distributed-systems/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Edge</title>
-      <link>http://7sharpnine.com/tags/edge/</link>
+      <link>http://7sharpnine.github.io/tags/edge/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/edge/</guid>
+      <guid>http://7sharpnine.github.io/tags/edge/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Edge Fs</title>
-      <link>http://7sharpnine.com/tags/edge-fs/</link>
+      <link>http://7sharpnine.github.io/tags/edge-fs/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/edge-fs/</guid>
+      <guid>http://7sharpnine.github.io/tags/edge-fs/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Elixir</title>
-      <link>http://7sharpnine.com/tags/elixir/</link>
+      <link>http://7sharpnine.github.io/tags/elixir/</link>
       <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/elixir/</guid>
+      <guid>http://7sharpnine.github.io/tags/elixir/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Elm</title>
-      <link>http://7sharpnine.com/tags/elm/</link>
+      <link>http://7sharpnine.github.io/tags/elm/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/elm/</guid>
+      <guid>http://7sharpnine.github.io/tags/elm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Emulators</title>
-      <link>http://7sharpnine.com/tags/emulators/</link>
+      <link>http://7sharpnine.github.io/tags/emulators/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/emulators/</guid>
+      <guid>http://7sharpnine.github.io/tags/emulators/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Erlang</title>
-      <link>http://7sharpnine.com/tags/erlang/</link>
+      <link>http://7sharpnine.github.io/tags/erlang/</link>
       <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/erlang/</guid>
+      <guid>http://7sharpnine.github.io/tags/erlang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fable</title>
-      <link>http://7sharpnine.com/tags/fable/</link>
+      <link>http://7sharpnine.github.io/tags/fable/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fable/</guid>
+      <guid>http://7sharpnine.github.io/tags/fable/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Finance</title>
-      <link>http://7sharpnine.com/tags/finance/</link>
+      <link>http://7sharpnine.github.io/tags/finance/</link>
       <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/finance/</guid>
+      <guid>http://7sharpnine.github.io/tags/finance/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Flamegraph</title>
-      <link>http://7sharpnine.com/tags/flamegraph/</link>
+      <link>http://7sharpnine.github.io/tags/flamegraph/</link>
       <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/flamegraph/</guid>
+      <guid>http://7sharpnine.github.io/tags/flamegraph/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fractureio</title>
-      <link>http://7sharpnine.com/tags/fractureio/</link>
+      <link>http://7sharpnine.github.io/tags/fractureio/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fractureio/</guid>
+      <guid>http://7sharpnine.github.io/tags/fractureio/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fsharp</title>
-      <link>http://7sharpnine.com/tags/fsharp/</link>
+      <link>http://7sharpnine.github.io/tags/fsharp/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fsharp/</guid>
+      <guid>http://7sharpnine.github.io/tags/fsharp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fsharp.compiler.services</title>
-      <link>http://7sharpnine.com/tags/fsharp.compiler.services/</link>
+      <link>http://7sharpnine.github.io/tags/fsharp.compiler.services/</link>
       <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fsharp.compiler.services/</guid>
+      <guid>http://7sharpnine.github.io/tags/fsharp.compiler.services/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fsharpx</title>
-      <link>http://7sharpnine.com/tags/fsharpx/</link>
+      <link>http://7sharpnine.github.io/tags/fsharpx/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fsharpx/</guid>
+      <guid>http://7sharpnine.github.io/tags/fsharpx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Functional Programming</title>
-      <link>http://7sharpnine.com/tags/functional-programming/</link>
+      <link>http://7sharpnine.github.io/tags/functional-programming/</link>
       <pubDate>Thu, 30 Jun 2016 13:53:45 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/functional-programming/</guid>
+      <guid>http://7sharpnine.github.io/tags/functional-programming/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Fuse</title>
-      <link>http://7sharpnine.com/tags/fuse/</link>
+      <link>http://7sharpnine.github.io/tags/fuse/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/fuse/</guid>
+      <guid>http://7sharpnine.github.io/tags/fuse/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Games</title>
-      <link>http://7sharpnine.com/tags/games/</link>
+      <link>http://7sharpnine.github.io/tags/games/</link>
       <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/games/</guid>
+      <guid>http://7sharpnine.github.io/tags/games/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Gc</title>
-      <link>http://7sharpnine.com/tags/gc/</link>
+      <link>http://7sharpnine.github.io/tags/gc/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/gc/</guid>
+      <guid>http://7sharpnine.github.io/tags/gc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Generative</title>
-      <link>http://7sharpnine.com/tags/generative/</link>
+      <link>http://7sharpnine.github.io/tags/generative/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/generative/</guid>
+      <guid>http://7sharpnine.github.io/tags/generative/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Googleplus</title>
-      <link>http://7sharpnine.com/tags/googleplus/</link>
+      <link>http://7sharpnine.github.io/tags/googleplus/</link>
       <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/googleplus/</guid>
+      <guid>http://7sharpnine.github.io/tags/googleplus/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Haskell</title>
-      <link>http://7sharpnine.com/tags/haskell/</link>
+      <link>http://7sharpnine.github.io/tags/haskell/</link>
       <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/haskell/</guid>
+      <guid>http://7sharpnine.github.io/tags/haskell/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ioptron</title>
-      <link>http://7sharpnine.com/tags/ioptron/</link>
+      <link>http://7sharpnine.github.io/tags/ioptron/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/ioptron/</guid>
+      <guid>http://7sharpnine.github.io/tags/ioptron/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ios</title>
-      <link>http://7sharpnine.com/tags/ios/</link>
+      <link>http://7sharpnine.github.io/tags/ios/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/ios/</guid>
+      <guid>http://7sharpnine.github.io/tags/ios/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ironpython</title>
-      <link>http://7sharpnine.com/tags/ironpython/</link>
+      <link>http://7sharpnine.github.io/tags/ironpython/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/ironpython/</guid>
+      <guid>http://7sharpnine.github.io/tags/ironpython/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Javascript</title>
-      <link>http://7sharpnine.com/tags/javascript/</link>
+      <link>http://7sharpnine.github.io/tags/javascript/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/javascript/</guid>
+      <guid>http://7sharpnine.github.io/tags/javascript/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Lambda</title>
-      <link>http://7sharpnine.com/tags/lambda/</link>
+      <link>http://7sharpnine.github.io/tags/lambda/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/lambda/</guid>
+      <guid>http://7sharpnine.github.io/tags/lambda/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mac</title>
-      <link>http://7sharpnine.com/tags/mac/</link>
+      <link>http://7sharpnine.github.io/tags/mac/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/mac/</guid>
+      <guid>http://7sharpnine.github.io/tags/mac/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mailboxprocessor</title>
-      <link>http://7sharpnine.com/tags/mailboxprocessor/</link>
+      <link>http://7sharpnine.github.io/tags/mailboxprocessor/</link>
       <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/mailboxprocessor/</guid>
+      <guid>http://7sharpnine.github.io/tags/mailboxprocessor/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Memory Fragmentation</title>
-      <link>http://7sharpnine.com/tags/memory-fragmentation/</link>
+      <link>http://7sharpnine.github.io/tags/memory-fragmentation/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/memory-fragmentation/</guid>
+      <guid>http://7sharpnine.github.io/tags/memory-fragmentation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Memory Profiling</title>
-      <link>http://7sharpnine.com/tags/memory-profiling/</link>
+      <link>http://7sharpnine.github.io/tags/memory-profiling/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/memory-profiling/</guid>
+      <guid>http://7sharpnine.github.io/tags/memory-profiling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Metaprogramming</title>
-      <link>http://7sharpnine.com/tags/metaprogramming/</link>
+      <link>http://7sharpnine.github.io/tags/metaprogramming/</link>
       <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/metaprogramming/</guid>
+      <guid>http://7sharpnine.github.io/tags/metaprogramming/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Microsoft</title>
-      <link>http://7sharpnine.com/tags/microsoft/</link>
+      <link>http://7sharpnine.github.io/tags/microsoft/</link>
       <pubDate>Tue, 31 May 2016 13:24:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/microsoft/</guid>
+      <guid>http://7sharpnine.github.io/tags/microsoft/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mono</title>
-      <link>http://7sharpnine.com/tags/mono/</link>
+      <link>http://7sharpnine.github.io/tags/mono/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/mono/</guid>
+      <guid>http://7sharpnine.github.io/tags/mono/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Monodevelop</title>
-      <link>http://7sharpnine.com/tags/monodevelop/</link>
+      <link>http://7sharpnine.github.io/tags/monodevelop/</link>
       <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/monodevelop/</guid>
+      <guid>http://7sharpnine.github.io/tags/monodevelop/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Monogame</title>
-      <link>http://7sharpnine.com/tags/monogame/</link>
+      <link>http://7sharpnine.github.io/tags/monogame/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/monogame/</guid>
+      <guid>http://7sharpnine.github.io/tags/monogame/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Monotouch</title>
-      <link>http://7sharpnine.com/tags/monotouch/</link>
+      <link>http://7sharpnine.github.io/tags/monotouch/</link>
       <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/monotouch/</guid>
+      <guid>http://7sharpnine.github.io/tags/monotouch/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mount</title>
-      <link>http://7sharpnine.com/tags/mount/</link>
+      <link>http://7sharpnine.github.io/tags/mount/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/mount/</guid>
+      <guid>http://7sharpnine.github.io/tags/mount/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Multithreading</title>
-      <link>http://7sharpnine.com/tags/multithreading/</link>
+      <link>http://7sharpnine.github.io/tags/multithreading/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/multithreading/</guid>
+      <guid>http://7sharpnine.github.io/tags/multithreading/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mvp</title>
-      <link>http://7sharpnine.com/tags/mvp/</link>
+      <link>http://7sharpnine.github.io/tags/mvp/</link>
       <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/mvp/</guid>
+      <guid>http://7sharpnine.github.io/tags/mvp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Node</title>
-      <link>http://7sharpnine.com/tags/node/</link>
+      <link>http://7sharpnine.github.io/tags/node/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/node/</guid>
+      <guid>http://7sharpnine.github.io/tags/node/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Objc</title>
-      <link>http://7sharpnine.com/tags/objc/</link>
+      <link>http://7sharpnine.github.io/tags/objc/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/objc/</guid>
+      <guid>http://7sharpnine.github.io/tags/objc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Parallelism</title>
-      <link>http://7sharpnine.com/tags/parallelism/</link>
+      <link>http://7sharpnine.github.io/tags/parallelism/</link>
       <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/parallelism/</guid>
+      <guid>http://7sharpnine.github.io/tags/parallelism/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Performance</title>
-      <link>http://7sharpnine.com/tags/performance/</link>
+      <link>http://7sharpnine.github.io/tags/performance/</link>
       <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/performance/</guid>
+      <guid>http://7sharpnine.github.io/tags/performance/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Pipelets</title>
-      <link>http://7sharpnine.com/tags/pipelets/</link>
+      <link>http://7sharpnine.github.io/tags/pipelets/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/pipelets/</guid>
+      <guid>http://7sharpnine.github.io/tags/pipelets/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Pipeline</title>
-      <link>http://7sharpnine.com/tags/pipeline/</link>
+      <link>http://7sharpnine.github.io/tags/pipeline/</link>
       <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/pipeline/</guid>
+      <guid>http://7sharpnine.github.io/tags/pipeline/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Platonic</title>
-      <link>http://7sharpnine.com/tags/platonic/</link>
+      <link>http://7sharpnine.github.io/tags/platonic/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/platonic/</guid>
+      <guid>http://7sharpnine.github.io/tags/platonic/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Profiling</title>
-      <link>http://7sharpnine.com/tags/profiling/</link>
+      <link>http://7sharpnine.github.io/tags/profiling/</link>
       <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/profiling/</guid>
+      <guid>http://7sharpnine.github.io/tags/profiling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Programming</title>
-      <link>http://7sharpnine.com/tags/programming/</link>
+      <link>http://7sharpnine.github.io/tags/programming/</link>
       <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/programming/</guid>
+      <guid>http://7sharpnine.github.io/tags/programming/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reflection</title>
-      <link>http://7sharpnine.com/tags/reflection/</link>
+      <link>http://7sharpnine.github.io/tags/reflection/</link>
       <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/reflection/</guid>
+      <guid>http://7sharpnine.github.io/tags/reflection/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Refractor</title>
-      <link>http://7sharpnine.com/tags/refractor/</link>
+      <link>http://7sharpnine.github.io/tags/refractor/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/refractor/</guid>
+      <guid>http://7sharpnine.github.io/tags/refractor/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Roslyn</title>
-      <link>http://7sharpnine.com/tags/roslyn/</link>
+      <link>http://7sharpnine.github.io/tags/roslyn/</link>
       <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/roslyn/</guid>
+      <guid>http://7sharpnine.github.io/tags/roslyn/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rx</title>
-      <link>http://7sharpnine.com/tags/rx/</link>
+      <link>http://7sharpnine.github.io/tags/rx/</link>
       <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/rx/</guid>
+      <guid>http://7sharpnine.github.io/tags/rx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Saea</title>
-      <link>http://7sharpnine.com/tags/saea/</link>
+      <link>http://7sharpnine.github.io/tags/saea/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/saea/</guid>
+      <guid>http://7sharpnine.github.io/tags/saea/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Scriptcs</title>
-      <link>http://7sharpnine.com/tags/scriptcs/</link>
+      <link>http://7sharpnine.github.io/tags/scriptcs/</link>
       <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/scriptcs/</guid>
+      <guid>http://7sharpnine.github.io/tags/scriptcs/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Scripting</title>
-      <link>http://7sharpnine.com/tags/scripting/</link>
+      <link>http://7sharpnine.github.io/tags/scripting/</link>
       <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/scripting/</guid>
+      <guid>http://7sharpnine.github.io/tags/scripting/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Seo</title>
-      <link>http://7sharpnine.com/tags/seo/</link>
+      <link>http://7sharpnine.github.io/tags/seo/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/seo/</guid>
+      <guid>http://7sharpnine.github.io/tags/seo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Sockets</title>
-      <link>http://7sharpnine.com/tags/sockets/</link>
+      <link>http://7sharpnine.github.io/tags/sockets/</link>
       <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/sockets/</guid>
+      <guid>http://7sharpnine.github.io/tags/sockets/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Solid</title>
-      <link>http://7sharpnine.com/tags/solid/</link>
+      <link>http://7sharpnine.github.io/tags/solid/</link>
       <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/solid/</guid>
+      <guid>http://7sharpnine.github.io/tags/solid/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spa</title>
-      <link>http://7sharpnine.com/tags/spa/</link>
+      <link>http://7sharpnine.github.io/tags/spa/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/spa/</guid>
+      <guid>http://7sharpnine.github.io/tags/spa/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spritekit</title>
-      <link>http://7sharpnine.com/tags/spritekit/</link>
+      <link>http://7sharpnine.github.io/tags/spritekit/</link>
       <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/spritekit/</guid>
+      <guid>http://7sharpnine.github.io/tags/spritekit/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Storyboard</title>
-      <link>http://7sharpnine.com/tags/storyboard/</link>
+      <link>http://7sharpnine.github.io/tags/storyboard/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/storyboard/</guid>
+      <guid>http://7sharpnine.github.io/tags/storyboard/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Subdivision</title>
-      <link>http://7sharpnine.com/tags/subdivision/</link>
+      <link>http://7sharpnine.github.io/tags/subdivision/</link>
       <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/subdivision/</guid>
+      <guid>http://7sharpnine.github.io/tags/subdivision/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Takahash</title>
-      <link>http://7sharpnine.com/tags/takahash/</link>
+      <link>http://7sharpnine.github.io/tags/takahash/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/takahash/</guid>
+      <guid>http://7sharpnine.github.io/tags/takahash/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tdf</title>
-      <link>http://7sharpnine.com/tags/tdf/</link>
+      <link>http://7sharpnine.github.io/tags/tdf/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/tdf/</guid>
+      <guid>http://7sharpnine.github.io/tags/tdf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Telescope</title>
-      <link>http://7sharpnine.com/tags/telescope/</link>
+      <link>http://7sharpnine.github.io/tags/telescope/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/telescope/</guid>
+      <guid>http://7sharpnine.github.io/tags/telescope/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Televue</title>
-      <link>http://7sharpnine.com/tags/televue/</link>
+      <link>http://7sharpnine.github.io/tags/televue/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/televue/</guid>
+      <guid>http://7sharpnine.github.io/tags/televue/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Threading</title>
-      <link>http://7sharpnine.com/tags/threading/</link>
+      <link>http://7sharpnine.github.io/tags/threading/</link>
       <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/threading/</guid>
+      <guid>http://7sharpnine.github.io/tags/threading/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tools</title>
-      <link>http://7sharpnine.com/tags/tools/</link>
+      <link>http://7sharpnine.github.io/tags/tools/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/tools/</guid>
+      <guid>http://7sharpnine.github.io/tags/tools/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tpl</title>
-      <link>http://7sharpnine.com/tags/tpl/</link>
+      <link>http://7sharpnine.github.io/tags/tpl/</link>
       <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/tpl/</guid>
+      <guid>http://7sharpnine.github.io/tags/tpl/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tpl Dataflow</title>
-      <link>http://7sharpnine.com/tags/tpl-dataflow/</link>
+      <link>http://7sharpnine.github.io/tags/tpl-dataflow/</link>
       <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/tpl-dataflow/</guid>
+      <guid>http://7sharpnine.github.io/tags/tpl-dataflow/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Transpiling</title>
-      <link>http://7sharpnine.com/tags/transpiling/</link>
+      <link>http://7sharpnine.github.io/tags/transpiling/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/transpiling/</guid>
+      <guid>http://7sharpnine.github.io/tags/transpiling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Triplet</title>
-      <link>http://7sharpnine.com/tags/triplet/</link>
+      <link>http://7sharpnine.github.io/tags/triplet/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/triplet/</guid>
+      <guid>http://7sharpnine.github.io/tags/triplet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Twitter</title>
-      <link>http://7sharpnine.com/tags/twitter/</link>
+      <link>http://7sharpnine.github.io/tags/twitter/</link>
       <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/twitter/</guid>
+      <guid>http://7sharpnine.github.io/tags/twitter/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Typeprovider</title>
-      <link>http://7sharpnine.com/tags/typeprovider/</link>
+      <link>http://7sharpnine.github.io/tags/typeprovider/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/typeprovider/</guid>
+      <guid>http://7sharpnine.github.io/tags/typeprovider/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Typeproviders</title>
-      <link>http://7sharpnine.com/tags/typeproviders/</link>
+      <link>http://7sharpnine.github.io/tags/typeproviders/</link>
       <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/typeproviders/</guid>
+      <guid>http://7sharpnine.github.io/tags/typeproviders/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Types</title>
-      <link>http://7sharpnine.com/tags/types/</link>
+      <link>http://7sharpnine.github.io/tags/types/</link>
       <pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/types/</guid>
+      <guid>http://7sharpnine.github.io/tags/types/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Xamarin</title>
-      <link>http://7sharpnine.com/tags/xamarin/</link>
+      <link>http://7sharpnine.github.io/tags/xamarin/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
-      <guid>http://7sharpnine.com/tags/xamarin/</guid>
+      <guid>http://7sharpnine.github.io/tags/xamarin/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Xamarin Studio</title>
-      <link>http://7sharpnine.com/tags/xamarin-studio/</link>
+      <link>http://7sharpnine.github.io/tags/xamarin-studio/</link>
       <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/xamarin-studio/</guid>
+      <guid>http://7sharpnine.github.io/tags/xamarin-studio/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Xamarin.forms</title>
-      <link>http://7sharpnine.com/tags/xamarin.forms/</link>
+      <link>http://7sharpnine.github.io/tags/xamarin.forms/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/xamarin.forms/</guid>
+      <guid>http://7sharpnine.github.io/tags/xamarin.forms/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Yourkit</title>
-      <link>http://7sharpnine.com/tags/yourkit/</link>
+      <link>http://7sharpnine.github.io/tags/yourkit/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharpnine.com/tags/yourkit/</guid>
+      <guid>http://7sharpnine.github.io/tags/yourkit/</guid>
       <description></description>
     </item>
     
