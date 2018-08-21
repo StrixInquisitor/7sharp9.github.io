@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Functional Programming on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/functional-programming/</link>
+    <link>https://7sharp9.github.io/tags/functional-programming/</link>
     <description>Recent content in Functional Programming on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Thu, 30 Jun 2016 13:53:45 +0100</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Elmtastic Updates</title>
-      <link>http://7sharp9.github.io/2016/06/30/elmtastic-updates/</link>
+      <link>https://7sharp9.github.io/2016/06/30/elmtastic-updates/</link>
       <pubDate>Thu, 30 Jun 2016 13:53:45 +0100</pubDate>
       
-      <guid>http://7sharp9.github.io/2016/06/30/elmtastic-updates/</guid>
+      <guid>https://7sharp9.github.io/2016/06/30/elmtastic-updates/</guid>
       <description>&lt;p&gt;With the release of Elm 0.17 there were some fundamental changes to the Elm language.  This post
 is my attempt to help those that may be struggling with these changes&lt;/p&gt;</description>
     </item>

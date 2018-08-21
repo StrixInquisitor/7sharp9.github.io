@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Azure on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/azure/</link>
+    <link>https://7sharp9.github.io/tags/azure/</link>
     <description>Recent content in Azure on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 05 May 2013 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/azure/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/azure/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I node something (Bout You)</title>
-      <link>http://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</link>
+      <link>https://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</guid>
+      <guid>https://7sharp9.github.io/2013/05/05/2013-05-05-i-node-something/</guid>
       <description>What is Edge.js?  Unless you live in a hole you have probably heard of node.js so I&amp;rsquo;ll not bother to explain what it is or what it does. An interesting project has come to light lately, namely Edge.js. The Edge.js project allows you to connect node.js with .Net.
 The creator of Edge.js Tomasz Janczuk sums this up nicely:
  An edge connects two nodes

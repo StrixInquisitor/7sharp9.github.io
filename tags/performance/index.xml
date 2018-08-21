@@ -2,69 +2,69 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Performance on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/performance/</link>
+    <link>https://7sharp9.github.io/tags/performance/</link>
     <description>Recent content in Performance on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 11 Mar 2012 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/performance/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/performance/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Black-Scholes Taste Test</title>
-      <link>http://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</link>
+      <link>https://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</link>
       <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</guid>
+      <guid>https://7sharp9.github.io/2012/03/11/2012-03-10-black-scholes-taste-test/</guid>
       <description>In this edition we are going to be doing a taste test, C# vs F#. Oh yeah, if you quickly glanced at the title you may have thought this was a recipe for black scones, as interesting and tasty as that may be, unfortunately its going to be finance related.
 I recently presented a paper on the benefits of F#, part of this was a comparison of the famous Black-Scholes equation in both C# and F#.</description>
     </item>
     
     <item>
       <title>Fixing a hole...</title>
-      <link>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
+      <link>https://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
+      <guid>https://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
       <description>Due to popular demand&amp;hellip; well, I had a couple of requests anyway :-) Heres a post inspired by my recent encounters profiling some of the code in Fracture-IO. I have recently been profiling the code in fracture to remove any so called low hanging fruits. During this time I also noticed an increase in memory allocation. I remembered I had recently been experimenting in a branch using pipelets as a buffer between the send and receive stages in the Http Server, so I set up a simple test to see if pipelets were contributing to the memory allocation issues I was seeing.</description>
     </item>
     
     <item>
       <title> Agents and ObjectPools</title>
-      <link>http://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</link>
+      <link>https://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</link>
       <pubDate>Sun, 05 Jun 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
+      <guid>https://7sharp9.github.io/2011/06/05/2011-06-05-agents-and-objectpools/</guid>
       <description>Everyone knows F# agents are cool right? Well here&amp;rsquo;s yet another example of how versatile they can be&amp;hellip;
 There was a series of posts last April by Stephen Toub from the pfxteam at Microsoft. I was reading through some of the posts again the other day and thought some of the ideas presented there would make interesting projects in F# to demonstrate the flexibility and succinctness of the language. I thought the ObjectPool example would make an interesting project in F# using agents aka MailboxProcessors.</description>
     </item>
     
     <item>
       <title>Pipeline processing 2</title>
-      <link>http://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</link>
+      <link>https://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</link>
       <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
+      <guid>https://7sharp9.github.io/2011/02/13/2011-02-13-pipeline-processing-2/</guid>
       <description>Welcome to pipeline processing part 2. I feel I need to backtrack slightly from the previous post, having worked with pipelines for quite some time I have the advantage of knowing all of the details that may be alluded to in these articles without being effected by any omissions I may make, obviously you guys aren&amp;rsquo;t in that position, so I&amp;rsquo;m going to try and rectify that a bit now.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 4</title>
-      <link>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
+      <link>https://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
+      <guid>https://7sharp9.github.io/2011/01/28/2011-01-28-sockets-and-bockets-part-4/</guid>
       <description>Welcome to part 4 If you were looking forward to some exciting new F# code this time your going to be disappointed, however if you are like me and like looking at graphs and stats and digging in deeper into the code then your going to enjoy this, lets get started&amp;hellip;I set up a 5 minute test with 50 clients connecting to the server with a 15ms interval between each one.</description>
     </item>
     
     <item>
       <title>Sockets and Bockets 3</title>
-      <link>http://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</link>
+      <link>https://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</link>
       <pubDate>Thu, 20 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</guid>
+      <guid>https://7sharp9.github.io/2011/01/20/2011-01-20-sockets-and-bockets-part-3/</guid>
       <description>Welcome to part three! As promised heres a description of the inner workings. I&amp;rsquo;m sick to death of typing SocketAsyncEventArgs so from now on I will refer to it as SAEA.BocketPool
 The BocketPool has an interesting name and with it an interesting constructor! It takes the following parameters:
 number: The number of items to create in the BocketPool. size: The size of each buffer in bytes. callback: A callback function which is invoked whenever the SAEA object completes its operation.</description>
@@ -72,10 +72,10 @@ number: The number of items to create in the BocketPool. size: The size of each 
     
     <item>
       <title>Sockets and Bockets 2</title>
-      <link>http://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</link>
+      <link>https://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</link>
       <pubDate>Fri, 14 Jan 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</guid>
+      <guid>https://7sharp9.github.io/2011/01/14/2011-01-14-sockets-and-bockets-part-2/</guid>
       <description>Welcome to part two Lets jump in at the deep end and take a look at some code&amp;hellip;
 When you look at the method syntax for the xxxAsync methods you will notice they return a boolean value that indicates if the method completed synchronously, this means that you have to check the return value every time you use one of the methods and invoke the callback yourself if it completes synchronously.</description>
     </item>

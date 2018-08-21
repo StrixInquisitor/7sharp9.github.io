@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Objc on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/objc/</link>
+    <link>https://7sharp9.github.io/tags/objc/</link>
     <description>Recent content in Objc on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 01 Jun 2014 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/objc/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/objc/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Anything you can do ...</title>
-      <link>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</link>
+      <link>https://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</guid>
+      <guid>https://7sharp9.github.io/2014/06/01/2014-06-01-anything-you-can-do/</guid>
       <description>For any of you that are aware of the newly updated Xamarin Web site, you may have seen the following:
  Objective-C was ahead of its time 30 years ago. C# is ahead of its time today. Anything you can do in Objective-C or Java, you can do in C# with Xamarin—usually more succinctly and with fewer bugs.
  What is also true is that F# is way ahead of its time, and you can produce even more succinct code with even fewer bugs than C#!</description>

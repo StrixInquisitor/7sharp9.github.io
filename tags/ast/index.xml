@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ast on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/ast/</link>
+    <link>https://7sharp9.github.io/tags/ast/</link>
     <description>Recent content in Ast on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 12 Jul 2015 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/ast/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/ast/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Meta-Matic</title>
-      <link>http://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</link>
+      <link>https://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</link>
       <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</guid>
+      <guid>https://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/</guid>
       <description>&lt;p&gt;Sit down, strap in, and prepare for take off, we&amp;rsquo;re going Meta-Matic!&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;re going to be exploring some &lt;a href=&#34;https://en.wikipedia.org/wiki/Metaprogramming&#34;&gt;metaprogramming&lt;/a&gt; magic in F#.  Transforming

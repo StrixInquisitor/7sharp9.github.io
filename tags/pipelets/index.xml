@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pipelets on 7sharp9</title>
-    <link>http://7sharp9.github.io/tags/pipelets/</link>
+    <link>https://7sharp9.github.io/tags/pipelets/</link>
     <description>Recent content in Pipelets on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
     <lastBuildDate>Sun, 11 Dec 2011 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://7sharp9.github.io/tags/pipelets/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://7sharp9.github.io/tags/pipelets/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Fixing a hole...</title>
-      <link>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
+      <link>https://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</link>
       <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
       
-      <guid>http://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
+      <guid>https://7sharp9.github.io/2011/12/11/2011-12-11-fixing-a-hole/</guid>
       <description>Due to popular demand&amp;hellip; well, I had a couple of requests anyway :-) Heres a post inspired by my recent encounters profiling some of the code in Fracture-IO. I have recently been profiling the code in fracture to remove any so called low hanging fruits. During this time I also noticed an increase in memory allocation. I remembered I had recently been experimenting in a branch using pipelets as a buffer between the send and receive stages in the Http Server, so I set up a simple test to see if pipelets were contributing to the memory allocation issues I was seeing.</description>
     </item>
     
