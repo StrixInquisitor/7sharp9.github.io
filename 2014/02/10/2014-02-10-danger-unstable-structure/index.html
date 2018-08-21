@@ -7,25 +7,28 @@
         <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.16" />
+        <meta name="generator" content="Hugo 0.47.1" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="http://7sharpnine.com/css/normalize.css">
-        <link rel="stylesheet" href="http://7sharpnine.com/css/tomorrow-night-bright.css">
-        <link rel="stylesheet" href="http://7sharpnine.com/css/style.css">
+        <link rel="stylesheet" href="http://7sharp9.github.iocss/normalize.css">
+        <link rel="stylesheet" href="http://7sharp9.github.iocss/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="http://7sharp9.github.iocss/style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     </head>
     <body>
         
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-10152365-8', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-10152365-8', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
 
@@ -35,10 +38,10 @@ ga('send', 'pageview');
                     <div class="site-title-wrapper">
                         
                             <h1 class="site-title">
-                                <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                                <a title="7sharp9" href="http://7sharp9.github.io">7sharp9</a>
                             </h1>
                         
-                        <a class="button-square" href="http://7sharpnine.com/index.xml"><i class="fa fa-rss"></i></a>
+                        <a class="button-square" href="http://7sharp9.github.ioindex.xml"><i class="fa fa-rss"></i></a>
                         
                             <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
                                 <i class="fa fa-twitter"></i>
@@ -96,13 +99,22 @@ ga('send', 'pageview');
 
 
 <div class="container">
-    <article class="post-container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
         <header class="post-header">
-    <h1 class="post-title">Danger unstable structure - No more!</h1>
+    <h1 class="post-title" itemprop="name headline">Danger unstable structure - No more!</h1>
     
+    <p class="post-date">
+        <span>Published <time datetime="2014-02-10" itemprop="datePublished">Mon, Feb 10, 2014</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
 </header>
 
-        <div class="post-content clearfix">
+        <div class="post-content clearfix" itemprop="articleBody">
     
 
     
@@ -123,7 +135,7 @@ ga('send', 'pageview');
 <p>The F# addin for <a href="http://monodevelop.com">MonoDevelop</a> / <a href="https://xamarin.com/studio">Xamarin Studio</a> hasn&rsquo;t always been as stable and pretty as it is now.  When I first started working on it I went through a rocky phase of just trying to get it to compile and install.  There were a whole host of changes going on in MonoDevelop which caused a lot of head scratching and late nights.  Of all the issues encountered tooltips were the absolute bane of my life, they were often horribly mangled like this:</p>
 
 
-<figure >
+<figure>
     
         <img src="https://lh5.googleusercontent.com/-12p4uUpRK4g/Uvjtt2WAe7I/AAAAAAAABzs/QaQ-Tw8jIDw/w924-h416-no/77e93b30-7fa2-11e2-9490-303b1f7cb8b3.png" />
     
@@ -133,7 +145,7 @@ ga('send', 'pageview');
 
 <p>Or completion lists were insanely long and downright pugly:<br />
 
-<figure >
+<figure>
     
         <img src="https://lh5.googleusercontent.com/-yZCVc4ymsGg/Uvsx_YwKbkI/AAAAAAAAB0w/NSvcqUyoC7w/w1400-h958-no/huge_overloads.png" />
     
@@ -165,7 +177,7 @@ ga('send', 'pageview');
 <p>The precursor to rename refactoring was highlight usages, by clicking in the code editor the current identifier is highlighted and all occurrences of of that identifier are also highlighted.  This makes it very easy to see where a specific identifier is used and is one of my favorite features:</p>
 
 
-<figure >
+<figure>
     
         <img src="https://lh5.googleusercontent.com/-Adx7bMfd7O0/UvtEs9UQdcI/AAAAAAAAB1w/aMva_sHDX1U/w880-h498-no/Screen&#43;Shot&#43;2014-02-12&#43;at&#43;09.51.17.png" />
     
@@ -177,7 +189,7 @@ ga('send', 'pageview');
 
 <p>Overload tooltips have now been refined so they look like the image below rather than the huge overload list shown at the top of this post.<br />
 
-<figure >
+<figure>
     
         <img src="https://lh3.googleusercontent.com/-hnmNtHIsrRU/UvtOB_yf0qI/AAAAAAAAB2U/FY3cMm-SY-0/w1400-h324-no/overload_enhancement.png" />
     
@@ -193,7 +205,7 @@ ga('send', 'pageview');
 
 <p>We now also have tooltips for symbols, which makes custom symbol use more palatable.  Now you can simply hover over the symbol see see its signature and xmldoc summary.<br />
 
-<figure >
+<figure>
     
         <img src="https://lh4.googleusercontent.com/-FFZtSnVdSkU/UvtVTNb5KlI/AAAAAAAAB2w/uPCpJhuOaoY/w642-h204-no/symbol&#43;tooltips.png" />
     
@@ -210,7 +222,7 @@ ga('send', 'pageview');
 <p>Pathed document navigation is implemented in the source window to aid navigation between modules, types and functions within a source file:</p>
 
 
-<figure >
+<figure>
     
         <img src="https://lh3.googleusercontent.com/-Evxt2R9Whr8/Uvt81UNJImI/AAAAAAAAB3M/_de-clz_b80/w1400-h878-no/pathed_doc.png" />
     
@@ -337,7 +349,7 @@ member x.TryGetRecentTypeCheckResultsForFile(filename:string, options:CheckOptio
 <p>I also experimented quite a bit with a custom tokeniser that allowed the keywords and other syntax elements to be highlighted as tooltips:</p>
 
 <p>
-<figure >
+<figure>
     
         <img src="https://lh4.googleusercontent.com/-_sHdxrBme-I/UvkMM1WVHHI/AAAAAAAAB0M/OtF0vnUdilI/w840-h344-no/keyword&#43;tooltip.png" />
     
@@ -435,25 +447,50 @@ At the time the F# binding was going through quite a turbulent change to the sou
     
 
     <div class="share">
-        <a class="icon-twitter" href="http://twitter.com/share?text=Danger%20unstable%20structure%20-%20No%20more%21&url=http%3a%2f%2f7sharpnine.com%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
+        <a class="icon-twitter" href="http://twitter.com/share?text=Danger%20unstable%20structure%20-%20No%20more%21&url=http%3a%2f%2f7sharp9.github.io%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
             onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
             <i class="fa fa-twitter"></i>
             <span class="hidden">Twitter</span>
         </a>
 
-        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharpnine.com%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2f7sharp9.github.io%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
             onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
             <i class="fa fa-facebook"></i>
             <span class="hidden">Facebook</span>
         </a>
 
-        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharpnine.com%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2f7sharp9.github.io%2f2014%2f02%2f10%2f2014-02-10-danger-unstable-structure%2f"
            onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
            <i class="fa fa-google-plus"></i>
             <span class="hidden">Google+</span>
         </a>
     </div>
 </footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "7sharp9" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
     </article>
 </div>
 
@@ -464,7 +501,7 @@ At the time the F# binding was going through quite a turbulent change to the sou
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                        <a title="7sharp9" href="http://7sharpnine.com/">7sharp9</a>
+                        <a title="7sharp9" href="http://7sharp9.github.io">7sharp9</a>
                     </h1>
                     <a class="button-square button-jump-top js-jump-top" href="#">
                         <i class="fa fa-angle-up"></i>
@@ -477,10 +514,10 @@ At the time the F# binding was going through quite a turbulent change to the sou
             </div>
         </footer>
 
-        <script src="http://7sharpnine.com/js/jquery-1.11.3.min.js"></script>
-        <script src="http://7sharpnine.com/js/highlight.pack.js"></script>
-        <script src="http://7sharpnine.com/js/jquery.fitvids.js"></script>
-        <script src="http://7sharpnine.com/js/scripts.js"></script>
+        <script src="http://7sharp9.github.iojs/jquery-1.11.3.min.js"></script>
+        <script src="http://7sharp9.github.iojs/highlight.pack.js"></script>
+        <script src="http://7sharp9.github.iojs/jquery.fitvids.js"></script>
+        <script src="http://7sharp9.github.iojs/scripts.js"></script>
     </body>
 </html>
 
