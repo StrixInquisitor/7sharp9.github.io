@@ -19,16 +19,11 @@
       
       <guid>https://7sharp9.github.io/2014/12/10/2014-12-07-terror-from-the-deep/</guid>
       <description>&lt;figure class=&#34;img-left&#34;&gt;
-    
-        &lt;img src=&#34;https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0&#34; /&gt;
-    
-    
+    &lt;img src=&#34;https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0&#34;/&gt; 
 &lt;/figure&gt;
 
 
-&lt;p&gt;So this is my Christmas special.  I&amp;rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the &lt;a href=&#34;https://github.com/fsharp/fsharpbinding&#34;&gt;fsharpbinding repo&lt;/a&gt;, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&amp;hellip;
-
-Actually I&amp;rsquo;m only joking, adding features to the F# compiler and F# addin is fairly easy depending on what you want to do.  You can run into issues along the way which means you might need to delve into more of the F# compilers functionality, essentially to derive and adapt new functions that you might need.&lt;/p&gt;</description>
+&lt;p&gt;So this is my Christmas special.  I&amp;rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the &lt;a href=&#34;https://github.com/fsharp/fsharpbinding&#34;&gt;fsharpbinding repo&lt;/a&gt;, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&amp;hellip;&lt;/p&gt;</description>
     </item>
     
   </channel>

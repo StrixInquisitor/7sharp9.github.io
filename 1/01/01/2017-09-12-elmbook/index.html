@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title> &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.55.3" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-10152365-8', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="https://7sharp9.github.io/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://7sharp9.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline"></h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="0001-01-01" itemprop="datePublished">Mon, Jan 1, 0001</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <p>Building a single page application</p>
+
+<p>In this chapter we will specify and build a single page application consisting of bootstrap based navbar navigation with a selection of views that are shown based on the navigation option selected within the applications model.</p>
+
+<p>Basic Structure</p>
+
+<p>The basic structure of the application we will be constructing comprises a home, about, contact, gallery and item view as follows:</p>
+
+<p><Replace with nice mockup>
+Home View
+Navigation[About|Gallery|Contact]
+[Main view below based on navigation selection]</p>
+
+<p>About View
+[About details]</p>
+
+<p>Contact View
+[Contact details]</p>
+
+<p>Gallery View
+[Gallery items    |fixed description text
+ Category1 image  |
+ Category2 image  |
+ Category3 image] |</p>
+
+<p>Item View
+[Image  Description]</p>
+
+<p>The basic structure of this single page application is relatively simple and also follows the elm architecture as you would expect.</p>
+
+<p>This single page application will be split into files loosely based on How i structure elm apps by Kris Jenkins.<br />
+├─ App.elm
+├─ State.elm
+├─ Types.elm
+├─ View.elm</p>
+
+<p>The main application startup will be hosted in App.elm.  Application state and models will be contained within State.elm.  Types.elm will contain the various types that we will be using in the application.  Finally the initial view visible to the user will be contained in View.elm.<br />
+In addition each view in the application can be given its own module and file nested in the file structure as follows:</p>
+
+<p>├─ About
+│  └─ View.elm
+├─ Category
+│  └─ View.elm
+├─ Contact
+│  └─ View.elm
+├─ Detail
+│  └─ View.elm
+├─ Gallery
+│  └─ View.elm
+└─ Home
+   └─ View.elm</p>
+
+<p>Although this single page application is relatively simple and could be built by any one of the many static site engines like Ghost, Hugo or Jekyll it builds on the earlier chapters slowly adding complexity so you can see where things would lead to on a bigger site more complex site where you have additional requirements like web sockets etc.</p>
+
+<p>Core structure</p>
+
+<p>First of all lets look at how we can construct the main entry point of the application, let’s create the following skeleton for App.elm:
+module Main exposing (..)</p>
+
+<p>type alias Model =
+    { page : string }</p>
+
+<p>init =
+    { page = &ldquo;Home&rdquo; }</p>
+
+<p>view model =
+  div [] []</p>
+
+<p>update msg model =
+    (model, Cmd.none)</p>
+
+<p>subscription model =
+    Sub.None</p>
+
+<p>main : Program Never
+main =
+    Html.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }</p>
+
+<p>All the main elements of the application are imported and a Html.program is started with the appropriate init, view, update, and subscriptions.<br />
+Lets start to flesh things out further by further defining the model and other related types.</p>
+
+<p>Model, Messages and types</p>
+
+<p>In this section we will be describing the model which represents the applications state as runtime, the messages used within the application and also any types that we might need to represent in the application too.</p>
+
+<p>Model</p>
+
+<p>At the moment the model is really simple, its just a record with a single field page which is a string.  Thats not a very robust way of defining the model so lets see about changing that now.</p>
+
+<p>The current page of the application is fairly well defined its either going to be one of the following pages:</p>
+
+<p>Home - the default home page
+About - a page which displays information about the site
+Contact- a page which displays contact details after first exposing a captcha request
+Gallery - a page which shows the user different categories that are available to view
+Gallery Category - a page which shows a list of items available in a a category
+Item Detail - a page showing details on a single item</p>
+
+<p>We can model the concept of a page really well with a union type:</p>
+
+<p>type Page
+    = Home
+    | About
+    | Contact
+    | Gallery
+    | CategoryDetail String
+    | ItemDetail String</p>
+
+<p>Home, About, Contact and Gallery are depicted by empty types with no specific shape but CategoryDetail and ItemDetail have the shape or type of a string.  Come to think of it CategoryDetail is very loosely typed being represented by a simple string, we can tighten that up too as the set of categories is also well defined.  Lets just define just three categories for now:</p>
+
+<p>type CategoryDetail
+    = Seasides
+    | IllustratedQuotes
+    | Architecture</p>
+
+<p>The same cannot be said about ItemDetail as thats just going to be a key to the items name, it could equally be a number but lets keep that as a simple string for now.  Lets update the Page type to take those new types into account:</p>
+
+<p>type Page
+    = Home
+    | About
+    | Contact
+    | Gallery
+    | CategoryDetail CategoryDetail
+    | ItemDetail String</p>
+
+<p>We can now also update the Model so that the field page is represented by the Page type:</p>
+
+<p>type alias Model =
+    { page : Page }</p>
+
+<p>Messages</p>
+
+<p>The primary messages that will be used will be either no navigate back a page or to navigate to a specific page.  There will also be a message to indicate we want to use a Captcha to view an email address to avoid an email address being exposed to spam crawlers.  Lets define these three messages again using union types:</p>
+
+<p>type Msg
+    = NavigateTo Page
+    | NavigateBack
+    | Captcha</p>
+
+<p>NavigateTo - navigates to the page detailed.
+NavigateBack - navigates back one page.
+Captcha - displays a captcha request which then shows an email address on success.</p>
+
+<p>More types</p>
+
+<p>In the application we will also need types to represent the information about the categories detail and Item detail, we can use records to do this with simple string fields to represent textual information and images.
+Category will have a categoryType, img and description:</p>
+
+<p>type alias Category =
+    {categoryType : CategoryType, img : String, description : String}</p>
+
+<p>Item will have an id, title, img, description and category:</p>
+
+<p>type alias Item =
+    {id : String, title : String, img : String, description : String, category : CategoryType}</p>
+
+<p>All of the field types are simple types apart from category which is also a CategoryType which we defined above.</p>
+
+<p>View</p>
+
+<p>The View is quite simple based on a standard Bootstrap 4 Navbar navigation.  We can define it by adapting some standard bootstrap html
+<nav class="navbar navbar-light bg-faded">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <ul class="nav navbar-nav">
+    <li class="nav-item active">
+      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="http://example.com" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+      <div class="dropdown-menu" aria-labelledby="supportedContentDropdown">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+      </div>
+    </li>
+  </ul>
+</nav></p>
+
+<p>We can define the following rootView function:</p>
+
+<p>rootView model =
+    div [ class &ldquo;container&rdquo; ]
+        [ nav [ class &ldquo;navbar navbar-light&rdquo;, attribute &ldquo;role&rdquo; &ldquo;navigation&rdquo; ]
+            [ a
+                [ class &ldquo;pull-xs-left&rdquo;
+                , href &lt;| toHash Home
+                , onClick_ &lt;| NavigateTo Home
+                ]
+                [ img [ id &ldquo;logo&rdquo;, class &ldquo;img-fluid&rdquo;, src &ldquo;/img/logogreen.png&rdquo;, srcset [ &ldquo;/img/logogreen.png&rdquo;, &ldquo;/img/logogreen@2x.png&rdquo; ] ] [] ]
+            , button
+                [ attribute &ldquo;aria-controls&rdquo; &ldquo;exCollapsingNavbar2&rdquo;
+                , attribute &ldquo;aria-expanded&rdquo; &ldquo;false&rdquo;
+                , attribute &ldquo;aria-label&rdquo; &ldquo;Toggle navigation&rdquo;
+                , class &ldquo;navbar-toggler hidden-sm-up flex-center&rdquo;
+                , attribute &ldquo;data-target&rdquo; &ldquo;#exCollapsingNavbar2&rdquo;
+                , attribute &ldquo;data-toggle&rdquo; &ldquo;collapse&rdquo;
+                , type&rsquo; &ldquo;button&rdquo;
+                ]
+                [ text &ldquo;☰&rdquo; ]
+            , div [ class &ldquo;collapse navbar-toggleable-xs&rdquo;, id &ldquo;exCollapsingNavbar2&rdquo; ]
+                [ ul [ class &ldquo;nav navbar-nav pull-sm-right text-xs-center&rdquo; ]
+                    [ renderMenuItem model Home &ldquo;Home&rdquo;
+                    , renderMenuItem model About &ldquo;About&rdquo;
+                    , renderMenuItem model Gallery &ldquo;Gallery&rdquo;
+                    , renderMenuItem model Contact &ldquo;Contact&rdquo;
+                    ]
+                ]
+            ]
+        , div [ class &ldquo;content container-fluid&rdquo; ] [ viewPage model ]
+        ]</p>
+
+<p>Theres are several functions here which we have not seen before: toHref, onClick_, srcset, renderMenuItem and viewPage, lets go though them now.</p>
+
+<p>Converting pages to hrefs</p>
+
+<p>When we want to navigate we can either use a href node or send a command to navigate via the Elm architecture.  If we want to navigate using href then we need some way to convert out representation of a page into something that can be represented in the url in the browser navigation:</p>
+
+<p>toHref : Page -&gt; String
+toHash page =
+    1case page of
+        Home -&gt;
+            2&rdquo;/home&rdquo;</p>
+
+<pre><code>    About -&gt;
+        &quot;/about&quot;
+
+    Contact -&gt;
+        &quot;/contact&quot;
+
+    Gallery -&gt;
+        &quot;/gallery&quot;
+
+    CategoryDetail categoryType -&gt;
+        3&quot;/category/&quot; ++ toString categoryType
+
+    ItemDetail name -&gt;
+        &quot;/item/&quot; ++ name
+</code></pre>
+
+<p>The case statement is used to start pattern matching on the page type, we will have a separate statement to handle each case in the page union type.
+For a simple page like About we return a string that represents a simple path.
+For a more complex page like CategoryDetail we have to combine elements from the union type to build a path.  Here you can see that the categoryType is concatenated not the string &ldquo;category/&rdquo;.  The function toString is used to convert  categoryType into a string as it is also a union type.</p>
+
+<p>onClick event handling
+The astute reader may have noticed the onClick_ with a trailing underscore which is different to the normal definition of onClick.  The onClick event is also working hand in hand with the href to allow us to navigate with our own event handler.  We define a slightly different onClick as follows:</p>
+
+<p>onClick_ : a -&gt; Attribute a
+onClick_ msg =
+    onWithOptions &ldquo;click&rdquo; { stopPropagation = True, preventDefault = True} (succeed msg)</p>
+
+<p>Whats happening here is we are using onWithOptions to define an alternative onClick thats stops the propagation of the event and also overrides the default browser behaviour.  If we did not do this then clicking on the link would result in the browser trying to open the href which would result in a page not found 404 error as the page does not actually exist, rather it is generated by the Elm architecture during the navigation and updating of the application.</p>
+
+<p>Multiple images sources based on pixel density</p>
+
+<p>srcset is an html 5 img attribute that can be used to apply different images depending on the native resolution of the browser, Mozilla.org describes it as follows:
+A list of one or more strings separated by commas indicating a set of possible image sources for the user agent to use. Each string is composed of:
+a URL to an image,
+optionally, whitespace followed by one of:
+a width descriptor, or a positive integer directly followed by &lsquo;w&rsquo;. The width descriptor is divided by the source size given in the sizes attribute to calculate the effective pixel density.
+a pixel density descriptor, which is a positive floating point number directly followed by &lsquo;x&rsquo;.</p>
+
+<p>We can define srcset is defined as follows:
+srcset : List String -&gt; Attribute a
+srcset items =
+    let
+        maps =
+            1items |&gt; List.indexedMap (\i item -&gt; item ++ &ldquo; &rdquo; ++ toString (i + 1) ++ &ldquo;x&rdquo;)
+    in
+        property &ldquo;srcset&rdquo; (2maps |&gt; String.join &ldquo;,&rdquo; &gt;&gt; Json.Encode.string)</p>
+
+<p>An indexed map is applied to each of the strings in items, we use the index to define the pixel density descriptor.
+The mapped strings are joined back together with String.join and encoded as a Json string.
+So in the view where we see: srcset [&ldquo;/img/logogreen.png&rdquo;,&ldquo;/img/logogreen@2x.png&rdquo; ] we will get the following attribute:
+<img srcset="/img/logogreen.png 1x,/img/logogreen@2x.png 2x”></p>
+
+<p>Defining navigation and changing the appearance</p>
+
+<p>renderMenuItem is changing a navigations item&rsquo;s style based on the current page and also defines the navigation to a specific page:</p>
+
+<p>renderMenuItem : Model -&gt; Page -&gt; String -&gt; Html.Html Msg
+renderMenuItem model navigationPage txt =
+    let
+        1liClass =
+            (if model.page == navigationPage
+             then &ldquo;nav-item active&rdquo;
+             else &ldquo;nav-item&rdquo;)</p>
+
+<pre><code>    2textElement =
+        if model.page == menuItem
+        then [ text txt
+             , span [ class &quot;sr-only&quot; ]
+                 [ text &quot;(current)&quot; ]
+             ]
+        else [text txt]
+in
+li [class liClass]
+    [ a [ class &quot;nav-link specialEliteFont&quot;
+        , href (toHref navigationPage), 3onClick_ &lt;| NavigateTo navigationPage
+        ]
+        textElement
+]
+</code></pre>
+
+<p>Here we define liClass to be either nav-item active if the current page is equal to menuItem
+iIf the current page is equal to menuItemWe define a textElement which will have it an extra span with the class sr-only (Screen Reader only) defined and the text &ldquo;(Current)&rdquo;.  If it is not the current page then we just use the text.  This is so that screen readers will have an indication of what navigation option is active as an accessibility aid.
+Notice the onClick_ event we defined along with the NavigateTo message we defined the the Messages section.</p>
+
+<p>Rendering the sub views</p>
+
+<p>The sub view is shown underneath the navigation menu:</p>
+
+<hr />
+
+<p>| Navigation | |_________<strong><em>|
+|            |
+|  sub view  |
+|</em></strong>_________|</p>
+
+<p>We render the subview with viewPage, the view is updated depending on which page is current:</p>
+
+<p>viewPage model =
+    case model.page of
+        Home -&gt; getHomePage ()
+        About -&gt; getAboutPage ()
+        Gallery -&gt; getGalleryAsCards ()
+        Contact -&gt; getContactPage ()
+        CategoryDetail category -&gt; getCategoryPageCards category
+        ItemDetail item -&gt; getItemPage item</p>
+
+<p>You can see there is a separate view for each page which in return a list of nodes for that particular view.</p>
+
+<p>For each of these sub views we can create a separate module and import the function into View.elm.</p>
+
+<p>Any of the parameterless pages could be defined very simply, heres an example of what Home.View could look like:
+module Home.View exposing (..)</p>
+
+<p>import Html exposing (br, div, Html, img, p, text)
+import Html.Attributes exposing (class, src)</p>
+
+<p>getAboutPage : () -&gt; Html Msg
+getAboutPage () =
+    div [ class &ldquo;container-fluid&rdquo; ] [ text “About&rdquo; ]</p>
+
+<p>We create that file in the Home folder and name the file View.Elm.  Remember from Chapter 3 than Elm enforces naming of modules and file names to coincide with the name of the file and module name.  So we have to ensure we have a file named View.elm in a folder named Home.  The module name also has to be Home.View, don&rsquo;t worry the elm compiler will call you out if you get any thing wrong.<br />
+We can import the module and function into View.elm by adding an import statement to the top of the file:</p>
+
+<p>import Home.View exposing (getHomePage)</p>
+
+<p>Heres a slightly more advanced example using one of the pages CategoryDetail with parameters Category.View:</p>
+
+<p>module Category.View exposing (getCategoryPageCards)</p>
+
+<p>import Html exposing (a, br, div, Html, img, p, text)
+import Html.Attributes exposing (alt, class, href, name, src)</p>
+
+<p>getCategoryPageCards category =
+    let
+        items =
+            List.filter (\c -&gt; c.category == category) Data.items
+        colClass =
+            case List.length items of
+                1 -&gt; &ldquo;col-xs-12&rdquo;
+                2 -&gt; &ldquo;col-xs-12 col-sm-6&rdquo;
+                _ -&gt; &ldquo;col-xs-12 col-sm-6 col-md-4&rdquo;</p>
+
+<pre><code>    itemMapper item =
+        div [ class colClass ]
+            [ div [ class &quot;card&quot;]
+                [ a [ noContextMenu
+                    , href (toHref &lt;| ItemDetail item.id)
+                    , onClick_ (NavigateTo &lt;| ItemDetail item.id)
+                    ]
+                    [ img [ noContextMenu, class &quot;card-img-top img-fluid&quot;, src item.img ] [] ]
+                , div [ class &quot;card-block&quot; ]
+                    [ p [ class &quot;card-text&quot; ] [ text item.title ] ]
+                ]
+            ]
+in
+    div [ class &quot;container-fluid&quot; ]
+        [ div [ class &quot;row&quot; ]
+            (items |&gt; List.map itemMapper)
+        , div [] [ backButton ]
+        ]
+</code></pre>
+
+<p>The nodes returned from getCategoryPageCards are returned as part of viewPage.  Data.items are filtered by the current category and mapped into divs with onClick_ navigation to the ItemDetail page.</p>
+
+<p>Update</p>
+
+<p>The purpose of the update function is to update our model in relation to external events, in this instance its going to be mainly navigation oriented so the update is rather simple.</p>
+
+<p>The update function is defined as follows:</p>
+
+<p>update : Msg -&gt; Model -&gt; ( Model, Cmd b )
+update msg model =
+    case msg of
+        1NavigateTo page -&gt;
+            ( model, (Navigation.newUrl &lt;| pageToString page) )</p>
+
+<pre><code>    2NavigateBack -&gt;
+        model =&gt; (Navigation.back 1)
+
+    3Captcha -&gt;
+        ( model, captcha() )
+</code></pre>
+
+<p>We pattern match on the msg parameter and use the commands described in the Messages section.<br />
+For the NavigateTo command we update the model to the new page.
+For navigating back we use a command from the Navigation package to navigate back exactly one page.
+For the Captcha command we run another function to do that work for us, the captcha function.<br />
+The Captcha function is defined as Port defined like this:</p>
+
+<p>port captcha : () -&gt; Cmd msg</p>
+
+<p>We then need to add a little JavaScript subscription to the port which opens a new url with the captcha verification :</p>
+
+<p>app.ports.captcha.subscribe(function () {
+    window.open(&lsquo;<a href="http://www.google.com/recaptcha/mailhide/...'">http://www.google.com/recaptcha/mailhide/...'</a>, &ldquo;, &lsquo;toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300&rsquo;);
+    return false;
+});</p>
+
+<p>Whats happening here is that when the Captcha message is received  the JavaScript subscriber is notified and a a window is opened allowing the email address to be retrieved if the captcha is successful.</p>
+
+<p>Navigation and Uri parsing</p>
+
+<p>Navigation or routing as it is sometimes called in single page applications is the managing of the browser address bar without creating new requests to servers etc.  This is done internally via Html 5 push state.</p>
+
+<p>Navigation in Elm is handled by the Elm Navigation package.  This package provides an alternative program Navigation.program which means the one we defined in Core structure now needs to be altered.  The program function in Elm Navigation has been extended with an additional two extra arguments.   The main program entry point needs to be modified to look like this:</p>
+
+<p>main : Program Never
+main =
+    Navigation.program (Navigation.makeParser pathParser)
+        { init = nit
+        , view = view
+        , update = update
+        , urlUpdate = urlUpdate
+        , subscriptions = subscriptions
+        }</p>
+
+<p>The first additional argument is a Parser, there is a utility function called makeParser in the Navigation package that allows us to define a function to turn a browser Location into whatever data we want to:</p>
+
+<p>makeParser : (Location -&gt; a) -&gt; Parser a</p>
+
+<p>In the Navigation.program above you can see this used along with the pathParser function below to parse a Location into a Page:
+Navigation.program (Navigation.makeParser pathParser)</p>
+
+<p>Parsing</p>
+
+<p>Parsing is handled with a parser combinator library defined in the url-parser package.  There are other parser combinator libraries which add more functionality to url-parser but it has everything you need for most situations.  We covered combinators in chapter 7 Interoperability and this is very much the same concept of combining small functions to create more complex functions and behaviour.  We will only be using a small selection of combinators to parse the results:
+oneOf is a combinator that will try to match one of the parsers in a list.
+s is a string combinator matching a particular string like &ldquo;home&rdquo;, &ldquo;shop&rdquo; etc.
+&lt;/&gt; is a combinator that matches a <code>/</code> character in the location like item/myitem.
+UrlParser.string matches any string.
+format Is a combinator that allows you to customise or map another Parser, here it is used to Parsed output into the union types that represent them.</p>
+
+<p>pathParser : Navigation.Location -&gt; Result String Page
+pathParser location =
+    parse identity pageParser (String.dropLeft 1 location.pathname)</p>
+
+<p>The pathParser functions first parameter is a function to map the successful parsing to another type here we are using the identity function to leave the result as is.  The String.dropLeft 1 function is removing the leading character from  location.pathname which is the leading forward slash.</p>
+
+<p>pageParser : UrlParser.Parser (Page -&gt; a) a
+pageParser =
+    oneOf
+        [1format Home (oneOf [ s &ldquo;home&rdquo;, s &ldquo;&rdquo; ])
+        ,2 format About (s &ldquo;about&rdquo;)
+        , format Shop (s &ldquo;shop&rdquo;)
+        , format Gallery (s &ldquo;gallery&rdquo;)
+        , format Contact (s &ldquo;contact&rdquo;)
+        ,3 format (stringToCategoryType &gt;&gt; CategoryDetail) (s &ldquo;category&rdquo; &lt;/&gt; UrlParser.string)
+        , format ItemDetail (s &ldquo;item&rdquo; &lt;/&gt; UrlParser.string)
+        ]</p>
+
+<p>The format function is part of the navigation package and is simply a function to map the parsing result in if successful, in this instance we are using the Page union types constructors to perform that map.  The combinators oneOf is used to choose between several in the preceding list, in this instance s is used to match the strings home and an empty string.
+Again format is used to construct a map to the About Page.  The s combinator is again use to match the string “about”
+This time format is used with an extra function stringToCategoryType.  As shown below, .  The combinators used here are the s combinator to match the string “category”, the &lt;/&gt; the forward slash combinator and finally UrlParser.string which matches any string.  e,g, category/Seasides</p>
+
+<p>stringToCategoryType : String -&gt; CategoryType
+stringToCategoryType category =
+    case category of
+        &ldquo;Seasides&rdquo; -&gt;
+            Seasides</p>
+
+<pre><code>    &quot;IllustratedQuotes&quot; -&gt;
+        IllustratedQuotes
+
+    _ -&gt;
+        Unknown
+</code></pre>
+
+<p>To match the category in the url back to a CategoryType we match the corresponding string representation back into a CategoryType.
+Finally now that we know how parsing work we can look at the urlUpdate to see how it works:</p>
+
+<p>urlUpdate : Result a Page -&gt; Model -&gt; ( Model, Cmd c )
+urlUpdate result model =
+    case result of
+        Err _ -&gt;
+            ( model, Navigation.modifyUrl (pageToString model.page) )</p>
+
+<pre><code>    Ok page -&gt;
+        { model | page = page } =&gt; updateAnalytics (pageToString page)
+</code></pre>
+
+<p>We pattern match on the result witch is a Result type and if its the Ok case then we update the models page to the one passed in.  If the result is an error (Err) then we modify the url with Navigation.modifyUrl just pointing it back to the previous page.  pageToString simply turns the Page type back into a string.  I&rsquo;m going to strategically ignore updateAnalytics for now as this will be covered in the next section.</p>
+
+<p>Google Analytics integration</p>
+
+<p>Google analytics can be easily added to any web application be simply creating an account and including the following JavaScript in your html and replacing UA-12345678-1 with your own id:</p>
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-12345678-1', 'auto');
+    ga('require', 'linkid');
+    ga('send', 'pageview');
+</script>
+
+<p>The problem with this solution is that theres only one real page in the application, it would be really nice if the navigation in this application could show correctly.  We need to provide a way to update Google analytics whenever the page navigation changes.  Luckily Google provides a way to do this via the ga(&lsquo;set&rsquo;, &lsquo;page&rsquo;, page) and ga(&lsquo;send&rsquo;, ‘pageview&rsquo;) JavaScript functions.  We can do this by defining another port.  Remember the updateAnalytics remember from urlUpdate?<br />
+{ model | page = page } =&gt; updateAnalytics (pageToString page)</p>
+
+<p>Well thats the port we are going to define now, it looks like this:</p>
+
+<p>port updateAnalytics: String -&gt; Cmd msg</p>
+
+<p>Now all we need to do is wire up a little more JavaScript so that when the updateAnalytics function is called the JavaScript subscriber is notified and Google analytics is updateed correctly.</p>
+
+<p>The JavaScript looks like this:</p>
+
+<p>app.ports.updateAnalytics.subscribe(function (page) {
+    ga(&lsquo;set&rsquo;, &lsquo;page&rsquo;, page);
+    ga(&lsquo;send&rsquo;, &lsquo;pageview&rsquo;);
+});</p>
+
+<p>Summary</p>
+
+<p>We have covered quite a range of different aspects in this chapter:</p>
+
+<p>Setting up a project with a structure that supports a lot more expansion rather than having thousands of lines crammed into a single file.<br />
+We used a model and type based approach to model the navigation and pages with the application
+We learned how Navigation works in single page applications
+Used Html 5 img srcset attribute to apply different images based on pixel density
+Added custom events to override default browser behaviour on navigation to a url
+Learned how to use parser combinators to parse url fragments
+Used ports to communicate with JavaScript
+Solved a problem with the correct navigation been shown in single page apps analytics
+￼ <a href="https://guide.elm-lang.org/architecture/">https://guide.elm-lang.org/architecture/</a>
+￼ <a href="http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html">http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html</a>
+￼ <a href="https://twitter.com/krisajenkins">https://twitter.com/krisajenkins</a>
+￼ <a href="https://ghost.org/">https://ghost.org/</a>
+￼ <a href="https://gohugo.io/">https://gohugo.io/</a>
+￼ <a href="https://www.staticgen.com/jekyll">https://www.staticgen.com/jekyll</a>
+￼ <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset</a>
+￼ <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">https://developer.mozilla.org/en-US/docs/Web/API/History_API</a>
+￼ <a href="http://package.elm-lang.org/packages/elm-lang/navigation/latest">http://package.elm-lang.org/packages/elm-lang/navigation/latest</a></p>
+
+<p>￼ <a href="http://package.elm-lang.org/packages/evancz/url-parser/latest/">http://package.elm-lang.org/packages/evancz/url-parser/latest/</a></p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=&url=https%3a%2f%2f7sharp9.github.io%2f1%2f01%2f01%2f2017-09-12-elmbook%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f7sharp9.github.io%2f1%2f01%2f01%2f2017-09-12-elmbook%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2f7sharp9.github.io%2f1%2f01%2f01%2f2017-09-12-elmbook%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "7sharp9" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="https://7sharp9.github.io/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://7sharp9.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://7sharp9.github.io/js/highlight.pack.js"></script>
+        <script src="https://7sharp9.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://7sharp9.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Profiling on 7sharp9</title>
+    <title>profiling on 7sharp9</title>
     <link>https://7sharp9.github.io/tags/profiling/</link>
-    <description>Recent content in Profiling on 7sharp9</description>
+    <description>Recent content in profiling on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
@@ -18,7 +18,7 @@
       <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
       <guid>https://7sharp9.github.io/2016/05/29/flame-on/</guid>
-      <description>&lt;p&gt;A few weeks back I posted on Twitter that I was experimenting with flame graphs, In this post I will share how this was accomplished.  &lt;/p&gt;</description>
+      <description>&lt;p&gt;A few weeks back I posted on Twitter that I was experimenting with flame graphs, In this post I will share how this was accomplished.&lt;/p&gt;</description>
     </item>
     
   </channel>

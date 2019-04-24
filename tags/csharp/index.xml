@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Csharp on 7sharp9</title>
+    <title>CSharp on 7sharp9</title>
     <link>https://7sharp9.github.io/tags/csharp/</link>
-    <description>Recent content in Csharp on 7sharp9</description>
+    <description>Recent content in CSharp on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
@@ -72,7 +72,7 @@ This edge connects node.js with .</description>
       
       <guid>https://7sharp9.github.io/2013/04/18/2013-04-18-ios-async-revisited/</guid>
       <description>In this post weare going to look as async again, but from the perspective of F#.
-Xamarin Evolve 2013    I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
+Xamarin Evolve 2013   I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
     </item>
     
     <item>

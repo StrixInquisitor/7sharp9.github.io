@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Applied Meta-Programming With Myriad &middot; Dave Thomas</title>
+        <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.55.3" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-10152365-8', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="7sharp9" href="https://7sharp9.github.io/">7sharp9</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://7sharp9.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/7sharp9_exhumed">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/7sharp9">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/607275/7sharp9">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/dave-thomas-73636221/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:kukulcanenator@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Skype" title="Skype+" href="skype:7sharpnine?add">
+                                <i class="fa fa-skype"></i>
+                            </a>
+                        
+
+
+
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Applied Meta-Programming With Myriad</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2019-04-22" itemprop="datePublished">Mon, Apr 22, 2019</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">Dave Thomas</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h2 id="what-is-myriad">What is Myriad?</h2>
+
+<p>Myriad is a pre-compilation tool to generate code from code.  It is integrated into the build cycle via an MSBuild extension.  It is also possible to invoke the tool separately but this essay will deal with describing integration within MSBuild project files as this would be the most common usage pattern.</p>
+
+<h2 id="historical-basis">Historical basis</h2>
+
+<p>The Myriad project stems from meta-programming work that I have been doing over the last year, and also further back through my history of using F#.  The predecessor project <a href="https://github.com/7sharp9/falanx">Falanx</a> built the first steps towards Myriad by taking blocks of functionality from different areas of the F# ecosystem and welding them together to aid in code generation.</p>
+
+<h3 id="meta-programming-101">Meta-programming 101</h3>
+
+<p>F# has a number of meta-programming facilities that I have spoke about before in my previous blog posts:  Quotations, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Providers</a>, Typed Expression, and also the untyped AST.</p>
+
+<p>Quotation are backed by reflection and mainly used to transform F# to another language.  They are limited in that they do not represent the whole F# language like the AST does and also do not encode F# on a one to one basis, some elements like discriminated union decomposition and pattern matching are not represented in the same form as they occur in F#, details are lost in transformation.</p>
+
+<p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Providers</a> use Quotations to encode method information and use these expression with a skeleton of types produced by some for of input schema.  <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Providers</a> can be useful in some limited scenarios.  Building a Type Provider should not be taken lightly as there can often be a lot of edge cases and debugging before they are production ready.  Theres also the fact that <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Providers</a> can not create any F# constructs like records or Discriminated Unions.</p>
+
+<p>Typed expressions are used for whole language or system transformations and is the technique used in <a href="https://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/">Fable</a> to transpile F# to JavaScript.  You can read more about typed expressions in my <a href="https://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/">Metamatic blog post</a>.  They have no dependency on reflection and do not require any on disk assemblies.</p>
+
+<p>The untyped AST or AST for short is not an area that has been widely used mainly as working with the AST is qick tricky outside the compiler and the AST is normally produced by the compiler as a result of the parsing phase.</p>
+
+<h3 id="falanx-whistle-stop-tour">Falanx Whistle-stop Tour</h3>
+
+<p>It is not the scope of this essay to describe <a href="https://github.com/7sharp9/falanx">Falanx</a> in detail but reading some of the background on this may provide an insight on how the direction of Myriad was formed and some of the technical challenges experienced in <a href="https://github.com/7sharp9/falanx">Falanx</a> drove the resulting decisions and design.</p>
+
+<p><a href="https://github.com/7sharp9/falanx">Falanx</a> uses a mixture of <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Providers</a>, <em>(mainly the <a href="https://github.com/fsprojects/FSharp.TypeProviders.SDK">Type Provider SDK</a> not the actual Type Provider invocation mechanism)</em> Quotations, and AST manipulation.  <a href="https://github.com/7sharp9/falanx">Falanx</a> evolved from a minimum viable product where the key input factors were a prototype which could be developed within a few weeks that could take a <a href="https://developers.google.com/protocol-buffers/">protocol buffer</a> schema and generate F# records and union types as output.</p>
+
+<p>This is an example of a `<a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> file:</p>
+
+<pre><code>syntax = &quot;proto3&quot;;
+message BundleRequest {
+  int32 martId = 1;
+  string member_id = 2;
+}
+</code></pre>
+
+<p>Falanx works by defining an MSBuild extension that references a <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> file and outputs another file in response to it</p>
+
+<pre><code>&lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;Falanx.Sdk&quot; Version=&quot;0.4.*&quot; PrivateAssets=&quot;All&quot; /&gt;
+&lt;/ItemGroup&gt;
+
+&lt;ProtoFile Include=&quot;..\proto\bundle.proto&quot;&gt;
+    &lt;OutputPath&gt;mycustom.fs&lt;/OutputPath&gt;
+&lt;/ProtoFile&gt;
+</code></pre>
+
+<p><code>&lt;ProtoFile Include=&quot;..\proto\bundle.proto&quot;&gt;</code> is the input file, <code>&lt;OutputPath&gt;mycustom.fs&lt;/OutputPath&gt;</code> is the output.</p>
+
+<p>The resulting source file is the output:</p>
+
+<pre><code class="language-fsharp">[&lt;CLIMutable&gt;]
+type BundleRequest =
+    { mutable martId : int option
+      mutable memberId : string option }
+
+    static member JsonObjCodec =
+        fun martId memberId -&gt;
+        { martId = martId
+          memberId = memberId }
+        &lt;!&gt; Operators.jopt&lt;BundleRequest, Int32&gt; (&quot;martId&quot;) (fun x -&gt; x.martId)
+        &lt;*&gt; Operators.jopt&lt;BundleRequest, String&gt; (&quot;memberId&quot;) (fun x -&gt; x.memberId)
+
+    static member Serialize(m : BundleRequest, buffer : ZeroCopyBuffer) =
+        writeOption&lt;Int32&gt;  (writeInt32)  (1) (buffer) (m.martId)
+        writeOption&lt;String&gt; (writeString) (2) (buffer) (m.memberId)
+
+    static member Deserialize(buffer : ZeroCopyBuffer) =
+        deserialize&lt;BundleRequest&gt; (buffer)
+
+    interface IMessage with
+        member x.Serialize(buffer : ZeroCopyBuffer) =
+            BundleRequest.Serialize(x, buffer)
+
+        member x.ReadFrom(buffer : ZeroCopyBuffer) =
+            let enumerator =
+                ZeroCopyBuffer.allFields(buffer).GetEnumerator()
+            while enumerator.MoveNext() do
+                let current : Froto.Serialization.Encoding.RawField = enumerator.Current
+                if current.FieldNum = 2 then x.memberId &lt;- (Some(readString current) )
+                else if current.FieldNum = 1 then x.martId &lt;- (Some(readInt32 current) )
+                else ()
+            enumerator.Dispose()
+
+        member x.SerializedLength() = serializedLength&lt;BundleRequest&gt; (x)
+</code></pre>
+
+<h4 id="parsing-ast">Parsing/AST</h4>
+
+<p>The first part of the file is a record definition followed by binary and json serialization methods.  <code>JsonObjCodec</code> is used via the <a href="https://github.com/mausch/Fleece">Fleece</a> library, <code>Serialize</code> and <code>Deserialize</code> are used by the Froto<a href="https://github.com/ctaggart/froto">12</a> library.</p>
+
+<p>Part of the technical challenge of Falanx was the time pressure to build a minimum viable product in a short amount of time.  Type Providers were out of the question as one of the main requirements were to product F# Records and Discriminated Unions.</p>
+
+<p>The <a href="https://github.com/ctaggart/froto">Froto</a> library already had a working <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">Type Provider</a> but the resulting output code was not what was F# Records and Discriminated Unions as Type Providers only support basic CLR type no F# specific types are supported.  Another issue was that <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> version 2 was the only version supported.  So a decision was made to reuse the parser from Froto and update it to support Protocol Buffers 3 syntax.</p>
+
+<h4 id="quotations">Quotations</h4>
+
+<p>We now have the Protocol Buffer 3 file represented as an abstract syntax tree.  In Froto there also exist the capability to create Quotations for the Provided Type methods that were used in the Froto Type Provider, although we were not using the Type Provider in Froto, we could reuse some of these and adapt them to our needs.  Extra quotations were created to form the <code>JsonObjCodec</code> method from the code above.</p>
+
+<h4 id="quotations-ast">Quotations -&gt; AST</h4>
+
+<p>The next part was to take the Quotations representing <code>Serialize</code>, <code>Deserialize</code> and <code>JsonObjCodec</code> and convert them to code.  Both Quotations and the F# AST represent similar but not quite the same things:  A collection of nodes that represent the abstract notion of code.  Quotations do not map fully into the F# AST as they only represent a subset of the AST, types for example are not present in Quotations, neither can quotation map functions like for like into F# AST nodes as quotations lack detail compared the the F# AST, such as fixity information, pattern matching and decomposition of Discriminated Unions are all altered in the quotation of literals or composing of Quotation Expressions.  Theres an interesting library called <a href="https://github.com/eiriktsarpalis/QuotationCompiler">Quotation Compiler</a> inside this library there a piece of code which uses an entry point into the F# compiler that allows you to compile an AST to a dll.  Along side that there is a function that transforms quotations to fragments of an AST too.  It was not possible to reference this library as I needed to heavily modify it to work with the Quotations formed from Provided types but it did fom the basis for the bulk of the solution.</p>
+
+<h4 id="ast-source-code">AST -&gt; Source code</h4>
+
+<p>We did not need the output to be a dll but actual source code as this was another of the main requirements, to do this I used the <a href="https://github.com/fsprojects/fantomas">Fantomas</a> library which allows you to use an AST as input and get back the source code the AST represents.</p>
+
+<h4 id="summary-of-challenges-with-falanx">Summary of Challenges with Falanx</h4>
+
+<p>Theres were quite a few challenges with Falanx, mainly around the usage and consumption of Quotations, in other languages quoting and unquoting is a first class part off the language, however, this is not so with F# so there are lots of pitfalls whist working with Quotations.</p>
+
+<ol>
+<li>Quotations are really difficult to work with when you need to compose complex functions, even more so if you mix in <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/generics/statically-resolved-type-parameters">Statically Resolved Type Parameters</a></li>
+<li>Quotations loose detail when you literally quote sections of code.  For example pattern matching gets transformed into if else blocks, fixity information is lost so you font know if an operator was called with infix or prefix notation.</li>
+<li>Quotation do not represent the full range of expressions possible with F#.  Types are not representable, Discriminated Union decomposition has no form of Quotation.</li>
+<li>The transformed quotations are not always elegant idiomatic F# code, mainly for the reason above and the fact that pattern matching is erased etc.</li>
+<li>Splicing type into quotations can be really tricky especially if you are using a library that uses a lot of generics such as Fleece</li>
+</ol>
+
+<h1 id="myriad-technical-aspects">Myriad Technical Aspects</h1>
+
+<p>Myriad is similar to the <a href="https://github.com/ocaml-ppx/ppx_deriving">ppx_deriving</a> extension for OCaml except that it&rsquo;s not as integrated as the OCaml tool.  Although Compiler integration is desirable there is the question of whether ot not this would be in scope for the future direction of the F# language.  There is also the latency factor of writing and extension for the F# compiler and waiting for a release cycle so that it becomes generally available for everyone to use.  By leveraging MSBuild its possible to come close to some of the capabilities and functionality of <a href="https://github.com/ocaml-ppx/ppx_deriving">ppx_deriving</a>.  At the very least it progresses the notion of what more advances macro like capabilities of F# may look like.</p>
+
+<p><a href="https://github.com/ocaml-ppx/ppx_deriving">ppx_deriving</a> works by allowing a type to extended by an arbitrary function, there are various built in plugins such as <code>show</code>, <code>eq</code>, <code>ord</code>, <code>enum</code>, <code>iter</code>, <code>map</code>, <code>fold</code>, <code>make</code>, <code>yojson</code> and <code>protobuf</code>.</p>
+
+<p>Another well known plugin is <a href="https://github.com/janestreet/ppx_fields_conv">ppx_fields_conv</a>:
+&gt;Generation of accessor and iteration functions for OCaml records.
+ppx_fields_conv is a ppx rewriter that can be used to define first class values representing record fields, and additional routines, to get and set record fields, iterate and fold over all fields of a record and create new record values.</p>
+
+<p>This was the basis for the idea of Myriad.  We will not be taking the full capability of <a href="https://github.com/janestreet/ppx_fields_conv">ppx_fields_conv</a> only a subset to show the potential of this approach.  More specifically we will be creating field accessor functions and a create function for each record in the input.</p>
+
+<p>The technical aspects of this project derive from four main areas: parsing, ast construction, code output and build integration.</p>
+
+<h2 id="parsing">Parsing</h2>
+
+<p>The first step is gathering information from the input file which is easily done using <a href="https://fsharp.github.io/FSharp.Compiler.Service/untypedtree.html">FSharp.Compiler.Services</a>.  Its easy enough to extract the ast from a piece of code using something such as:</p>
+
+<pre><code class="language-fsharp">let filename = &quot;test.fs&quot;
+let fileText = File.ReadAllText filename
+let checker = FSharpChecker.Create()
+let projOptions, _ = checker.GetProjectOptionsFromScript(filename, fileText) |&gt; Async.RunSynchronously
+
+let ast =
+  let parsingOptions, _ = checker.GetParsingOptionsFromProjectOptions(projOptions)
+  let parseFileResults = checker.ParseFile(file, input, parsingOptions) |&gt; Async.RunSynchronously
+  match parseFileResults.ParseTree with
+  | Some tree -&gt; tree
+  | None -&gt; failwith &quot;Something went wrong during parsing!&quot;
+</code></pre>
+
+<p>A <code>checker</code> is created and <code>projectOptions</code> are created using the <code>filename</code> and <code>fileText</code> as input.
+Now the checker can be used to extract an ast by first creating <code>parsingOptions</code> and passing them to the <code>checker.ParseFile</code>, this function returns an option which we pattern match, throwing an exception if there is no Ast present.</p>
+
+<p>Now that we have the Ast we can use more pattern matching to try and find Ast nodes that we are interested in.  This can be done using a small section of dense pattern matching and decomposition:</p>
+
+<pre><code class="language-fsharp">match ast with
+| ParsedInput.ImplFile(ParsedImplFileInput(_,_,_,_,_,modules,_)) -&gt;
+    for SynModuleOrNamespace(namespaceIdent,_,_,moduleDecls,_,_,_,_) in modules do
+        for moduleDecl in moduleDecls do
+            match moduleDecl with
+            | SynModuleDecl.Types(types,_) -&gt;
+                for TypeDefn(ComponentInfo(_,_,_,recordIdent,_,_,_,_), typeDefRepr,_,_) in types do
+                    match typeDefRepr with
+                    | SynTypeDefnRepr.Simple(SynTypeDefnSimpleRepr.Record(_,fields,_),_) -&gt;
+                        yield (namespaceIdent,recordIdent,fields)
+//...
+</code></pre>
+
+<p>In this snippet you can see that we traverse the AST first decomposing <code>ParsedInput.ImplFile</code>, we do this so that we dont have to extract further information in another match such as:</p>
+
+<pre><code class="language-fsharp">match ast with
+| ParsedInput.ImplFile(pu) -&gt;
+    match pu with ParsedImplFileInput(_,_,_,_,_,modules,_)
+</code></pre>
+
+<p>Now we can loop through the modules/namespaces.  We then drill deeper until we find type definitions within the module.  Once we have found a type definition we can then match on a record node which is an <code>SynTypeDefnSimpleRepr.Record</code>.  Once we have found a record we can extract and yield and parameters that we need for the generator.  In this instance all we need is the parent namespace which we can find from <code>SynModuleOrNamespace(namespaceIdent,_,_,_,_,_,_,_)</code>, the record identifier which we find in the type definitions <code>ComponentInfo</code>:  <code>TypeDefn(ComponentInfo(_,_,_,recordIdent,_,_,_,_),_,_,_)</code>.  The final parameter we need is the fields of the record which are in the record definition itself: <code>SynTypeDefnSimpleRepr.Record(_,fields,_)</code>.  In this section you can see that we heavily used pattern matching and discriminated union decomposition, which are ideal for this particular task.</p>
+
+<h2 id="ast-construction">Ast Construction</h2>
+
+<p>Now that we have the information we need we can now go about constructing the modules and functions that we want to generate.</p>
+
+<h2 id="code-output">Code Output</h2>
+
+<p>Actual code generation can be done using the F# formatter <a href="https://github.com/fsprojects/fantomas">Fantomas</a>.  Fantomas has API call that accepts an ast, all  we have to do is make a call to that API to get back formatted source code:</p>
+
+<pre><code class="language-fsharp">let sourceCode = Fantomas.CodeFormatter.FormatAST(ast, filename, None, fantomasConfig)
+</code></pre>
+
+<p>This can now have a header inserted and be written to a file:</p>
+
+<pre><code class="language-fsharp">let code =
+    [   &quot;//------------------------------------------------------------------------------&quot;
+        &quot;//        This code was generated by myriad.&quot;
+        &quot;//        Changes to this file will be lost when the code is regenerated.&quot;
+        &quot;//------------------------------------------------------------------------------&quot;
+        formattedCode ]
+    |&gt; String.concat Environment.NewLine
+
+File.WriteAllText(outputFile, code)
+</code></pre>
+
+<h2 id="msbuild-integration">MSBuild integration</h2>
+
+<p>Wrapping the parsing and generation of code in a manner that is easy to use is done via an MSBuild extension, this gives a close approximation to the use of <a href="https://github.com/ocaml-ppx/ppx_deriving">ppx_deriving</a> and its role within the OCaml ecosystem.</p>
+
+<p>This is achieved by adding two child attributes to the <code>Compile</code> MSBuild element as follows:</p>
+
+<pre><code>&lt;Compile Include=&quot;Generated.fs&quot;&gt;
+    &lt;MyriadFile&gt;..\..\src\Example\Library.fs&lt;/MyriadFile&gt;
+    &lt;MyriadNameSpace&gt;Test&lt;/MyriadNameSpace&gt;
+&lt;/Compile&gt;
+</code></pre>
+
+<p>The <code>&lt;Compile Include=&quot;Generated.fs&quot; &gt;</code> element is used to specify the output name and also to make sure that the generated file is used during compilation.</p>
+
+<p><code>&lt;MyriadFile&gt;..\..\src\Example\Library.fs&lt;/MyriadFile&gt;</code> is used to choose the file as input to the myriad code generation.</p>
+
+<p><code>&lt;MyriadNameSpace&gt;Test&lt;/MyriadNameSpace&gt;</code> is used to specify a namespace to use for the generated code.  If this is omitted then <code>RootNamespace</code> is used.</p>
+
+<h3 id="myriadsdkfileslist-target">_MyriadSdkFilesList Target</h3>
+
+<p>In order for the integration to occur <code>MyriadFile</code> and <code>MyriadNameSpace</code> have to be processed by the MSBuild extension to form a list of <code>Compile</code> element extensions that we can then use to form as an input to a CLI/Command line tool.  This is done in the <code>_MyriadSdkFilesList</code> Target, this first part is shown below:</p>
+
+<pre><code>&lt;Target Name=&quot;_MyriadSdkFilesList&quot; BeforeTargets=&quot;MyriadSdkGenerateInputCache&quot;&gt;
+    &lt;ItemGroup&gt;
+        &lt;MyriadSource Include=&quot;%(Compile.MyriadFile)&quot; Condition=&quot; '%(Compile.MyriadFile)' != '' &quot;&gt;
+            &lt;OutputPath&gt;$([System.IO.Path]::GetFullPath('%(Compile.FullPath)'))&lt;/OutputPath&gt;
+            &lt;Namespace Condition=&quot; '%(Compile.MyriadNamespace)' != '' &quot; &gt;%(Compile.MyriadNamespace)&lt;/Namespace&gt;
+            &lt;Namespace Condition=&quot; '%(Compile.MyriadNamespace)' == '' &quot; &gt;$(RootNamespace)&lt;/Namespace&gt;
+        &lt;/MyriadSource&gt;
+    &lt;/ItemGroup&gt;
+
+    &lt;ItemGroup&gt;
+        &lt;MyriadCodegen Include=&quot;%(MyriadSource.FullPath)&quot;&gt;
+            &lt;OutputPath Condition=&quot; '%(MyriadSource.OutputPath)' != '' &quot;&gt;$([System.IO.Path]::GetFullPath('%(MyriadSource.OutputPath)'))&lt;/OutputPath&gt;
+            &lt;OutputPath Condition=&quot; '%(MyriadSource.OutputPath)' == '' &quot;&gt;%(MyriadSource.FullPath).fs&lt;/OutputPath&gt;
+            &lt;Namespace&gt;%(MyriadSource.Namespace)&lt;/Namespace&gt;
+        &lt;/MyriadCodegen&gt;
+    &lt;/ItemGroup&gt;
+
+    &lt;PropertyGroup&gt;
+        &lt;_MyriadSdkCodeGenInputCache&gt;$(IntermediateOutputPath)$(MSBuildProjectFile).FalanxSdkCodeGenInputs.cache&lt;/_MyriadSdkCodeGenInputCache&gt;
+    &lt;/PropertyGroup&gt;
+&lt;/Target&gt;
+</code></pre>
+
+<p>We first gather a list of files for myriad to process.  We do this by creating an <code>ItemGroup</code> which is a list of <code>MyriadSource</code> elements, only <code>Compile</code> elements that have a <code>MyriadFile</code> node are processed, this is done via the <code>Condition</code> attribute: <code>Condition=&quot; '%(Compile.MyriadFile)' != ''</code>.  The <code>MyriadSource</code> element is formed from three pieces of information.</p>
+
+<p>The <code>Include</code> attribute is the <code>MyriadFile</code> element we include in the MSBuild file.<br />
+The <code>OutputPath</code> element is full path for the <code>Compile</code> elements <code>Include</code> attribute, this is also known as <code>Identity</code>
+The <code>Namespace</code> element is either the <code>%(Compile.MyriadNamespace)</code> if it is present of the <code>$(RootNamespace)</code> if it is not.</p>
+
+<hr />
+
+<p>Now that we have created an <code>ItemGroup</code> containing <code>MyriadSource</code> elements we can refine this a little, you could fold these changes into the <code>MyriadSource</code> <code>ItemGroup</code> but it is easier to create two <code>ItemGroup</code> elements.</p>
+
+<p>We create a new <code>ItemGroup</code> called <code>MyriadCodegen</code> which references <code>MyriadSource</code> for its <code>Include</code> attribute, there are also <code>Condition</code> checks the <code>OutputPath</code> is not empty, and also another to ensure that if it is empty at that stage to just set it to the input file.   This would mean that the input file would be processed and changed rather than being written to another file.</p>
+
+<h3 id="myriadsdkgeneratecode-target">MyriadSdkGenerateCode Target</h3>
+
+<p>The final step is to invoke the CLI tool with all the information we have gathered in the <code>MyriadSdkGenerateCode</code> target:</p>
+
+<pre><code>&lt;PropertyGroup&gt;
+    &lt;MyriadSdkGenerateCodeDependsOn&gt;$(MyriadSdkGenerateCodeDependsOn);ResolveReferences;MyriadSdkGenerateInputCache&lt;/MyriadSdkGenerateCodeDependsOn&gt;
+&lt;/PropertyGroup&gt;
+
+&lt;Target Name=&quot;MyriadSdkGenerateCode&quot;
+        DependsOnTargets=&quot;$(MyriadSdkGenerateCodeDependsOn)&quot; 
+        BeforeTargets=&quot;CoreCompile&quot;
+        Condition=&quot; '$(DesignTimeBuild)' != 'true' &quot;
+        Inputs=&quot;@(MyriadCodegen);$(_MyriadSdkCodeGenInputCache);$(MyriadSdk_Generator_Exe)&quot;
+        Outputs=&quot;%(MyriadCodegen.OutputPath)&quot;&gt;
+
+    &lt;PropertyGroup&gt;
+        &lt;_MyriadSdk_InputFileName&gt;%(MyriadCodegen.Identity)&lt;/_MyriadSdk_InputFileName&gt;
+        &lt;_MyriadSdk_OutputFileName&gt;%(MyriadCodegen.OutputPath)&lt;/_MyriadSdk_OutputFileName&gt;
+        &lt;_MyriadSdk_Namespace&gt;%(MyriadCodegen.Namespace)&lt;/_MyriadSdk_Namespace&gt;
+    &lt;/PropertyGroup&gt;
+
+    &lt;ItemGroup&gt;
+        &lt;MyriadSdk_Args Include='--inputfile &quot;$(_MyriadSdk_InputFileName)&quot;' /&gt;
+        &lt;MyriadSdk_Args Include='--outputfile &quot;$(_MyriadSdk_OutputFileName)&quot;' /&gt;
+        &lt;MyriadSdk_Args Include='--namespace &quot;$(_MyriadSdk_Namespace)&quot;' /&gt;
+    &lt;/ItemGroup&gt;
+
+    &lt;!-- Use dotnet to execute the process. --&gt;
+    &lt;Exec Command=&quot;$(MyriadSdk_Generator_ExeHost)&amp;quot;$(MyriadSdk_Generator_Exe)&amp;quot; @(MyriadSdk_Args -&gt; '%(Identity)', ' ')&quot; /&gt;
+&lt;/Target&gt;
+</code></pre>
+
+<p>The <code>DependsOnTargets</code> attribute is used to ensure that anything contained in the <code>MyriadSdkGenerateCodeDependsOn</code> element is ran before this Target.</p>
+
+<p>Within the <code>MyriadSdkGenerateCode</code> <code>Target</code> element there are <code>Inputs</code> and <code>Outputs</code> attributes, these are used to determine when myriad needs to run.  An item is considered up-to-date if its output file is the same age or newer than its input file or files.</p>
+
+<p>We create a <code>PropertyGroup</code> to contain the command line parameters <code>_MyriadSdk_InputFileName</code>, <code>_MyriadSdk_OutputFileName</code> and <code>_MyriadSdk_Namespace</code> using the corresponding elements from the  <code>_MyriadSdkFilesList</code> Targets ItemGroup <code>MyriadCodegen</code>.</p>
+
+<p>we now create an ItemGroup which has within it three <code>MyriadSdk_Args</code> elements that we need to invoke the code generator with.</p>
+
+<p>Finally we execute the code generator with <code>Exec</code> invoking the CLI too, with the parameters from <code>MyriadSdk_Args</code> Include attribute via the MSBuild function <code>@(MyriadSdk_Args -&gt; '%(Identity)', ' ')</code></p>
+
+<p>One thing that was not discussed in this section was the <code>_MyriadSdkCodeGenInputCache</code> that was referenced in both Targets above:</p>
+
+<pre><code>&lt;Target Name=&quot;MyriadSdkGenerateInputCache&quot; DependsOnTargets=&quot;ResolveAssemblyReferences;_MyriadSdkFilesList&quot; BeforeTargets=&quot;MyriadSdkGenerateCode&quot;&gt;
+
+    &lt;ItemGroup&gt;
+        &lt;MyriadSdk_CodeGenInputs Include=&quot;@(MyriadCodegen);@(ReferencePath);$(MyriadSdk_Generator_Exe)&quot; /&gt;
+    &lt;/ItemGroup&gt;
+
+    &lt;Hash ItemsToHash=&quot;@(MyriadSdk_CodeGenInputs)&quot;&gt;
+        &lt;Output TaskParameter=&quot;HashResult&quot; PropertyName=&quot;MyriadSdk_UpdatedInputCacheContents&quot; /&gt;
+    &lt;/Hash&gt;
+
+    &lt;WriteLinesToFile Overwrite=&quot;true&quot; File=&quot;$(_MyriadSdkCodeGenInputCache)&quot; Lines=&quot;$(MyriadSdk_UpdatedInputCacheContents)&quot; WriteOnlyWhenDifferent=&quot;True&quot; /&gt;
+
+&lt;/Target&gt;
+</code></pre>
+
+<p>This target generates a hash using <code>@(MyriadCodegen);@(ReferencePath);$(MyriadSdk_Generator_Exe)</code> as an input, so if any of those changes then a different hash will be written to the output file via <code>&lt;WriteLinesToFile Overwrite=&quot;true&quot; File=&quot;$(_MyriadSdkCodeGenInputCache)&quot;</code>.  This captures the total set of all inputs to the code generator a complete set of dependencies for the code generator.  This is based on the _GenerateCompileDependencyCache target from the .NET project system, which was used as a reference.  You can find this in the .Net project system <a href="https://github.com/Microsoft/msbuild/blob/adb180d394176f36aca1cc2eac4455fef564739f/src/Tasks/Microsoft.Common.CurrentVersion.targets#L3407">source</a>.</p>
+
+<h1 id="usage-demo">Usage Demo</h1>
+
+<h2 id="input-code">Input code</h2>
+
+<p>Myriad works with an input file as the basis for code generation, specifically records within the input file are used in the code generation phase.</p>
+
+<pre><code class="language-fsharp">namespace Example
+
+type Test1 = { one: int; two: string; three: float; four: float32 }
+type Test2 = { one: Test1; two: string }
+</code></pre>
+
+<p>Myriad is invoked via the following addition to an F# project file:</p>
+
+<pre><code class="language-xml">    &lt;Compile Include=&quot;Generated.fs&quot; &gt; &lt;!--1--&gt;
+      &lt;MyriadFile&gt;..\..\src\Example\Library.fs&lt;/MyriadFile&gt; &lt;!--2--&gt;
+      &lt;MyriadNameSpace&gt;Test&lt;/MyriadNameSpace&gt; &lt;!--3--&gt;
+    &lt;/Compile&gt;
+</code></pre>
+
+<ol>
+<li>The <code>&lt;Compile Include=&quot;...&quot; &gt;</code> element is used to specify the output name and also to make sure that the generated file is used during compilation.</li>
+<li><code>&lt;MyriadFile&gt;...&lt;/MyriadFile&gt;</code> is used to choose the file as input to the myriad code generation.<br /></li>
+<li><code>&lt;MyriadNameSpace&gt;...&lt;/MyriadNameSpace&gt;</code> is used to specify a namespace to use for the generated code.  If this is omitted then <code>RootNamespace</code> is used.<br /></li>
+</ol>
+
+<h2 id="output-code">Output code</h2>
+
+<pre><code class="language-fsharp">//------------------------------------------------------------------------------
+//        This code was generated by myriad.
+//        Changes to this file will be lost when the code is regenerated.
+//------------------------------------------------------------------------------
+namespace rec Test
+
+module Test1 =
+    open Example
+
+    let one (x : Test1) = x.one
+    let two (x : Test1) = x.two
+    let three (x : Test1) = x.three
+    let four (x : Test1) = x.four
+
+    let create (one : int) (two : string) (three : float) (four : float32) : Test1 =
+        { one = one
+          two = two
+          three = three
+          four = four }
+
+module Test2 =
+    open Example
+
+    let one (x : Test2) = x.one
+    let two (x : Test2) = x.two
+
+    let create (one : Test1) (two : string) : Test2 =
+        { one = one
+          two = two }
+</code></pre>
+
+<h1 id="summary">Summary</h1>
+
+<h1 id="references">References</h1>
+
+<p><a href="https://github.com/ocaml-ppx/ppx_deriving">1 Type-driven code generation for OCaml - ppx_deriving</a><br />
+<a href="https://github.com/janestreet/ppx_fields_conv">2 Generation of accessor and iteration functions for ocaml records</a><br />
+<a href="https://fsharp.github.io/FSharp.Compiler.Service/untypedtree.html">3 Compiler Services: Processing untyped syntax tree</a><br />
+<a href="https://github.com/fsprojects/fantomas">4 Fantomas F# source code formatter</a><br />
+<a href="https://github.com/Microsoft/msbuild/blob/adb180d394176f36aca1cc2eac4455fef564739f/src/Tasks/Microsoft.Common.CurrentVersion.targets#L3407">5 .NET project System:- _GenerateCompileDependencyCache</a><br />
+<a href="https://github.com/7sharp9/falanx">6 Falanx protobuf Code Generation</a><br />
+<a href="https://7sharp9.github.io/2015/07/12/2015-07-08-meta-matic/">7 Meta-matic</a><br />
+<a href="https://github.com/fsprojects/FSharp.TypeProviders.SDK">8 Type Provider SDK</a><br />
+<a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">9 Type Providers</a><br />
+<a href="https://developers.google.com/protocol-buffers/">10 Protocol Buffers</a><br />
+<a href="https://github.com/mausch/Fleece">11 Fleece</a><br />
+<a href="https://github.com/ctaggart/froto">12 Froto</a><br />
+<a href="https://github.com/eiriktsarpalis/QuotationCompiler">13 Quotation Compiler</a><br />
+<a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/generics/statically-resolved-type-parameters">14 Statically Resolved Type Parameters</a></p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="/tags/fsharp/">FSharp</a>
+            
+                 <a href="/tags/metaprogramming/">Metaprogramming</a>
+            
+                 <a href="/tags/quotations/">Quotations</a>
+            
+                 <a href="/tags/ast/">AST</a>
+            
+                 <a href="/tags/type-providers/">Type Providers</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=Applied%20Meta-Programming%20With%20Myriad&url=https%3a%2f%2f7sharp9.github.io%2f2019%2f04%2f22%2f2019-04-22-applied-metaprogramming-with-myriad%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f7sharp9.github.io%2f2019%2f04%2f22%2f2019-04-22-applied-metaprogramming-with-myriad%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2f7sharp9.github.io%2f2019%2f04%2f22%2f2019-04-22-applied-metaprogramming-with-myriad%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "7sharp9" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="7sharp9" href="https://7sharp9.github.io/">7sharp9</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://7sharp9.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://7sharp9.github.io/js/highlight.pack.js"></script>
+        <script src="https://7sharp9.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://7sharp9.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

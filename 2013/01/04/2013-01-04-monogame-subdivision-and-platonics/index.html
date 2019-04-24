@@ -7,11 +7,11 @@
         <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.47.1" />
+        <meta name="generator" content="Hugo 0.55.3" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
-        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night.css">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -188,12 +188,8 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 
 <p>Bear in mind we are not looking at optimisation at all at this stage purely visualising what we have.  We are using the <code>mapi</code> function to alternate between defining blue violet and orange vertex colours.  At the moment because we haven&rsquo;t set up any lights the octahedron would just appear as diamond chunk of colour with no shading, with these two simple vertex colours we can see the separate facets and see the 3D form.</p>
 
-
 <figure>
-    
-        <img src="https://lh6.googleusercontent.com/-v5uELxAJljU/UOS6FEGjzYI/AAAAAAAABkY/WIxT8AYFUpY/s640/octahedron.png" />
-    
-    
+    <img src="https://lh6.googleusercontent.com/-v5uELxAJljU/UOS6FEGjzYI/AAAAAAAABkY/WIxT8AYFUpY/s640/octahedron.png"/> 
 </figure>
 
 
@@ -229,38 +225,18 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 
 <p>Here we have a recursive function that takes three vertices <code>v1, v2, v3</code> and a depth parameter.   When the depth parameter is zero we are at our subdivision maximum and we return a normalized triangle.  Incidentally for the same lighting issues mentioned above we use three different colours for the vertices: light blue, alice blue, and slate grey.  The three vertices <code>u12, u23, u31</code> define the points in-between the input triangle, we calculate them by adding the vertices together and dividing them by two <code>((v1 + v2) / 2.0f)</code> then pipe-lining the result to the normalize function (<code>|&gt; Vector3.Normalize</code>).  We do this for each of the points.  The final step is the <code>yield!</code> section which creates the next level of subdivision for each of the resulting four triangles.  Remember our input triangle is divided into four.  If fact in the previous article there are several images of this:</p>
 
-<p>
-<figure class="third">
-    
-        <img src="https://lh4.googleusercontent.com/-NpV1nz3K-kI/ULKY-KY6emI/AAAAAAAABio/565nXCNC9xY/s425/texture&#43;coords.png" alt="Tetrahedron-coordinates" />
-    
-    
-    <figcaption>
-        <p>
-        Tetrahedron-coordinates
-        
-            
-        
-        </p> 
-    </figcaption>
-    
+<p><figure class="third">
+    <img src="https://lh4.googleusercontent.com/-NpV1nz3K-kI/ULKY-KY6emI/AAAAAAAABio/565nXCNC9xY/s425/texture&#43;coords.png"
+         alt="Tetrahedron-coordinates"/> <figcaption>
+            <p>Tetrahedron-coordinates</p>
+        </figcaption>
 </figure>
 
-
 <figure class="third">
-    
-        <img src="https://lh4.googleusercontent.com/-hLyy6qGXjWc/ULKn_4p-CUI/AAAAAAAABjA/azvh8cUNrAY/s310/Tetrahedron.png" alt="Tetrahedron" />
-    
-    
-    <figcaption>
-        <p>
-        Tetrahedron
-        
-            
-        
-        </p> 
-    </figcaption>
-    
+    <img src="https://lh4.googleusercontent.com/-hLyy6qGXjWc/ULKn_4p-CUI/AAAAAAAABjA/azvh8cUNrAY/s310/Tetrahedron.png"
+         alt="Tetrahedron"/> <figcaption>
+            <p>Tetrahedron</p>
+        </figcaption>
 </figure>
 </p>
 
@@ -292,12 +268,8 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 </ul>
 
 <p>The image below shows the octahedron at various levels of subdivision from one through to four:
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-oHWbg56xaXA/UOYSZVvgsZI/AAAAAAAABks/mCbZMz8Fy38/s739/subdivisions.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-oHWbg56xaXA/UOYSZVvgsZI/AAAAAAAABks/mCbZMz8Fy38/s739/subdivisions.png"/> 
 </figure>
 </p>
 
@@ -400,7 +372,7 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2017 / All rights reserved Dave Thomas</span>
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
                 </p>
             </div>
         </footer>

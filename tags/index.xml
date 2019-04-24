@@ -7,215 +7,62 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
-    <lastBuildDate>Sun, 06 Mar 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://7sharp9.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>68000</title>
-      <link>https://7sharp9.github.io/tags/68000/</link>
-      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/68000/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Agents</title>
-      <link>https://7sharp9.github.io/tags/agents/</link>
-      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/agents/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ast</title>
+      <title>AST</title>
       <link>https://7sharp9.github.io/tags/ast/</link>
-      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://7sharp9.github.io/tags/ast/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Async</title>
-      <link>https://7sharp9.github.io/tags/async/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      <title>FSharp</title>
+      <link>https://7sharp9.github.io/tags/fsharp/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/async/</guid>
+      <guid>https://7sharp9.github.io/tags/fsharp/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Async Workflows</title>
-      <link>https://7sharp9.github.io/tags/async-workflows/</link>
-      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      <title>Metaprogramming</title>
+      <link>https://7sharp9.github.io/tags/metaprogramming/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/async-workflows/</guid>
+      <guid>https://7sharp9.github.io/tags/metaprogramming/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Asynchronous</title>
-      <link>https://7sharp9.github.io/tags/asynchronous/</link>
-      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      <title>Quotations</title>
+      <link>https://7sharp9.github.io/tags/quotations/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/asynchronous/</guid>
+      <guid>https://7sharp9.github.io/tags/quotations/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Atari St</title>
-      <link>https://7sharp9.github.io/tags/atari-st/</link>
-      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      <title>TAST</title>
+      <link>https://7sharp9.github.io/tags/tast/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/atari-st/</guid>
+      <guid>https://7sharp9.github.io/tags/tast/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Await</title>
-      <link>https://7sharp9.github.io/tags/await/</link>
-      <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
+      <title>Type Providers</title>
+      <link>https://7sharp9.github.io/tags/type-providers/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/await/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Azure</title>
-      <link>https://7sharp9.github.io/tags/azure/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/azure/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Clojure</title>
-      <link>https://7sharp9.github.io/tags/clojure/</link>
-      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/clojure/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Community Hero</title>
-      <link>https://7sharp9.github.io/tags/community-hero/</link>
-      <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/community-hero/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Compilation</title>
-      <link>https://7sharp9.github.io/tags/compilation/</link>
-      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/compilation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Complexity</title>
-      <link>https://7sharp9.github.io/tags/complexity/</link>
-      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/complexity/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Concurrency</title>
-      <link>https://7sharp9.github.io/tags/concurrency/</link>
-      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/concurrency/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Csharp</title>
-      <link>https://7sharp9.github.io/tags/csharp/</link>
-      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/csharp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Dataflow</title>
-      <link>https://7sharp9.github.io/tags/dataflow/</link>
-      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/dataflow/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Delos</title>
-      <link>https://7sharp9.github.io/tags/delos/</link>
-      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/delos/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Design Patterns</title>
-      <link>https://7sharp9.github.io/tags/design-patterns/</link>
-      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/design-patterns/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Development</title>
-      <link>https://7sharp9.github.io/tags/development/</link>
-      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Distributed Systems</title>
-      <link>https://7sharp9.github.io/tags/distributed-systems/</link>
-      <pubDate>Sun, 03 Jul 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/distributed-systems/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Edge</title>
-      <link>https://7sharp9.github.io/tags/edge/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/edge/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Edge Fs</title>
-      <link>https://7sharp9.github.io/tags/edge-fs/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/edge-fs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Elixir</title>
-      <link>https://7sharp9.github.io/tags/elixir/</link>
-      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/elixir/</guid>
+      <guid>https://7sharp9.github.io/tags/type-providers/</guid>
       <description></description>
     </item>
     
@@ -229,24 +76,6 @@
     </item>
     
     <item>
-      <title>Emulators</title>
-      <link>https://7sharp9.github.io/tags/emulators/</link>
-      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/emulators/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Erlang</title>
-      <link>https://7sharp9.github.io/tags/erlang/</link>
-      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/erlang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Fable</title>
       <link>https://7sharp9.github.io/tags/fable/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
@@ -256,56 +85,74 @@
     </item>
     
     <item>
-      <title>Finance</title>
-      <link>https://7sharp9.github.io/tags/finance/</link>
-      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/finance/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Flamegraph</title>
-      <link>https://7sharp9.github.io/tags/flamegraph/</link>
-      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/flamegraph/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Fractureio</title>
-      <link>https://7sharp9.github.io/tags/fractureio/</link>
-      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/fractureio/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Fsharp</title>
-      <link>https://7sharp9.github.io/tags/fsharp/</link>
+      <title>SEO</title>
+      <link>https://7sharp9.github.io/tags/seo/</link>
       <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/fsharp/</guid>
+      <guid>https://7sharp9.github.io/tags/seo/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Fsharp.compiler.services</title>
-      <link>https://7sharp9.github.io/tags/fsharp.compiler.services/</link>
-      <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
+      <title>SPA</title>
+      <link>https://7sharp9.github.io/tags/spa/</link>
+      <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/fsharp.compiler.services/</guid>
+      <guid>https://7sharp9.github.io/tags/spa/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Fsharpx</title>
+      <title>Generative</title>
+      <link>https://7sharp9.github.io/tags/generative/</link>
+      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/generative/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Storyboard</title>
+      <link>https://7sharp9.github.io/tags/storyboard/</link>
+      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/storyboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TypeProvider</title>
+      <link>https://7sharp9.github.io/tags/typeprovider/</link>
+      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/typeprovider/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xamarin</title>
+      <link>https://7sharp9.github.io/tags/xamarin/</link>
+      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/xamarin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fsharpX</title>
       <link>https://7sharp9.github.io/tags/fsharpx/</link>
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
       <guid>https://7sharp9.github.io/tags/fsharpx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iOS</title>
+      <link>https://7sharp9.github.io/tags/ios/</link>
+      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/ios/</guid>
       <description></description>
     </item>
     
@@ -328,79 +175,7 @@
     </item>
     
     <item>
-      <title>Games</title>
-      <link>https://7sharp9.github.io/tags/games/</link>
-      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/games/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Gc</title>
-      <link>https://7sharp9.github.io/tags/gc/</link>
-      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/gc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Generative</title>
-      <link>https://7sharp9.github.io/tags/generative/</link>
-      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/generative/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Googleplus</title>
-      <link>https://7sharp9.github.io/tags/googleplus/</link>
-      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/googleplus/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Haskell</title>
-      <link>https://7sharp9.github.io/tags/haskell/</link>
-      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/haskell/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ioptron</title>
-      <link>https://7sharp9.github.io/tags/ioptron/</link>
-      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/ioptron/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ios</title>
-      <link>https://7sharp9.github.io/tags/ios/</link>
-      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/ios/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ironpython</title>
-      <link>https://7sharp9.github.io/tags/ironpython/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/ironpython/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Javascript</title>
+      <title>JavaScript</title>
       <link>https://7sharp9.github.io/tags/javascript/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
@@ -409,56 +184,11 @@
     </item>
     
     <item>
-      <title>Lambda</title>
-      <link>https://7sharp9.github.io/tags/lambda/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      <title>Transpiling</title>
+      <link>https://7sharp9.github.io/tags/transpiling/</link>
+      <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/lambda/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Mac</title>
-      <link>https://7sharp9.github.io/tags/mac/</link>
-      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/mac/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Mailboxprocessor</title>
-      <link>https://7sharp9.github.io/tags/mailboxprocessor/</link>
-      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/mailboxprocessor/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Memory Fragmentation</title>
-      <link>https://7sharp9.github.io/tags/memory-fragmentation/</link>
-      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/memory-fragmentation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Memory Profiling</title>
-      <link>https://7sharp9.github.io/tags/memory-profiling/</link>
-      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/memory-profiling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Metaprogramming</title>
-      <link>https://7sharp9.github.io/tags/metaprogramming/</link>
-      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/metaprogramming/</guid>
+      <guid>https://7sharp9.github.io/tags/transpiling/</guid>
       <description></description>
     </item>
     
@@ -472,38 +202,92 @@
     </item>
     
     <item>
-      <title>Mono</title>
-      <link>https://7sharp9.github.io/tags/mono/</link>
-      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
+      <title>FlameGraph</title>
+      <link>https://7sharp9.github.io/tags/flamegraph/</link>
+      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/mono/</guid>
+      <guid>https://7sharp9.github.io/tags/flamegraph/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Monodevelop</title>
-      <link>https://7sharp9.github.io/tags/monodevelop/</link>
-      <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
+      <title>profiling</title>
+      <link>https://7sharp9.github.io/tags/profiling/</link>
+      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/monodevelop/</guid>
+      <guid>https://7sharp9.github.io/tags/profiling/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Monogame</title>
-      <link>https://7sharp9.github.io/tags/monogame/</link>
-      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      <title>68000</title>
+      <link>https://7sharp9.github.io/tags/68000/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/monogame/</guid>
+      <guid>https://7sharp9.github.io/tags/68000/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Monotouch</title>
-      <link>https://7sharp9.github.io/tags/monotouch/</link>
-      <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
+      <title>Atari ST</title>
+      <link>https://7sharp9.github.io/tags/atari-st/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/monotouch/</guid>
+      <guid>https://7sharp9.github.io/tags/atari-st/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Emulators</title>
+      <link>https://7sharp9.github.io/tags/emulators/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/emulators/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Community Hero</title>
+      <link>https://7sharp9.github.io/tags/community-hero/</link>
+      <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/community-hero/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MVP</title>
+      <link>https://7sharp9.github.io/tags/mvp/</link>
+      <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/mvp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Elixir</title>
+      <link>https://7sharp9.github.io/tags/elixir/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/elixir/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Types</title>
+      <link>https://7sharp9.github.io/tags/types/</link>
+      <pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/types/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Delos</title>
+      <link>https://7sharp9.github.io/tags/delos/</link>
+      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/delos/</guid>
       <description></description>
     </item>
     
@@ -517,114 +301,6 @@
     </item>
     
     <item>
-      <title>Multithreading</title>
-      <link>https://7sharp9.github.io/tags/multithreading/</link>
-      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/multithreading/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Mvp</title>
-      <link>https://7sharp9.github.io/tags/mvp/</link>
-      <pubDate>Thu, 16 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/mvp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Node</title>
-      <link>https://7sharp9.github.io/tags/node/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/node/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Objc</title>
-      <link>https://7sharp9.github.io/tags/objc/</link>
-      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/objc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Parallelism</title>
-      <link>https://7sharp9.github.io/tags/parallelism/</link>
-      <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/parallelism/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Performance</title>
-      <link>https://7sharp9.github.io/tags/performance/</link>
-      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/performance/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pipelets</title>
-      <link>https://7sharp9.github.io/tags/pipelets/</link>
-      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/pipelets/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pipeline</title>
-      <link>https://7sharp9.github.io/tags/pipeline/</link>
-      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/pipeline/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Platonic</title>
-      <link>https://7sharp9.github.io/tags/platonic/</link>
-      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/platonic/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Profiling</title>
-      <link>https://7sharp9.github.io/tags/profiling/</link>
-      <pubDate>Sun, 29 May 2016 20:35:29 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/profiling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Programming</title>
-      <link>https://7sharp9.github.io/tags/programming/</link>
-      <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/programming/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Reflection</title>
-      <link>https://7sharp9.github.io/tags/reflection/</link>
-      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/reflection/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Refractor</title>
       <link>https://7sharp9.github.io/tags/refractor/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
@@ -634,128 +310,11 @@
     </item>
     
     <item>
-      <title>Roslyn</title>
-      <link>https://7sharp9.github.io/tags/roslyn/</link>
-      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/roslyn/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Rx</title>
-      <link>https://7sharp9.github.io/tags/rx/</link>
-      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/rx/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Saea</title>
-      <link>https://7sharp9.github.io/tags/saea/</link>
-      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/saea/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Scriptcs</title>
-      <link>https://7sharp9.github.io/tags/scriptcs/</link>
-      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/scriptcs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Scripting</title>
-      <link>https://7sharp9.github.io/tags/scripting/</link>
-      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/scripting/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Seo</title>
-      <link>https://7sharp9.github.io/tags/seo/</link>
-      <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/seo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Sockets</title>
-      <link>https://7sharp9.github.io/tags/sockets/</link>
-      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/sockets/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Solid</title>
-      <link>https://7sharp9.github.io/tags/solid/</link>
-      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/solid/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spa</title>
-      <link>https://7sharp9.github.io/tags/spa/</link>
-      <pubDate>Sat, 09 Dec 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/spa/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spritekit</title>
-      <link>https://7sharp9.github.io/tags/spritekit/</link>
-      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/spritekit/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Storyboard</title>
-      <link>https://7sharp9.github.io/tags/storyboard/</link>
-      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/storyboard/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Subdivision</title>
-      <link>https://7sharp9.github.io/tags/subdivision/</link>
-      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/subdivision/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Takahash</title>
       <link>https://7sharp9.github.io/tags/takahash/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
       <guid>https://7sharp9.github.io/tags/takahash/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tdf</title>
-      <link>https://7sharp9.github.io/tags/tdf/</link>
-      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/tdf/</guid>
       <description></description>
     </item>
     
@@ -778,51 +337,6 @@
     </item>
     
     <item>
-      <title>Threading</title>
-      <link>https://7sharp9.github.io/tags/threading/</link>
-      <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/threading/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tools</title>
-      <link>https://7sharp9.github.io/tags/tools/</link>
-      <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/tools/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tpl</title>
-      <link>https://7sharp9.github.io/tags/tpl/</link>
-      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/tpl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tpl Dataflow</title>
-      <link>https://7sharp9.github.io/tags/tpl-dataflow/</link>
-      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/tpl-dataflow/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Transpiling</title>
-      <link>https://7sharp9.github.io/tags/transpiling/</link>
-      <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/transpiling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Triplet</title>
       <link>https://7sharp9.github.io/tags/triplet/</link>
       <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
@@ -832,47 +346,29 @@
     </item>
     
     <item>
-      <title>Twitter</title>
-      <link>https://7sharp9.github.io/tags/twitter/</link>
-      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
+      <title>iOptron</title>
+      <link>https://7sharp9.github.io/tags/ioptron/</link>
+      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/twitter/</guid>
+      <guid>https://7sharp9.github.io/tags/ioptron/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Typeprovider</title>
-      <link>https://7sharp9.github.io/tags/typeprovider/</link>
-      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
+      <title>FSharp.Compiler.Services</title>
+      <link>https://7sharp9.github.io/tags/fsharp.compiler.services/</link>
+      <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/typeprovider/</guid>
+      <guid>https://7sharp9.github.io/tags/fsharp.compiler.services/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Typeproviders</title>
-      <link>https://7sharp9.github.io/tags/typeproviders/</link>
-      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
+      <title>MonoDevelop</title>
+      <link>https://7sharp9.github.io/tags/monodevelop/</link>
+      <pubDate>Wed, 10 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/tags/typeproviders/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Types</title>
-      <link>https://7sharp9.github.io/tags/types/</link>
-      <pubDate>Mon, 30 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/types/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Xamarin</title>
-      <link>https://7sharp9.github.io/tags/xamarin/</link>
-      <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/xamarin/</guid>
+      <guid>https://7sharp9.github.io/tags/monodevelop/</guid>
       <description></description>
     </item>
     
@@ -886,7 +382,61 @@
     </item>
     
     <item>
-      <title>Xamarin.forms</title>
+      <title>TypeProviders</title>
+      <link>https://7sharp9.github.io/tags/typeproviders/</link>
+      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/typeproviders/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>reflection</title>
+      <link>https://7sharp9.github.io/tags/reflection/</link>
+      <pubDate>Sun, 16 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/reflection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GooglePlus</title>
+      <link>https://7sharp9.github.io/tags/googleplus/</link>
+      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/googleplus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Twitter</title>
+      <link>https://7sharp9.github.io/tags/twitter/</link>
+      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/twitter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CSharp</title>
+      <link>https://7sharp9.github.io/tags/csharp/</link>
+      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/csharp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ObjC</title>
+      <link>https://7sharp9.github.io/tags/objc/</link>
+      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/objc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xamarin.Forms</title>
       <link>https://7sharp9.github.io/tags/xamarin.forms/</link>
       <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
       
@@ -895,7 +445,484 @@
     </item>
     
     <item>
-      <title>Yourkit</title>
+      <title>tools</title>
+      <link>https://7sharp9.github.io/tags/tools/</link>
+      <pubDate>Wed, 28 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/tools/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Games</title>
+      <link>https://7sharp9.github.io/tags/games/</link>
+      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/games/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SpriteKit</title>
+      <link>https://7sharp9.github.io/tags/spritekit/</link>
+      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/spritekit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Roslyn</title>
+      <link>https://7sharp9.github.io/tags/roslyn/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/roslyn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ScriptCs</title>
+      <link>https://7sharp9.github.io/tags/scriptcs/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/scriptcs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scripting</title>
+      <link>https://7sharp9.github.io/tags/scripting/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/scripting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dataflow</title>
+      <link>https://7sharp9.github.io/tags/dataflow/</link>
+      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/dataflow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mono</title>
+      <link>https://7sharp9.github.io/tags/mono/</link>
+      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/mono/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TDF</title>
+      <link>https://7sharp9.github.io/tags/tdf/</link>
+      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/tdf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TPL</title>
+      <link>https://7sharp9.github.io/tags/tpl/</link>
+      <pubDate>Wed, 05 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/tpl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rx</title>
+      <link>https://7sharp9.github.io/tags/rx/</link>
+      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/rx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Async</title>
+      <link>https://7sharp9.github.io/tags/async/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/async/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Azure</title>
+      <link>https://7sharp9.github.io/tags/azure/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/azure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IronPython</title>
+      <link>https://7sharp9.github.io/tags/ironpython/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/ironpython/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>edge</title>
+      <link>https://7sharp9.github.io/tags/edge/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/edge/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>edge-fs</title>
+      <link>https://7sharp9.github.io/tags/edge-fs/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/edge-fs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lambda</title>
+      <link>https://7sharp9.github.io/tags/lambda/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/lambda/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>node</title>
+      <link>https://7sharp9.github.io/tags/node/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/node/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>await</title>
+      <link>https://7sharp9.github.io/tags/await/</link>
+      <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/await/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>https://7sharp9.github.io/tags/programming/</link>
+      <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MonoTouch</title>
+      <link>https://7sharp9.github.io/tags/monotouch/</link>
+      <pubDate>Thu, 07 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/monotouch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mac</title>
+      <link>https://7sharp9.github.io/tags/mac/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/mac/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MonoGame</title>
+      <link>https://7sharp9.github.io/tags/monogame/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/monogame/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Platonic</title>
+      <link>https://7sharp9.github.io/tags/platonic/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/platonic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Subdivision</title>
+      <link>https://7sharp9.github.io/tags/subdivision/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/subdivision/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Clojure</title>
+      <link>https://7sharp9.github.io/tags/clojure/</link>
+      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/clojure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Erlang</title>
+      <link>https://7sharp9.github.io/tags/erlang/</link>
+      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/erlang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Haskell</title>
+      <link>https://7sharp9.github.io/tags/haskell/</link>
+      <pubDate>Mon, 27 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/haskell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Agents</title>
+      <link>https://7sharp9.github.io/tags/agents/</link>
+      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/agents/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Async Workflows</title>
+      <link>https://7sharp9.github.io/tags/async-workflows/</link>
+      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/async-workflows/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MailboxProcessor</title>
+      <link>https://7sharp9.github.io/tags/mailboxprocessor/</link>
+      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/mailboxprocessor/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>asynchronous</title>
+      <link>https://7sharp9.github.io/tags/asynchronous/</link>
+      <pubDate>Sun, 15 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/asynchronous/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Threading</title>
+      <link>https://7sharp9.github.io/tags/threading/</link>
+      <pubDate>Sun, 22 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/threading/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Compilation</title>
+      <link>https://7sharp9.github.io/tags/compilation/</link>
+      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/compilation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Finance</title>
+      <link>https://7sharp9.github.io/tags/finance/</link>
+      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/finance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Performance</title>
+      <link>https://7sharp9.github.io/tags/performance/</link>
+      <pubDate>Sun, 11 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/performance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TPL Dataflow</title>
+      <link>https://7sharp9.github.io/tags/tpl-dataflow/</link>
+      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/tpl-dataflow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>concurrency</title>
+      <link>https://7sharp9.github.io/tags/concurrency/</link>
+      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GC</title>
+      <link>https://7sharp9.github.io/tags/gc/</link>
+      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/gc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fractureIO</title>
+      <link>https://7sharp9.github.io/tags/fractureio/</link>
+      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/fractureio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memory profiling</title>
+      <link>https://7sharp9.github.io/tags/memory-profiling/</link>
+      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/memory-profiling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pipelets</title>
+      <link>https://7sharp9.github.io/tags/pipelets/</link>
+      <pubDate>Sun, 11 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/pipelets/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Development</title>
+      <link>https://7sharp9.github.io/tags/development/</link>
+      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>design patterns</title>
+      <link>https://7sharp9.github.io/tags/design-patterns/</link>
+      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/design-patterns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>solid</title>
+      <link>https://7sharp9.github.io/tags/solid/</link>
+      <pubDate>Mon, 22 Aug 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/solid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>distributed systems</title>
+      <link>https://7sharp9.github.io/tags/distributed-systems/</link>
+      <pubDate>Sun, 03 Jul 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/distributed-systems/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Complexity</title>
+      <link>https://7sharp9.github.io/tags/complexity/</link>
+      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/complexity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pipeline</title>
+      <link>https://7sharp9.github.io/tags/pipeline/</link>
+      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/pipeline/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sockets</title>
+      <link>https://7sharp9.github.io/tags/sockets/</link>
+      <pubDate>Mon, 04 Apr 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/sockets/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>parallelism</title>
+      <link>https://7sharp9.github.io/tags/parallelism/</link>
+      <pubDate>Sun, 13 Feb 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/parallelism/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Memory fragmentation</title>
+      <link>https://7sharp9.github.io/tags/memory-fragmentation/</link>
+      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/memory-fragmentation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Multithreading</title>
+      <link>https://7sharp9.github.io/tags/multithreading/</link>
+      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/multithreading/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SAEA</title>
+      <link>https://7sharp9.github.io/tags/saea/</link>
+      <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/saea/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>YourKit</title>
       <link>https://7sharp9.github.io/tags/yourkit/</link>
       <pubDate>Fri, 28 Jan 2011 00:00:00 +0000</pubDate>
       

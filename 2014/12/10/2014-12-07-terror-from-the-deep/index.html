@@ -7,11 +7,11 @@
         <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.47.1" />
+        <meta name="generator" content="Hugo 0.55.3" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
-        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night.css">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -118,16 +118,13 @@ if (!doNotTrack) {
     
 
     <figure class="img-left">
-    
-        <img src="https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0" />
-    
-    
+    <img src="https://dl.dropboxusercontent.com/s/29mripr5z1ik5tr/tftd.png?dl=0"/> 
 </figure>
 
 
-<p>So this is my Christmas special.  I&rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the <a href="https://github.com/fsharp/fsharpbinding">fsharpbinding repo</a>, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&hellip;
+<p>So this is my Christmas special.  I&rsquo;ve been asked on numerous times to write about the F# addin for Xamarin studio which is in the <a href="https://github.com/fsharp/fsharpbinding">fsharpbinding repo</a>, this repo is shared with the emacs support and also the Sublime Text support.  So in this edition we will be taking a deep dive into the terrifying deep depths of the F# compiler and F# addin development&hellip;</p>
 
-Actually I&rsquo;m only joking, adding features to the F# compiler and F# addin is fairly easy depending on what you want to do.  You can run into issues along the way which means you might need to delve into more of the F# compilers functionality, essentially to derive and adapt new functions that you might need.</p>
+<p>Actually I&rsquo;m only joking, adding features to the F# compiler and F# addin is fairly easy depending on what you want to do.  You can run into issues along the way which means you might need to delve into more of the F# compilers functionality, essentially to derive and adapt new functions that you might need.</p>
 
 <p>What I&rsquo;m going to show is how to add a new autocompletion list where instead of a standard completion list, its categorised by the type that the methods are derived from.  As an example you would be able to see the <code>ToString</code> methods etc on the <code>Obj</code> type andy other methods defined on their particular derived type.</p>
 
@@ -553,12 +550,8 @@ static member Create(infoReader:InfoReader, m, denv, items, reactor, checkAlive)
 </code></pre>
 
 <p>Phew! I think we are done.  Spinning up Xamarin Studio with the new addin shows the new completion list:<br />
-
 <figure>
-    
-        <img src="https://dl.dropboxusercontent.com/s/hkojvf87qyuxvla/completion.png?dl=0" />
-    
-    
+    <img src="https://dl.dropboxusercontent.com/s/hkojvf87qyuxvla/completion.png?dl=0"/> 
 </figure>
 </p>
 
@@ -724,7 +717,7 @@ static member Create(infoReader:InfoReader, m, denv, items, reactor, checkAlive)
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2017 / All rights reserved Dave Thomas</span>
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
                 </p>
             </div>
         </footer>

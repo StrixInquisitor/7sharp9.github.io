@@ -7,11 +7,11 @@
         <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.47.1" />
+        <meta name="generator" content="Hugo 0.55.3" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
-        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night.css">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -182,23 +182,15 @@ have changed below.</p>
 
 <p>First of all lets look at the CPU results from the <em>IAsync</em> pattern:</p>
 
-
 <figure>
-    
-        <img src="https://lh5.googleusercontent.com/-3H8-TiiB-VI/TwYhL2mvYsI/AAAAAAAABQI/z8dmiHBvTJE/mcnamara-cpu1.png" />
-    
-    
+    <img src="https://lh5.googleusercontent.com/-3H8-TiiB-VI/TwYhL2mvYsI/AAAAAAAABQI/z8dmiHBvTJE/mcnamara-cpu1.png"/> 
 </figure>
 
 
 <p>Heres the same run from the SAEA pattern:</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-yGB2zdE3kGM/TwYhLPrUmLI/AAAAAAAABP8/Y6CIMWOi4Gk/Bocket-cpu2.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-yGB2zdE3kGM/TwYhLPrUmLI/AAAAAAAABP8/Y6CIMWOi4Gk/Bocket-cpu2.png"/> 
 </figure>
 
 
@@ -215,24 +207,16 @@ pattern, green is generation 0, blue is generation 1 and orange is the large
 object heap.  There&rsquo;s also red for generation 2 but the results are behind the
 others and they are only small 0,2 MB peaks at 5 to 15 second intervals.</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-PalohQxAkOg/TwYhL6hR5JI/AAAAAAAABQQ/NtCLYc43OZc/mcnamara-mem1.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-PalohQxAkOg/TwYhL6hR5JI/AAAAAAAABQQ/NtCLYc43OZc/mcnamara-mem1.png"/> 
 </figure>
 
 
 <p>Heres the same but for the SAEA pattern, there are red peaks every 10- 20
 second intervals of 0.2MB hidden under the others.</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-Nadz1nXQ7lg/TwYhLBXMvcI/AAAAAAAABQM/xCfuXkzkekM/Bocket-mem1.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-Nadz1nXQ7lg/TwYhLBXMvcI/AAAAAAAABQM/xCfuXkzkekM/Bocket-mem1.png"/> 
 </figure>
 
 
@@ -243,31 +227,17 @@ second intervals of 0.2MB hidden under the others.</p>
 <p>Finally here&rsquo;s a couple of screen shot of the hot spots for memory allocations
 in both implementations</p>
 
-
 <figure>
-    
-        <img src="https://lh4.googleusercontent.com/-n3QWLgvNjq8/TwYhLX8cIZI/AAAAAAAABQA/LkeRno775Ew/s800/IAsync-hot.png" />
-    
-    
-    <figcaption>
-        <h4>IAsync</h4>
-        
-    </figcaption>
-    
+    <img src="https://lh4.googleusercontent.com/-n3QWLgvNjq8/TwYhLX8cIZI/AAAAAAAABQA/LkeRno775Ew/s800/IAsync-hot.png"/> <figcaption>
+            <h4>IAsync</h4>
+        </figcaption>
 </figure>
 
 
-
 <figure>
-    
-        <img src="https://lh5.googleusercontent.com/-PSX_YUfxkgU/TwYhMr40DTI/AAAAAAAABQY/D8bgLS6kNwc/s800/SAEA-hot.png" />
-    
-    
-    <figcaption>
-        <h4>SAEA</h4>
-        
-    </figcaption>
-    
+    <img src="https://lh5.googleusercontent.com/-PSX_YUfxkgU/TwYhMr40DTI/AAAAAAAABQY/D8bgLS6kNwc/s800/SAEA-hot.png"/> <figcaption>
+            <h4>SAEA</h4>
+        </figcaption>
 </figure>
 
 
@@ -383,7 +353,7 @@ connections.</p>
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2017 / All rights reserved Dave Thomas</span>
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
                 </p>
             </div>
         </footer>

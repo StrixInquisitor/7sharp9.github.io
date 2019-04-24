@@ -7,11 +7,11 @@
         <meta name="description" content="A blog written by Dave Thomas featuring software development and other musings.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.47.1" />
+        <meta name="generator" content="Hugo 0.55.3" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/normalize.css">
-        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="https://7sharp9.github.io/css/tomorrow-night.css">
         <link rel="stylesheet" href="https://7sharp9.github.io/css/style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -193,12 +193,8 @@ let generateCircularSeq (s) =
 <p>Using process explorer from Mark Russinovich I watched the allocated memory
 grow as the iterations progressed:</p>
 
-
 <figure>
-    
-        <img src="https://lh4.googleusercontent.com/-VP1-Vo2VINU/TuS7yZFTTlI/AAAAAAAABNw/3ksn5vNXTtw/s400/leak.png" />
-    
-    
+    <img src="https://lh4.googleusercontent.com/-VP1-Vo2VINU/TuS7yZFTTlI/AAAAAAAABNw/3ksn5vNXTtw/s400/leak.png"/> 
 </figure>
 
 
@@ -227,12 +223,8 @@ into the pipeline.  Now we click Take Memory Snapshot again. Now we have a
 snapshot of the difference between the two operations.  The summery screen is
 shown below:</p>
 
-
 <figure>
-    
-        <img src="https://lh4.googleusercontent.com/-N72POVbq0ZA/TuS7v0xBt1I/AAAAAAAABNQ/ExKfkJDCb50/s912/3%2Bsummary.png" />
-    
-    
+    <img src="https://lh4.googleusercontent.com/-N72POVbq0ZA/TuS7v0xBt1I/AAAAAAAABNQ/ExKfkJDCb50/s912/3%2Bsummary.png"/> 
 </figure>
 
 
@@ -245,12 +237,8 @@ Pipelets+loop@37-7<Unit, string,string>, and AsyncParams<Unit>.</p>
 <p>Now if we click on Class List button we can investigate these further, heres
 the Class List:</p>
 
-
 <figure>
-    
-        <img src="https://lh4.googleusercontent.com/-UDU20rPk7ck/TuS7xvK_67I/AAAAAAAABNg/tnxTlpBYBJg/s912/4%2Bclass%2Blist.png" />
-    
-    
+    <img src="https://lh4.googleusercontent.com/-UDU20rPk7ck/TuS7xvK_67I/AAAAAAAABNg/tnxTlpBYBJg/s912/4%2Bclass%2Blist.png"/> 
 </figure>
 
 
@@ -274,12 +262,8 @@ the function <strong>Pipelets+loop@37-7<Unit, string, FSharpRef<int>&gt;&gt;</st
 click on the icon that has three little blue boxes on it.  This will take us
 to the instance List as shown below:</p>
 
-
 <figure>
-    
-        <img src="https://lh6.googleusercontent.com/-csF589rWobQ/TuS7wzT6NWI/AAAAAAAABNY/TM95SUmaCEQ/s912/5%2Binstance%2Blist.png" />
-    
-    
+    <img src="https://lh6.googleusercontent.com/-csF589rWobQ/TuS7wzT6NWI/AAAAAAAABNY/TM95SUmaCEQ/s912/5%2Binstance%2Blist.png"/> 
 </figure>
 
 
@@ -289,12 +273,8 @@ each time.  Now lets look at the Instance Retention graph for the first one
 with a GC Root distance of 9, this is the icon on the right hand side of the
 function name, it looks like a few rectangles joined up with a line:</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-9orgQ4etsdI/TuS7yE-Dh7I/AAAAAAAABNs/0-dc3x8u-Mo/s525/first.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-9orgQ4etsdI/TuS7yE-Dh7I/AAAAAAAABNs/0-dc3x8u-Mo/s525/first.png"/> 
 </figure>
 
 
@@ -304,12 +284,8 @@ loop function at the bottom.</p>
 
 <p>Lets look at the next one, this has a GC Root distance of 12:</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-j1eALRVz0kA/TuS7z0ycXDI/AAAAAAAABN8/SGPVpPQbSz0/s531/second.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-j1eALRVz0kA/TuS7z0ycXDI/AAAAAAAABN8/SGPVpPQbSz0/s531/second.png"/> 
 </figure>
 
 
@@ -317,24 +293,16 @@ loop function at the bottom.</p>
 args, aux@, econt@ are repeated in the red boxes.  The functions look to be
 quite similar too.  Lets look at the next one GC Root Distance  of 15:</p>
 
-
 <figure>
-    
-        <img src="https://lh6.googleusercontent.com/-d3V1WkCktTM/TuS7zxVnizI/AAAAAAAABOA/wA5xlP-UTxA/s646/third.png" />
-    
-    
+    <img src="https://lh6.googleusercontent.com/-d3V1WkCktTM/TuS7zxVnizI/AAAAAAAABOA/wA5xlP-UTxA/s646/third.png"/> 
 </figure>
 
 
 <p>Looking at this we have a definite repeat of the functions and arguments,  if
 we look down to GC Root at a depth of 60 we get this:</p>
 
-
 <figure>
-    
-        <img src="https://lh3.googleusercontent.com/-X3v-_UfEkI4/TuS7xzETTHI/AAAAAAAABNk/js7xg3GTHIo/s640/60.png" />
-    
-    
+    <img src="https://lh3.googleusercontent.com/-X3v-_UfEkI4/TuS7xzETTHI/AAAAAAAABNk/js7xg3GTHIo/s640/60.png"/> 
 </figure>
 
 
@@ -525,7 +493,7 @@ with tail recursion.</p>
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2017 / All rights reserved Dave Thomas</span>
+                    <span>&copy; 2019 / All rights reserved Dave Thomas</span>
                 </p>
             </div>
         </footer>

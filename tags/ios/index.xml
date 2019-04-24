@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ios on 7sharp9</title>
+    <title>iOS on 7sharp9</title>
     <link>https://7sharp9.github.io/tags/ios/</link>
-    <description>Recent content in Ios on 7sharp9</description>
+    <description>Recent content in iOS on 7sharp9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Dave Thomas</copyright>
@@ -18,8 +18,7 @@
       <pubDate>Tue, 11 Apr 2017 23:11:55 +0100</pubDate>
       
       <guid>https://7sharp9.github.io/2017/04/11/i-want-to-tell-you-a-storyboard/</guid>
-      <description>&lt;p&gt;So as promised here&amp;rsquo;s a post with more detail on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;So as promised here&amp;rsquo;s a post with more detail on the iOS designer provider that I presented as part of my talk at &lt;a href=&#34;https://skillsmatter.com/conferences/8053-f-sharp-exchange-2017&#34;&gt;fsharpX 2017&lt;/a&gt; The talk is entitled &lt;a href=&#34;https://skillsmatter.com/skillscasts/10042-lightning-talk-session-expanding-the-horizons-of-mobile-development&#34;&gt;Expanding the Horizons of Mobile Development&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -48,7 +47,7 @@
       
       <guid>https://7sharp9.github.io/2013/04/18/2013-04-18-ios-async-revisited/</guid>
       <description>In this post weare going to look as async again, but from the perspective of F#.
-Xamarin Evolve 2013    I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
+Xamarin Evolve 2013   I have been watching the Xamarin Evolve conference this week and it was good to see Miguel announce full support for F#. Those that follow me on twitter etc, will know that I have been doing F# for quite a while in MonoDevelop and Xamarin Studio. The new support currently entails some new project templates so that you can easily create epic new F# Apps without having to refer to my blog.</description>
     </item>
     
     <item>

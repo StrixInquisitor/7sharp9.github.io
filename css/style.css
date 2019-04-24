@@ -103,17 +103,16 @@ img {
 pre {
   background: #F1F0EA;
   border: 1px solid #DDDBCC;
-  border-radius: 3px;
-  margin: 0 0 20px;
-  padding: 10px;
-  font-size: 16px; }
+  border-radius: 5px;
+  margin: 0 0 10px;
+  padding: 5px;
+  font-size: 15px; }
 
 code {
   padding: 2px 4px;
-  font-size: 90%;
   color: #F03838;
   background-color: #F1F0EA;
-  border-radius: 4px; }
+  border-radius: 5px; } 
 
 hr {
   border: none;
@@ -127,10 +126,10 @@ table {
   table tbody > tr:nth-child(odd) > th {
     background-color: #f7f7f3; }
   table th {
-    padding: 0 10px 10px;
+    padding: 0 8px 8px;
     text-align: left; }
   table td {
-    padding: 10px; }
+    padding: 8px; }
   table tr {
     border-bottom: 1px dotted #AEADAD; }
 
@@ -164,7 +163,7 @@ table {
   margin: 0 auto;
   position: relative;
   width: 100%;
-  max-width: 889px; }
+  max-width: 940px; }
 
 #wrapper {
   height: auto;
@@ -187,7 +186,7 @@ table {
   padding: 10px 12px;
   text-transform: uppercase; }
   .button:hover {
-    background: #F03838; }
+    background: rgb(139, 65, 65); }
 
 .button-square {
   background: #F03838;
