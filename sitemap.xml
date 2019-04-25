@@ -199,17 +199,6 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/page/about/</loc>
-    <lastmod>2016-04-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://7sharp9.github.io/page/</loc>
-    <lastmod>2016-04-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://7sharp9.github.io/tags/68000/</loc>
     <lastmod>2016-03-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -934,7 +923,11 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/1/01/01/2017-09-12-elmbook/</loc>
+    <loc>https://7sharp9.github.io/page/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://7sharp9.github.io/page/</loc>
     <priority>0</priority>
   </url>
   

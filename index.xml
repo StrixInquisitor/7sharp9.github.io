@@ -87,17 +87,6 @@ is my attempt to help those that may be struggling with these changes&lt;/p&gt;<
     </item>
     
     <item>
-      <title>About Me</title>
-      <link>https://7sharp9.github.io/page/about/</link>
-      <pubDate>Fri, 29 Apr 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/page/about/</guid>
-      <description>Hi, my name is Dave Thomas and Im a software engineer from the Uk. I work primarily in F# but also like to tinker with pretty much any interesting language. Im drawn to more functional languages like F#, Elm, but also like to use Rust, and recently Clojure.
-Have questions or suggestions? Feel free to ask me on Twitter.
-Thanks for reading!</description>
-    </item>
-    
-    <item>
       <title>Building Emulators in FSharp</title>
       <link>https://7sharp9.github.io/2016/03/06/2016-03-06-building-emulators-in-fsharp/</link>
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
@@ -610,16 +599,14 @@ When you look at the method syntax for the xxxAsync methods you will notice they
     </item>
     
     <item>
-      <title></title>
-      <link>https://7sharp9.github.io/1/01/01/2017-09-12-elmbook/</link>
+      <title>About Me</title>
+      <link>https://7sharp9.github.io/page/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://7sharp9.github.io/1/01/01/2017-09-12-elmbook/</guid>
-      <description>Building a single page application
-In this chapter we will specify and build a single page application consisting of bootstrap based navbar navigation with a selection of views that are shown based on the navigation option selected within the applications model.
-Basic Structure
-The basic structure of the application we will be constructing comprises a home, about, contact, gallery and item view as follows:
-Home View Navigation[About|Gallery|Contact] [Main view below based on navigation selection]</description>
+      <guid>https://7sharp9.github.io/page/about/</guid>
+      <description>Hi, my name is Dave Thomas and Im a software engineer from the Uk. I work primarily in F# but also like to tinker with pretty much any interesting language. Im drawn to more functional languages like F#, Elm, but also like to use Rust, and recently Clojure.
+Have questions or suggestions? Feel free to ask me on Twitter.
+Thanks for reading!</description>
     </item>
     
   </channel>
