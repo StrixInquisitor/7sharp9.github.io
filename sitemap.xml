@@ -531,12 +531,6 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/tags/async/</loc>
-    <lastmod>2013-05-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://7sharp9.github.io/tags/azure/</loc>
     <lastmod>2013-05-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -549,6 +543,12 @@
   
   <url>
     <loc>https://7sharp9.github.io/tags/ironpython/</loc>
+    <lastmod>2013-05-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://7sharp9.github.io/tags/async/</loc>
     <lastmod>2013-05-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
