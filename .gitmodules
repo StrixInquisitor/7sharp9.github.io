@@ -3,6 +3,11 @@
 	url = git@github.com:7sharp9/7sharp9.github.com.git
 	branch = master
 
+[submodule "source"]
+	path = public
+	url = git@github.com:7sharp9/7sharp9.github.com.git
+	branch = source
+
 [submodule "ghostwriter"]
 	path = themes/ghostwriter
 	url = git@github.com:7sharp9/ghostwriter.git

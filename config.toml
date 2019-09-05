@@ -23,6 +23,8 @@ googleAnalytics = "UA-10152365-8"
     stackoverflow = "http://stackoverflow.com/users/607275/7sharp9"
     email = "kukulcanenator@gmail.com"
     skype = "7sharpnine"
+    highlightjs = "tomorrow-night"
+    highlightjs_extra_languages = ["fsharp"]
 
 [Permalinks]
     post = "/:year/:month/:day/:filename/"

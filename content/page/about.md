@@ -1,6 +1,6 @@
 +++
 title = "About Me"
-date = "2016-04-29"
+
 +++
 {{< figure src="/img/working.jpg" >}}
 Hi, my name is Dave Thomas and Im a software engineer from the Uk.  I work primarily in F# but also like to tinker with pretty much any interesting language.  Im drawn to more functional languages like F#, Elm, but also like to use Rust, and recently Clojure.  
