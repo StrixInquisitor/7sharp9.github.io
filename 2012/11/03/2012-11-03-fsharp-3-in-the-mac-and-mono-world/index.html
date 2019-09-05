@@ -141,12 +141,7 @@ if (!doNotTrack) {
 <p>Head over to the <a href="http://www.go-mono.com/mono-downloads/download.html">Mono site</a> and install Mono 3.0 and the Mono MDK, they can be both found on the <a href="http://www.mono-project.com/What_is_Mono">download page</a>.</p>
 
 <p>IF you think you already have these installed you can check which version you have by Navigating to the directory: <code>/Library/Frameworks/Mono.framework/Versions</code>
-You should see version 3.0 in the list:</p>
-
-<figure>
-    <img src="https://lh3.googleusercontent.com/-N3cTmmXXvxI/UJUR1CIw4DI/AAAAAAAABgs/dQUFqgpQrvQ/s209/Mono3.0&#43;install.png"/> 
-</figure>
-
+You should see version 3.0 in the list.</p>
 
 <p>Also ensure that the <code>Current</code> symbolic link points to Mono version 3.0, when I was first tried to get things running I couldn&rsquo;t understand why I kept getting a version mismatches, this was because my link was pointing to Mono 2.10.9.</p>
 
@@ -210,23 +205,13 @@ make
 make install
 </code></pre>
 
-<p>That&rsquo;s it we&rsquo;re all done!  Pretty easy stuff thanks to <a href="http://twitter.com/winkler_ben">Ben Winkel</a> and others for putting in some time to fix up the issues.</p>
+<p>That&rsquo;s it we&rsquo;re all done!  Pretty easy stuff thanks to Ben Winkel and others for putting in some time to fix up the issues.</p>
 
 <p>Now you should be able to fire up <a href="http://monodevelop.com">MonoDevelop</a> and start building some F# code!</p>
 
-<p>You can check the add-in is installed properly my opening the Add-in Manager from the <a href="http://monodevelop.com">MonoDevelop</a> menu.  The F# language binding should be shown as:</p>
+<p>You can check the add-in is installed properly my opening the Add-in Manager from the <a href="http://monodevelop.com">MonoDevelop</a> menu.  The F# language binding should be shown in the list.</p>
 
-<figure>
-    <img src="https://lh5.googleusercontent.com/-ubaW6iROJyc/UJUR1MKOaJI/AAAAAAAABgw/PgUNUmFHhBM/s791/Addin&#43;manager.png"/> 
-</figure>
-
-
-<p>When you start a new solution you should now be presented with some F# specific options:</p>
-
-<figure>
-    <img src="https://lh4.googleusercontent.com/-p3GdkcD14aA/UJUR1WHLuhI/AAAAAAAABg0/TnpTuEkuC30/s932/New&#43;Solution.png"/> 
-</figure>
-
+<p>When you start a new solution you should now be presented with some F# specific options.</p>
 
 <p>Next time I will take this a step further by showing how to build, install and integrate <a href="http://monogame.codeplex.com">MonoGame</a> with F#.  I will also be releasing an F# specific project template for use with <a href="http://monodevelop.com">MonoDevelop</a>.</p>
 

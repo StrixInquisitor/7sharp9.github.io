@@ -154,13 +154,13 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/tags/javascript/</loc>
+    <loc>https://7sharp9.github.io/tags/transpiling/</loc>
     <lastmod>2016-06-07T13:20:49+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/tags/transpiling/</loc>
+    <loc>https://7sharp9.github.io/tags/javascript/</loc>
     <lastmod>2016-06-07T13:20:49+01:00</lastmod>
     <priority>0</priority>
   </url>
@@ -364,25 +364,8 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/2014/11/05/2014-11-05-as-free-as-a-bird/</loc>
-    <lastmod>2014-11-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://7sharp9.github.io/2014/11/05/2014-11-05-flux-compression-redux/</loc>
     <lastmod>2014-11-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://7sharp9.github.io/tags/googleplus/</loc>
-    <lastmod>2014-11-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://7sharp9.github.io/tags/twitter/</loc>
-    <lastmod>2014-11-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -420,18 +403,8 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/2014/03/18/2014-03-18-35-days-later/</loc>
-    <lastmod>2014-03-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://7sharp9.github.io/2014/02/10/2014-02-10-danger-unstable-structure/</loc>
     <lastmod>2014-02-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://7sharp9.github.io/2014/02/03/2014-02-03-detweeted/</loc>
-    <lastmod>2014-02-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -520,12 +493,6 @@
   </url>
   
   <url>
-    <loc>https://7sharp9.github.io/tags/async/</loc>
-    <lastmod>2013-05-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://7sharp9.github.io/tags/azure/</loc>
     <lastmod>2013-05-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -538,6 +505,12 @@
   
   <url>
     <loc>https://7sharp9.github.io/tags/ironpython/</loc>
+    <lastmod>2013-05-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://7sharp9.github.io/tags/async/</loc>
     <lastmod>2013-05-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

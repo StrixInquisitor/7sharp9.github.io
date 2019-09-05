@@ -175,20 +175,20 @@
     </item>
     
     <item>
-      <title>JavaScript</title>
-      <link>https://7sharp9.github.io/tags/javascript/</link>
-      <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/javascript/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Transpiling</title>
       <link>https://7sharp9.github.io/tags/transpiling/</link>
       <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
       
       <guid>https://7sharp9.github.io/tags/transpiling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>javascript</title>
+      <link>https://7sharp9.github.io/tags/javascript/</link>
+      <pubDate>Tue, 07 Jun 2016 13:20:49 +0100</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/javascript/</guid>
       <description></description>
     </item>
     
@@ -400,24 +400,6 @@
     </item>
     
     <item>
-      <title>GooglePlus</title>
-      <link>https://7sharp9.github.io/tags/googleplus/</link>
-      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/googleplus/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Twitter</title>
-      <link>https://7sharp9.github.io/tags/twitter/</link>
-      <pubDate>Wed, 05 Nov 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/twitter/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>CSharp</title>
       <link>https://7sharp9.github.io/tags/csharp/</link>
       <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
@@ -544,15 +526,6 @@
     </item>
     
     <item>
-      <title>Async</title>
-      <link>https://7sharp9.github.io/tags/async/</link>
-      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://7sharp9.github.io/tags/async/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Azure</title>
       <link>https://7sharp9.github.io/tags/azure/</link>
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
@@ -567,6 +540,15 @@
       <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
       
       <guid>https://7sharp9.github.io/tags/ironpython/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>async</title>
+      <link>https://7sharp9.github.io/tags/async/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://7sharp9.github.io/tags/async/</guid>
       <description></description>
     </item>
     

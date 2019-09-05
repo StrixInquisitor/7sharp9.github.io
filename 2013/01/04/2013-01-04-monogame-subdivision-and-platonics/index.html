@@ -172,7 +172,7 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 
 <h2 id="drawing-the-octahedron">Drawing the Octahedron</h2>
 
-<p>What now?  Well, with this code we have just been working with the raw vertices, we now need to get this into a form that <a href="http://monogame.codeplex.com">MonoGame</a> can render, namely an array of the <code>VertexPositionColor</code> structure.  It&rsquo;s a bit of a mouthful so lets alias this so we can simply refer to it as <code>vpc</code>:</p>
+<p>What now?  Well, with this code we have just been working with the raw vertices, we now need to get this into a form that <a href="http://www.monogame.net">MonoGame</a> can render, namely an array of the <code>VertexPositionColor</code> structure.  It&rsquo;s a bit of a mouthful so lets alias this so we can simply refer to it as <code>vpc</code>:</p>
 
 <pre><code class="language-fsharp">let vpc v c = VertexPositionColor(v, c)
 </code></pre>
@@ -194,7 +194,7 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 <p>Bear in mind we are not looking at optimisation at all at this stage purely visualising what we have.  We are using the <code>mapi</code> function to alternate between defining blue violet and orange vertex colours.  At the moment because we haven&rsquo;t set up any lights the octahedron would just appear as diamond chunk of colour with no shading, with these two simple vertex colours we can see the separate facets and see the 3D form.</p>
 
 <figure>
-    <img src="https://lh6.googleusercontent.com/-v5uELxAJljU/UOS6FEGjzYI/AAAAAAAABkY/WIxT8AYFUpY/s640/octahedron.png"/> 
+    <img src="/img/octahedron.jpg"/> 
 </figure>
 
 
@@ -274,7 +274,7 @@ If you remember back to the <a href="https://github.com/7sharp9/PlatonicSolids">
 
 <p>The image below shows the octahedron at various levels of subdivision from one through to four:
 <figure>
-    <img src="https://lh3.googleusercontent.com/-oHWbg56xaXA/UOYSZVvgsZI/AAAAAAAABks/mCbZMz8Fy38/s739/subdivisions.png"/> 
+    <img src="/img/subdivisions.png"/> 
 </figure>
 </p>
 
