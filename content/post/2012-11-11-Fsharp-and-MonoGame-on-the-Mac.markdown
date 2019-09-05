@@ -138,7 +138,7 @@ I'm currently starting work on a post which shows F# using some of the 3D aspect
 
 Until next time...
 
-[0]: http://monogame.codeplex.com
+[0]: http://www.monogame.net
 [1]: http://7sharpnine.com/posts/Fsharp-3-in-the-Mac-and-Mono-World/
 [2]: https://github.com/7sharp9/MonoGame
 [3]: https://github.com/mono/MonoGame

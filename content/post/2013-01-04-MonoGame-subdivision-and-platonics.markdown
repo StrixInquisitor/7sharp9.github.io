@@ -79,7 +79,7 @@ override x.Draw (gameTime) =
 
 Bear in mind we are not looking at optimisation at all at this stage purely visualising what we have.  We are using the `mapi` function to alternate between defining blue violet and orange vertex colours.  At the moment because we haven't set up any lights the octahedron would just appear as diamond chunk of colour with no shading, with these two simple vertex colours we can see the separate facets and see the 3D form.
 
-{{< figure src="https://lh6.googleusercontent.com/-v5uELxAJljU/UOS6FEGjzYI/AAAAAAAABkY/WIxT8AYFUpY/s640/octahedron.png" >}}
+{{< figure src="/img/octahedron.jpg" >}}
 
 ## Subdivision Surfaces
 
@@ -142,7 +142,7 @@ Here we are using some of the functions from the sequence module to group and pr
 * Finally we convert the sequence back into an array with `Seq.toArray`.  
 
 The image below shows the octahedron at various levels of subdivision from one through to four:
-{{< figure src="https://lh3.googleusercontent.com/-oHWbg56xaXA/UOYSZVvgsZI/AAAAAAAABks/mCbZMz8Fy38/s739/subdivisions.png" >}}
+{{< figure src="/img/subdivisions.png" >}}
 
 Well I hope you enjoyed this brief sojourn into subdivision, if you want to investigate further I recommend looking at the following papers.  
 
@@ -155,7 +155,7 @@ It's a very interesting area and I dont think will be able to resist doing anoth
 Until next time...
 
 [1]:http://en.wikipedia.org/wiki/Platonic_solid
-[2]:http://monogame.codeplex.com
+[2]:http://www.monogame.net
 [3]:https://github.com/7sharp9/PlatonicSolids
 [4]:http://en.wikipedia.org/wiki/Unit_vector
 [5]:http://en.wikipedia.org/wiki/Subdivision_surface

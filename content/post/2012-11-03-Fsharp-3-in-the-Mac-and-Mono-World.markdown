@@ -24,9 +24,7 @@ Once the Beta of Mono 3.0 goes live it should contain within it a nice shiny new
 Head over to the [Mono site] and install Mono 3.0 and the Mono MDK, they can be both found on the [download page][Mono].
 
 IF you think you already have these installed you can check which version you have by Navigating to the directory: `/Library/Frameworks/Mono.framework/Versions`
-You should see version 3.0 in the list:  
-
-{{< figure src="https://lh3.googleusercontent.com/-N3cTmmXXvxI/UJUR1CIw4DI/AAAAAAAABgs/dQUFqgpQrvQ/s209/Mono3.0+install.png" >}}
+You should see version 3.0 in the list.  
 
 Also ensure that the `Current` symbolic link points to Mono version 3.0, when I was first tried to get things running I couldn't understand why I kept getting a version mismatches, this was because my link was pointing to Mono 2.10.9.  
 
@@ -92,23 +90,18 @@ make
 make install
 ```
 
-That's it we're all done!  Pretty easy stuff thanks to [Ben Winkel] and others for putting in some time to fix up the issues.  
+That's it we're all done!  Pretty easy stuff thanks to Ben Winkel and others for putting in some time to fix up the issues.  
 
 Now you should be able to fire up [MonoDevelop] and start building some F# code!
 
-You can check the add-in is installed properly my opening the Add-in Manager from the [MonoDevelop] menu.  The F# language binding should be shown as:
+You can check the add-in is installed properly my opening the Add-in Manager from the [MonoDevelop] menu.  The F# language binding should be shown in the list.  
 
-{{< figure src="https://lh5.googleusercontent.com/-ubaW6iROJyc/UJUR1MKOaJI/AAAAAAAABgw/PgUNUmFHhBM/s791/Addin+manager.png" >}}
-
-When you start a new solution you should now be presented with some F# specific options:
-
-{{< figure src="https://lh4.googleusercontent.com/-p3GdkcD14aA/UJUR1WHLuhI/AAAAAAAABg0/TnpTuEkuC30/s932/New+Solution.png" >}}
+When you start a new solution you should now be presented with some F# specific options.  
 
 Next time I will take this a step further by showing how to build, install and integrate [MonoGame] with F#.  I will also be releasing an F# specific project template for use with [MonoDevelop].
 
 Until next time...
 
-[Ben Winkel]: http://twitter.com/winkler_ben
 [F#]: http://msdn.microsoft.com/en-us/vstudio/hh388569
 [F#GitHub]: https://github.com/fsharp/fsharp
 [Mono]: http://www.mono-project.com/What_is_Mono
